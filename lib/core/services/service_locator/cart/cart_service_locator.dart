@@ -22,7 +22,9 @@ class CartServiceLocator {
       () => AddToCartBloc(addToCartDataSource: getIt<AddToCartDataSource>()),
     );
 
-    getIt.registerFactory<CartBloc>(
+    // Singleton (not factory): both the Cart tab and Home's top-bar item
+    // count need to observe the exact same cart state.
+    getIt.registerLazySingleton<CartBloc>(
       () => CartBloc(
         cartDataSource: getIt<AddToCartDataSource>(),
         deleteCartDataSource: getIt<DeleteCartDataSource>(),

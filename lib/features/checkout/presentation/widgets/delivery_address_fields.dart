@@ -3,34 +3,37 @@ import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart' hide CustomTextFormField;
 import 'package:the_one_test/core/widgets/widgets/custom_text_field.dart';
 import 'package:the_one_test/core/widgets/widgets/validators.dart';
-import 'package:the_one_test/features/auth/presentation/widgets/custom_drop_down.dart';
 
 class DeliveryAddressFields extends StatelessWidget {
   const DeliveryAddressFields({
     super.key,
-    required this.selectedArea,
-    required this.onAreaChanged,
+    required this.areaController,
     required this.streetController,
     required this.houseNumberController,
     required this.fullAddressController,
   });
 
-  final String? selectedArea;
-  final ValueChanged<String?> onAreaChanged;
+  final TextEditingController areaController;
   final TextEditingController streetController;
   final TextEditingController houseNumberController;
   final TextEditingController fullAddressController;
 
   @override
   Widget build(BuildContext context) {
+    // These all come from the address picked via the "Delivery Address"
+    // button (a real saved address) — editing them free-form here wouldn't
+    // update that saved address, it'd just create a mismatch between what's
+    // shown and what's actually stored. Changing the address only happens
+    // through the picker.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomDropdown(
-          hint: 'Area'.tr(),
-          value: selectedArea,
-          items: const ['Cairo', 'Giza', 'Alexandria'],
-          onChanged: onAreaChanged,
+        CustomTextFormField(
+          hintText: 'Area'.tr(),
+          controller: areaController,
+          readOnly: true,
+          validator: Validators.validateEmpty,
+          borderColor: AppColors.primaryColor,
         ),
         Gap(16.h),
         Row(
@@ -40,6 +43,7 @@ class DeliveryAddressFields extends StatelessWidget {
               child: CustomTextFormField(
                 hintText: 'Street'.tr(),
                 controller: streetController,
+                readOnly: true,
                 validator: Validators.validateEmpty,
                 borderColor: AppColors.primaryColor,
               ),
@@ -50,6 +54,7 @@ class DeliveryAddressFields extends StatelessWidget {
                 hintText: 'House Number'.tr(),
                 keyboardType: TextInputType.number,
                 controller: houseNumberController,
+                readOnly: true,
                 validator: Validators.validateEmpty,
                 borderColor: AppColors.primaryColor,
               ),
@@ -61,6 +66,7 @@ class DeliveryAddressFields extends StatelessWidget {
           hintText: 'Full Address'.tr(),
           controller: fullAddressController,
           maxLines: 4,
+          readOnly: true,
           validator: Validators.validateEmpty,
           borderColor: AppColors.primaryColor,
         ),

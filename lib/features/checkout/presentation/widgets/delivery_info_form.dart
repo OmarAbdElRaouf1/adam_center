@@ -1,9 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-import 'package:the_one_test/core/widgets/under_construction_screen.dart';
 import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
+import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
+import 'package:the_one_test/features/auth/data/models/user_model.dart';
+import 'package:the_one_test/features/checkout/data/models/address_text.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
+import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
 import 'package:the_one_test/features/checkout/presentation/views/payment_view.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/delivery_address_button.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/delivery_address_fields.dart';
@@ -23,12 +26,17 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
+  final areaController = TextEditingController();
   final streetController = TextEditingController();
   final houseNumberController = TextEditingController();
   final fullAddressController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  String? selectedArea;
+  @override
+  void initState() {
+    super.initState();
+    _hydrateFrom(getIt<AccountCubit>().state);
+  }
 
   @override
   void dispose() {
@@ -36,19 +44,39 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
     lastNameController.dispose();
     phoneController.dispose();
     emailController.dispose();
+    areaController.dispose();
     streetController.dispose();
     houseNumberController.dispose();
     fullAddressController.dispose();
     super.dispose();
   }
 
-  void _openDeliveryAddressPicker() {
-    Navigator.push(
+  void _hydrateFrom(UserModel? user) {
+    if (user == null) return;
+    firstNameController.text = user.englishName ?? firstNameController.text;
+    lastNameController.text = user.lastName ?? lastNameController.text;
+    phoneController.text = user.customerPhone.isNotEmpty
+        ? user.customerPhone
+        : phoneController.text;
+    emailController.text = user.email ?? emailController.text;
+    areaController.text =
+        districtFromCustomerAddress(user.customerAddress) ??
+        user.districtName ??
+        areaController.text;
+    streetController.text = user.streetName ?? streetController.text;
+    houseNumberController.text = user.houseNo ?? houseNumberController.text;
+    fullAddressController.text =
+        user.customerAddress ?? fullAddressController.text;
+  }
+
+  Future<void> _openDeliveryAddressPicker() async {
+    final updated = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => UnderConstructionScreen(title: 'Delivery Address'.tr()),
-      ),
+      MaterialPageRoute(builder: (_) => const ChooseAddressView()),
     );
+    if (updated == true && mounted) {
+      setState(() => _hydrateFrom(getIt<AccountCubit>().state));
+    }
   }
 
   @override
@@ -68,8 +96,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
           DeliveryAddressButton(onTap: _openDeliveryAddressPicker),
           Gap(16.h),
           DeliveryAddressFields(
-            selectedArea: selectedArea,
-            onAreaChanged: (value) => setState(() => selectedArea = value),
+            areaController: areaController,
             streetController: streetController,
             houseNumberController: houseNumberController,
             fullAddressController: fullAddressController,
@@ -85,7 +112,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   lastName: lastNameController.text,
                   phone: phoneController.text,
                   email: emailController.text,
-                  area: selectedArea,
+                  area: areaController.text,
                   street: streetController.text,
                   houseNumber: houseNumberController.text,
                   fullAddress: fullAddressController.text,

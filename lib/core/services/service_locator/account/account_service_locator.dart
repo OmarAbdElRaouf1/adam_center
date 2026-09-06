@@ -4,7 +4,7 @@ import 'package:the_one_test/features/account/presentation/manager/account_cubit
 
 class AccountServiceLocator {
   static Future<void> init({required GetIt getIt}) async {
-    getIt.registerFactory<AccountCubit>(
+    getIt.registerLazySingleton<AccountCubit>(
       () => AccountCubit(getIt<UserSessionCache>()),
     );
   }

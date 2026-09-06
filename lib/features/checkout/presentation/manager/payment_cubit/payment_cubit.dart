@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:the_one_test/features/checkout/data/datasource/place_order_datasource.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/payment_methods_section.dart';
 
@@ -12,7 +13,9 @@ class PaymentState extends Equatable {
     this.discountRate = 0,
     this.discountAttempt = 0,
     this.discountCodeValid = true,
+    this.isPlacingOrder = false,
     this.orderPlaced = false,
+    this.orderError,
   });
 
   final double subtotal;
@@ -22,7 +25,9 @@ class PaymentState extends Equatable {
   final double discountRate;
   final int discountAttempt;
   final bool discountCodeValid;
+  final bool isPlacingOrder;
   final bool orderPlaced;
+  final String? orderError;
 
   double get discountValue => subtotal * discountRate;
   double get total => subtotal + deliveryFee - discountValue;
@@ -32,7 +37,9 @@ class PaymentState extends Equatable {
     double? discountRate,
     int? discountAttempt,
     bool? discountCodeValid,
+    bool? isPlacingOrder,
     bool? orderPlaced,
+    String? orderError,
   }) {
     return PaymentState(
       subtotal: subtotal,
@@ -42,7 +49,9 @@ class PaymentState extends Equatable {
       discountRate: discountRate ?? this.discountRate,
       discountAttempt: discountAttempt ?? this.discountAttempt,
       discountCodeValid: discountCodeValid ?? this.discountCodeValid,
+      isPlacingOrder: isPlacingOrder ?? this.isPlacingOrder,
       orderPlaced: orderPlaced ?? this.orderPlaced,
+      orderError: orderError,
     );
   }
 
@@ -55,21 +64,28 @@ class PaymentState extends Equatable {
     discountRate,
     discountAttempt,
     discountCodeValid,
+    isPlacingOrder,
     orderPlaced,
+    orderError,
   ];
 }
 
 class PaymentCubit extends Cubit<PaymentState> {
   static const double _deliveryFee = 25;
 
-  PaymentCubit({required double subtotal, required DeliveryInfoModel deliveryInfo})
-    : super(
-        PaymentState(
-          subtotal: subtotal,
-          deliveryFee: _deliveryFee,
-          deliveryInfo: deliveryInfo,
-        ),
-      );
+  final PlaceOrderDatasource _placeOrderDatasource;
+
+  PaymentCubit(
+    this._placeOrderDatasource, {
+    required double subtotal,
+    required DeliveryInfoModel deliveryInfo,
+  }) : super(
+         PaymentState(
+           subtotal: subtotal,
+           deliveryFee: _deliveryFee,
+           deliveryInfo: deliveryInfo,
+         ),
+       );
 
   void selectMethod(PaymentMethod method) =>
       emit(state.copyWith(selectedMethod: method));
@@ -93,5 +109,20 @@ class PaymentCubit extends Cubit<PaymentState> {
     );
   }
 
-  void placeOrder() => emit(state.copyWith(orderPlaced: true));
+  Future<void> placeOrder() async {
+    emit(state.copyWith(isPlacingOrder: true));
+    final result = await _placeOrderDatasource.placeOrder(
+      deliveryInfo: state.deliveryInfo,
+      paymentMethod: state.selectedMethod,
+      subtotal: state.subtotal,
+      discount: state.discountValue,
+      total: state.total,
+    );
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isPlacingOrder: false, orderError: failure.message),
+      ),
+      (_) => emit(state.copyWith(isPlacingOrder: false, orderPlaced: true)),
+    );
+  }
 }

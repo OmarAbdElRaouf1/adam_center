@@ -1,37 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-import 'package:the_one_test/core/local/user_session_datasource.dart';
+import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
+import 'package:the_one_test/features/auth/data/models/user_model.dart';
+import 'package:the_one_test/features/checkout/data/models/address_text.dart';
+import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
 
-import 'delivery_address_bottom_sheet.dart';
-
-class CartDeliveryBar extends StatefulWidget {
+class CartDeliveryBar extends StatelessWidget {
   const CartDeliveryBar({super.key});
-
-  @override
-  State<CartDeliveryBar> createState() => _CartDeliveryBarState();
-}
-
-class _CartDeliveryBarState extends State<CartDeliveryBar> {
-  var user = getIt<UserSessionCache>().getUser();
-
-  Future<void> _openAddressPicker(BuildContext context) async {
-    final updated = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppRadius.sheet.r),
-        ),
-      ),
-      builder: (_) => const DeliveryAddressBottomSheet(),
-    );
-
-    if (updated == true && mounted) {
-      setState(() => user = getIt<UserSessionCache>().getUser());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,32 +33,46 @@ class _CartDeliveryBarState extends State<CartDeliveryBar> {
             ),
           ),
           Gap(10.w),
+          // AccountCubit is a shared, app-wide singleton — reading it here
+          // via `bloc:` means an address change made from Home (or anywhere
+          // else) shows up here immediately too.
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${'Deliver to'.tr()}: ${user?.regionName}',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                Gap(2.h),
-                Text(
-                  '${user?.regionName}, ${user?.districtName}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            child: BlocBuilder<AccountCubit, UserModel?>(
+              bloc: getIt<AccountCubit>(),
+              builder: (context, user) {
+                final district =
+                    districtFromCustomerAddress(user?.customerAddress) ??
+                    user?.districtName;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${'Deliver to'.tr()}: ${user?.regionName}',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    Gap(2.h),
+                    Text(
+                      '${user?.regionName}, $district',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           IconButton(
-            onPressed: () => _openAddressPicker(context),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ChooseAddressView()),
+            ),
             icon: Icon(Icons.chevron_left, color: AppColors.primaryColor),
           ),
         ],

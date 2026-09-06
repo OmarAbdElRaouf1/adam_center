@@ -33,26 +33,6 @@ enum OrderStatus {
   }
 }
 
-class OrderAddress {
-  const OrderAddress({
-    required this.area,
-    required this.block,
-    required this.street,
-    required this.avenue,
-    required this.house,
-    required this.floor,
-    required this.apartment,
-  });
-
-  final String area;
-  final String block;
-  final String street;
-  final String avenue;
-  final String house;
-  final String floor;
-  final String apartment;
-}
-
 class OrderModel {
   const OrderModel({
     required this.orderNumber,
@@ -66,7 +46,35 @@ class OrderModel {
   final String orderNumber;
   final String date;
   final OrderStatus status;
-  final OrderAddress address;
+  // The backend already returns a ready-made, formatted address string
+  // (OrderAddress) rather than reliably-populated individual fields (its
+  // District/Street/House/Floor/Apartment fields come back null even when
+  // OrderAddress itself has the full text) — so this is shown as-is instead
+  // of being split back into parts.
+  final String address;
   final double totalPrice;
   final bool isPrevious;
+
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      orderNumber: (json['OrderNo'] ?? '').toString(),
+      date: (json['OrderDate'] ?? '').toString().split('T').first,
+      status: _statusFromJson(json),
+      address: json['OrderAddress'] ?? '',
+      totalPrice: (json['FinalValue'] as num?)?.toDouble() ?? 0,
+      // No "current vs previous" flag exists on the backend — a delivered
+      // order is treated as previous, anything still in progress as current.
+      isPrevious: json['Delivered'] == true,
+    );
+  }
+
+  static OrderStatus _statusFromJson(Map<String, dynamic> json) {
+    if (json['Delivered'] == true) return OrderStatus.received;
+    if (json['StartDeliver'] == true ||
+        json['SendingOrder'] == true ||
+        json['UnderDeliver'] == true) {
+      return OrderStatus.onTheWay;
+    }
+    return OrderStatus.preparing;
+  }
 }

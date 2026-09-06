@@ -1,7 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 import 'package:the_one_test/core/constant/end_points.dart';
@@ -20,9 +17,14 @@ import 'package:the_one_test/features/home/presentation/widgets/home_top_bar.dar
 import 'package:the_one_test/features/home/presentation/widgets/parent_category_preview_list.dart';
 import 'package:the_one_test/features/home/presentation/widgets/text_banner.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -41,6 +43,7 @@ class HomeView extends StatelessWidget {
         child: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: EdgeInsets.only(
               left: 10.w,
               right: 10.w,

@@ -9,7 +9,6 @@ class CartEmpty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.scaffoldLight,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -21,6 +20,8 @@ class CartEmpty extends StatelessWidget {
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         'assets/images/cart_empty.svg',

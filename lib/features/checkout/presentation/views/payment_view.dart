@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
+import 'package:the_one_test/features/checkout/data/datasource/place_order_datasource.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
 import 'package:the_one_test/features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/discount_code_field.dart';
@@ -36,13 +37,15 @@ class _PaymentViewState extends State<PaymentView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => PaymentCubit(
+        getIt<PlaceOrderDatasource>(),
         subtotal: widget.subtotal,
         deliveryInfo: widget.deliveryInfo,
       ),
       child: BlocConsumer<PaymentCubit, PaymentState>(
         listenWhen: (previous, current) =>
             current.discountAttempt != previous.discountAttempt ||
-            current.orderPlaced != previous.orderPlaced,
+            current.orderPlaced != previous.orderPlaced ||
+            current.orderError != previous.orderError,
         listener: (context, state) {
           if (state.orderPlaced) {
             context.showSuccessMessage('Order placed'.tr());
@@ -50,6 +53,10 @@ class _PaymentViewState extends State<PaymentView> {
               context,
               MaterialPageRoute(builder: (_) => const RootView()),
             );
+            return;
+          }
+          if (state.orderError != null) {
+            context.showErrorMessage(state.orderError!);
             return;
           }
           if (state.discountCodeValid) {
@@ -98,9 +105,11 @@ class _PaymentViewState extends State<PaymentView> {
                   Gap(28.h),
                   CustomElevatedButton.filled(
                     backgroundColor: AppColors.primaryColor,
-                    title: 'Pay'.tr(),
+                    title: state.isPlacingOrder ? '...'.tr() : 'Pay'.tr(),
                     context: context,
-                    onPressed: () => context.read<PaymentCubit>().placeOrder(),
+                    onPressed: state.isPlacingOrder
+                        ? () {}
+                        : () => context.read<PaymentCubit>().placeOrder(),
                   ),
                   Gap(12.h),
                 ],

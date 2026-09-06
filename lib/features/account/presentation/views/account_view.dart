@@ -41,36 +41,38 @@ class _AccountViewState extends State<AccountView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<AccountCubit>(),
-      child: BlocBuilder<AccountCubit, UserModel?>(
-        builder: (context, user) {
-          _hydrateControllers(user);
-          return Scaffold(
-            key: ValueKey(context.locale.languageCode),
-            appBar: const CustomAppBar(titleText: 'My Account'),
-            body: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AccountInfoFields(
-                      firstNameController: firstNameController,
-                      lastNameController: lastNameController,
-                      phoneController: phoneController,
-                      emailController: emailController,
-                    ),
-                    Gap(32.h),
-                    const AccountActionButtons(),
-                  ],
-                ),
+    // AccountCubit is a shared, app-wide singleton (see AccountServiceLocator)
+    // so other screens' address/profile changes reflect here too — passed
+    // explicitly via `bloc:` rather than a scoped BlocProvider, so popping
+    // this screen never disposes it.
+    return BlocBuilder<AccountCubit, UserModel?>(
+      bloc: getIt<AccountCubit>(),
+      builder: (context, user) {
+        _hydrateControllers(user);
+        return Scaffold(
+          key: ValueKey(context.locale.languageCode),
+          appBar: const CustomAppBar(titleText: 'My Account'),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AccountInfoFields(
+                    firstNameController: firstNameController,
+                    lastNameController: lastNameController,
+                    phoneController: phoneController,
+                    emailController: emailController,
+                  ),
+                  Gap(32.h),
+                  const AccountActionButtons(),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

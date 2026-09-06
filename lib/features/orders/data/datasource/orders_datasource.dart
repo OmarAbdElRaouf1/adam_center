@@ -1,4 +1,6 @@
+import 'package:the_one_test/core/constant/end_points.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/core/local/user_session_datasource.dart';
 import 'package:the_one_test/features/orders/data/models/order_model.dart';
 
 abstract interface class OrdersDatasource {
@@ -6,53 +8,20 @@ abstract interface class OrdersDatasource {
 }
 
 class OrdersDatasourceImpl implements OrdersDatasource {
-  static const _address = OrderAddress(
-    area: 'الاندلس',
-    block: '1',
-    street: '1',
-    avenue: '1',
-    house: '1',
-    floor: '1',
-    apartment: '1',
-  );
+  final GenericDataSource _genericDataSource;
+  final UserSessionCache _userSessionDatasource;
 
-  static const List<OrderModel> _orders = [
-    OrderModel(
-      orderNumber: '003',
-      date: '20-11-2024',
-      status: OrderStatus.preparing,
-      address: _address,
-      totalPrice: 10,
-      isPrevious: false,
-    ),
-    OrderModel(
-      orderNumber: '004',
-      date: '21-11-2024',
-      status: OrderStatus.onTheWay,
-      address: _address,
-      totalPrice: 10,
-      isPrevious: false,
-    ),
-    OrderModel(
-      orderNumber: '001',
-      date: '16-11-2024',
-      status: OrderStatus.received,
-      address: _address,
-      totalPrice: 10,
-      isPrevious: true,
-    ),
-    OrderModel(
-      orderNumber: '002',
-      date: '16-11-2024',
-      status: OrderStatus.cancelled,
-      address: _address,
-      totalPrice: 10,
-      isPrevious: true,
-    ),
-  ];
+  OrdersDatasourceImpl(this._genericDataSource, this._userSessionDatasource);
 
   @override
-  Future<Either<Failure, List<OrderModel>>> getOrders() async {
-    return const Right(_orders);
+  Future<Either<Failure, List<OrderModel>>> getOrders() {
+    final user = _userSessionDatasource.getUser();
+    return _genericDataSource.fetchData<OrderModel>(
+      endpoint: EndPoints.getPreviousOrders,
+      queryParameters: {
+        if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
+      },
+      fromJson: OrderModel.fromJson,
+    );
   }
 }

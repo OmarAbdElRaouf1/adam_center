@@ -57,21 +57,8 @@ class OrderCard extends StatelessWidget {
           ),
           Gap(4.h),
           Text(
-            context.localizeDigits(
-              '${'Area'.tr()}: ${order.address.area}  '
-              '${'Block'.tr()}: ${order.address.block}  '
-              '${'Street'.tr()}: ${order.address.street}  '
-              '${'Avenue'.tr()}: ${order.address.avenue}  '
-              '${'House'.tr()}: ${order.address.house}',
-            ),
-            style: TextStyle(fontSize: 13.5.sp),
-          ),
-          Text(
-            context.localizeDigits(
-              '${'Floor'.tr()}: ${order.address.floor}  '
-              '${'Apartment'.tr()}: ${order.address.apartment}',
-            ),
-            style: TextStyle(fontSize: 12.sp, height: 1.5),
+            context.localizeDigits(order.address),
+            style: TextStyle(fontSize: 13.5.sp, height: 1.5),
           ),
           Gap(10.h),
           Divider(height: 1, color: Theme.of(context).dividerTheme.color),
