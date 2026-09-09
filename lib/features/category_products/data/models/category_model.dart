@@ -1,4 +1,6 @@
-class SubCategoryModel {
+import 'package:equatable/equatable.dart';
+
+class SubCategoryModel extends Equatable {
   const SubCategoryModel({
     this.id,
     required this.title,
@@ -19,9 +21,12 @@ class SubCategoryModel {
       products: const [],
     );
   }
+
+  @override
+  List<Object?> get props => [id, title, image, products];
 }
 
-class ParentCategoryModel {
+class ParentCategoryModel extends Equatable {
   const ParentCategoryModel({
     this.id,
     required this.title,
@@ -42,4 +47,7 @@ class ParentCategoryModel {
       subCategories: const [],
     );
   }
+
+  @override
+  List<Object?> get props => [id, title, image, subCategories];
 }

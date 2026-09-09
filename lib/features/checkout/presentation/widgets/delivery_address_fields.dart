@@ -43,7 +43,6 @@ class DeliveryAddressFields extends StatelessWidget {
               child: CustomTextFormField(
                 hintText: 'Street'.tr(),
                 controller: streetController,
-                readOnly: true,
                 validator: Validators.validateEmpty,
                 borderColor: AppColors.primaryColor,
               ),
@@ -54,7 +53,6 @@ class DeliveryAddressFields extends StatelessWidget {
                 hintText: 'House Number'.tr(),
                 keyboardType: TextInputType.number,
                 controller: houseNumberController,
-                readOnly: true,
                 validator: Validators.validateEmpty,
                 borderColor: AppColors.primaryColor,
               ),
@@ -66,7 +64,6 @@ class DeliveryAddressFields extends StatelessWidget {
           hintText: 'Full Address'.tr(),
           controller: fullAddressController,
           maxLines: 4,
-          readOnly: true,
           validator: Validators.validateEmpty,
           borderColor: AppColors.primaryColor,
         ),

@@ -9,7 +9,7 @@ void logger(message) {
 
 void loggerError(message) {
   if (kDebugMode) {
-    Logger().e(message,);
+    Logger().e(message);
   }
 }
 

@@ -10,7 +10,8 @@ class UnderConstructionScreen extends StatefulWidget {
   final String? title;
 
   @override
-  State<UnderConstructionScreen> createState() => _UnderConstructionScreenState();
+  State<UnderConstructionScreen> createState() =>
+      _UnderConstructionScreenState();
 }
 
 class _UnderConstructionScreenState extends State<UnderConstructionScreen>
@@ -99,8 +100,10 @@ class _UnderConstructionScreenState extends State<UnderConstructionScreen>
                     backgroundColor: AppColors.mainAppColor,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28,
+                      vertical: 14,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

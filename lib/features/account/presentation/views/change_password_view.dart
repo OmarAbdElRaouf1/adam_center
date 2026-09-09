@@ -30,15 +30,19 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ChangePasswordCubit(),
-      child: BlocConsumer<ChangePasswordCubit, ChangePasswordStatus>(
-        listener: (context, status) {
-          if (status == ChangePasswordStatus.success) {
+      create: (_) => getIt<ChangePasswordCubit>(),
+      child: BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
+        listener: (context, state) {
+          if (state.status == ChangePasswordStatus.success) {
             context.showSuccessMessage('Password changed successfully'.tr());
             Navigator.pop(context);
+          } else if (state.status == ChangePasswordStatus.failure) {
+            context.showErrorMessage(
+              state.errorMessage ?? 'Something went wrong'.tr(),
+            );
           }
         },
-        builder: (context, status) {
+        builder: (context, state) {
           return Scaffold(
             key: ValueKey(context.locale.languageCode),
             appBar: const CustomAppBar(titleText: 'Change Password'),
@@ -54,9 +58,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         width: 96.w,
                         height: 96.w,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withValues(
-                            alpha: 0.1,
-                          ),
+                          color: AppColors.primaryColor.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -76,9 +78,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     CustomElevatedButton.filled(
                       context: context,
                       title: 'Change Password'.tr(),
+                      isLoading: state.status == ChangePasswordStatus.loading,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          context.read<ChangePasswordCubit>().submit();
+                          context.read<ChangePasswordCubit>().submit(
+                            oldPassword: oldPasswordController.text,
+                            newPassword: newPasswordController.text,
+                          );
                         }
                       },
                       backgroundColor: AppColors.primaryColor,

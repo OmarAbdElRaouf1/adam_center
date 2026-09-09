@@ -215,7 +215,11 @@ class CategoryRailShimmer extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomShimmerWidget(height: 40.w, width: 40.w, shape: BoxShape.circle),
+          CustomShimmerWidget(
+            height: 40.w,
+            width: 40.w,
+            shape: BoxShape.circle,
+          ),
           SizedBox(height: 6.h),
           CustomShimmerWidget(height: 9, width: 32.w),
         ],

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class NavigationService {
   static final GlobalKey<NavigatorState> navigatorKey =
-  GlobalKey<NavigatorState>();
+      GlobalKey<NavigatorState>();
 
   static BuildContext? get context =>
       navigatorKey.currentState?.overlay?.context;
@@ -28,8 +28,10 @@ class NavigationService {
     );
   }
 
-  static Future<dynamic> pushReplacementNamed(String routeName,
-      {Object? arguments}) {
+  static Future<dynamic> pushReplacementNamed(
+    String routeName, {
+    Object? arguments,
+  }) {
     return navigatorKey.currentState!.pushReplacementNamed(
       routeName,
       arguments: arguments,
@@ -42,7 +44,7 @@ class NavigationService {
 
   static void popUntil(String routeName) {
     return navigatorKey.currentState!.popUntil(
-          (route) => route.settings.name == routeName,
+      (route) => route.settings.name == routeName,
     );
   }
 
@@ -53,15 +55,17 @@ class NavigationService {
   static Future<dynamic> pushAndRemoveUntil(Widget page) {
     return navigatorKey.currentState!.pushAndRemoveUntil(
       CupertinoPageRoute(builder: (_) => page),
-          (route) => false,
+      (route) => false,
     );
   }
 
-  static Future<dynamic> pushNamedAndRemoveUntil(String routeName,
-      {Object? arguments}) {
+  static Future<dynamic> pushNamedAndRemoveUntil(
+    String routeName, {
+    Object? arguments,
+  }) {
     return navigatorKey.currentState!.pushNamedAndRemoveUntil(
       routeName,
-          (route) => false,
+      (route) => false,
       arguments: arguments,
     );
   }
@@ -71,7 +75,7 @@ class NavigationService {
   }
 
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   static void showToast(String message) {
     scaffoldMessengerKey.currentState?.showSnackBar(

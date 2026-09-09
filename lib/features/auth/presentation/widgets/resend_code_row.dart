@@ -9,7 +9,10 @@ class ResendCodeRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Didn't receive the code?".tr(), style: TextStyle(fontSize: 13.sp)),
+        Text(
+          "Didn't receive the code?".tr(),
+          style: TextStyle(fontSize: 13.sp),
+        ),
         TextButton(
           onPressed: () {},
           child: Text('Resend Code'.tr(), style: TextStyle(fontSize: 13.sp)),

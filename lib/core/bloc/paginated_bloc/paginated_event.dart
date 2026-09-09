@@ -1,4 +1,5 @@
 part of 'paginated_bloc.dart';
+
 abstract class PaginatedEvent<T> extends Equatable {
   const PaginatedEvent();
 

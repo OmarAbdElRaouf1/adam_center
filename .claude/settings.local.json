@@ -10,7 +10,8 @@
       "Bash(mv manager/*.dart presentation/manager/favorite_bloc/)",
       "Bash(rmdir manager *)",
       "Bash(mkdir -p presentation/manager/nav_bar_cubit)",
-      "Bash(mv manager/nav_bar_cubit.dart presentation/manager/nav_bar_cubit/)"
+      "Bash(mv manager/nav_bar_cubit.dart presentation/manager/nav_bar_cubit/)",
+      "Bash(flutter analyze *)"
     ],
     "additionalDirectories": [
       "/Users/omarraouf/Desktop/Projects/the_one_test/lib/features/auth/models",

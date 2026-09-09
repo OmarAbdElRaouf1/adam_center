@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/models/item_model.dart';
 import 'package:the_one_test/features/favorites/data/datasource/favorite_datasource.dart';
-import 'package:the_one_test/features/favorites/presentation/manager/favorite_bloc/favorite_event.dart';
+
+part 'favorite_event.dart';
 
 class FavoriteBloc extends Bloc<FavoriteEvent, BaseState<ItemModel>> {
   final FavoriteDatasource _favoriteDatasource;
@@ -29,7 +31,11 @@ class FavoriteBloc extends Bloc<FavoriteEvent, BaseState<ItemModel>> {
         ),
       ),
       (items) => emit(
-        state.copyWith(status: Status.success, items: items, metadata: {'action': 'fetch'}),
+        state.copyWith(
+          status: Status.success,
+          items: items,
+          metadata: {'action': 'fetch'},
+        ),
       ),
     );
   }
@@ -67,8 +73,8 @@ class FavoriteBloc extends Bloc<FavoriteEvent, BaseState<ItemModel>> {
           // Favorites tab.
           items: event.isCurrentlyFavorite
               ? state.items
-                  .where((item) => item.productId != event.productId)
-                  .toList()
+                    .where((item) => item.productId != event.productId)
+                    .toList()
               : state.items,
           metadata: {'action': 'toggle', 'productId': event.productId},
         ),

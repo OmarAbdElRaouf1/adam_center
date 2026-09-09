@@ -4,6 +4,7 @@ import 'package:the_one_test/core/http/either.dart';
 import 'package:the_one_test/core/http/failure.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
 import 'package:the_one_test/core/models/item_model.dart';
+import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/favorites/data/datasource/local_favorites_store.dart';
 
 abstract interface class FavoriteDatasource {
@@ -38,11 +39,7 @@ class FavoriteDatasourceImpl implements FavoriteDatasource {
     for (final id in ids) {
       final result = await _genericDataSource.fetchData<ItemModel>(
         endpoint: EndPoints.productDetails,
-        queryParameters: {
-          'ProductId': id,
-          if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
-          if (user != null) 'CustomerPhone': user.customerPhone,
-        },
+        queryParameters: {'ProductId': id, ...UserModel.identityParams(user)},
         fromJson: ItemModel.fromJson,
       );
       result.fold((_) {}, (products) {
@@ -58,14 +55,16 @@ class FavoriteDatasourceImpl implements FavoriteDatasource {
     final result = await _genericDataSource.postData<void>(
       endpoint: EndPoints.addFavorite,
       data: {
+        // Intentionally CustomerID only (no CustomerPhone) — not the same
+        // shape as UserModel.identityParams, do not consolidate.
         if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
         'ProductID': productId,
       },
     );
-    if (result.isSuccess) {
+    return result.fold((failure) => Left(failure), (value) async {
       await _localFavoritesStore.add(productId);
-    }
-    return result;
+      return Right(value);
+    });
   }
 
   @override
@@ -77,13 +76,15 @@ class FavoriteDatasourceImpl implements FavoriteDatasource {
     final result = await _genericDataSource.deleteData<void>(
       endpoint: 'Customer/DeleteCustomerProductBYID',
       queryParameters: {
+        // Intentionally CustomerID only (no CustomerPhone) — not the same
+        // shape as UserModel.identityParams, do not consolidate.
         if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
         'ProductID': productId,
       },
     );
-    if (result.isSuccess) {
+    return result.fold((failure) => Left(failure), (value) async {
       await _localFavoritesStore.remove(productId);
-    }
-    return result;
+      return Right(value);
+    });
   }
 }

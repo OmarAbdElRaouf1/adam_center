@@ -1,20 +1,25 @@
+import 'package:equatable/equatable.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/core/local/user_session_datasource.dart';
 import 'package:the_one_test/features/cart/data/datasource/add_to_cart_datasource.dart';
 import 'package:the_one_test/features/cart/data/datasource/delete_cart_datasource.dart';
+import 'package:the_one_test/features/cart/data/models/add_to_cart_model.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
-import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_event.dart';
+
+part 'cart_event.dart';
 
 class CartBloc extends Bloc<CartEvent, BaseState<CartItemModel>> {
   final AddToCartDataSource _cartDataSource;
   final DeleteCartDataSource _deleteCartDataSource;
+  final UserSessionCache _userSessionCache;
 
   CartBloc({
     required this._cartDataSource,
-    required DeleteCartDataSource deleteCartDataSource,
-  }) : _deleteCartDataSource = deleteCartDataSource,
-       super(const BaseState<CartItemModel>()) {
+    required this._deleteCartDataSource,
+    required this._userSessionCache,
+  }) : super(const BaseState<CartItemModel>()) {
     on<FetchCartItems>(_onFetchCartItems);
-    on<UpdateQuantity>(_onUpdateQuantity);
+    on<IncrementItem>(_onIncrementItem);
     on<DeleteCartItem>(_onDeleteCartItem);
     on<ClearCart>(_onClearCart);
   }
@@ -24,86 +29,75 @@ class CartBloc extends Bloc<CartEvent, BaseState<CartItemModel>> {
     Emitter<BaseState<CartItemModel>> emit,
   ) async {
     emit(state.copyWith(status: Status.loading, metadata: {'action': 'fetch'}));
+    await _refetch(emit, action: 'fetch');
+  }
 
+  // Cart items are never reconstructed client-side — every mutation below
+  // calls the real add/delete endpoint and then re-fetches the basket from
+  // the server, so what's shown always matches what the server actually has.
+  Future<void> _refetch(
+    Emitter<BaseState<CartItemModel>> emit, {
+    required String action,
+    Failure? carryFailure,
+  }) async {
     final result = await _cartDataSource.getCartItems();
-
     result.fold(
       (failure) => emit(
         state.copyWith(
           status: Status.failure,
-          failure: failure,
-          errorMessage: failure.message,
-          metadata: {'action': 'fetch'},
+          failure: carryFailure ?? failure,
+          errorMessage: (carryFailure ?? failure).message,
+          metadata: {'action': action},
         ),
       ),
       (items) {
         loggerInfo("items for Cart ${items.map((e) => e.toJson())}");
         emit(
           state.copyWith(
-            status: Status.success,
+            status: carryFailure == null ? Status.success : Status.failure,
+            failure: carryFailure,
+            errorMessage: carryFailure?.message,
             items: items,
-            metadata: {'action': 'fetch'},
+            metadata: {'action': action},
           ),
         );
       },
     );
   }
 
-  Future<void> _onUpdateQuantity(
-    UpdateQuantity event,
+  Future<void> _onIncrementItem(
+    IncrementItem event,
     Emitter<BaseState<CartItemModel>> emit,
   ) async {
-    final currentItems = state.items;
-    final index = currentItems.indexWhere(
-      (item) => item.productID == event.productId,
+    emit(
+      state.copyWith(
+        status: Status.loading,
+        metadata: {'action': 'increment', 'productId': event.productId},
+      ),
     );
-    if (index >= 0) {
-      final newQuantity = event.newQuantity.clamp(0, 100);
+
+    final result = await _cartDataSource.addToCart(
+      AddToCartRequest(
+        customerID: _userSessionCache.getUser()?.customerId ?? 0,
+        productID: event.productId,
+        productBarcode: event.barCode,
+      ),
+    );
+
+    final failure = result.fold((f) => f, (_) => null);
+    if (failure != null) {
       emit(
         state.copyWith(
-          status: Status.loading,
-          metadata: {'action': 'update', 'productId': event.productId},
+          status: Status.failure,
+          failure: failure,
+          errorMessage: failure.message,
+          metadata: {'action': 'increment', 'productId': event.productId},
         ),
       );
-
-      if (newQuantity == 0) {
-        final result = await _deleteCartDataSource.deleteCartItem(
-          event.productId,
-          event.barCode,
-        );
-        result.fold(
-          (failure) => emit(
-            state.copyWith(
-              status: Status.failure,
-              failure: failure,
-              errorMessage: failure.message,
-              metadata: {'action': 'update', 'productId': event.productId},
-            ),
-          ),
-          (_) => emit(
-            state.copyWith(
-              status: Status.success,
-              items: currentItems
-                  .where((item) => item.productID != event.productId)
-                  .toList(),
-              metadata: {'action': 'update', 'productId': event.productId},
-            ),
-          ),
-        );
-      } else {
-        final updatedItems = List<CartItemModel>.from(currentItems);
-        updatedItems[index] = updatedItems[index].copyWith(
-          salesQuantity: newQuantity,
-        );
-        emit(
-          state.copyWith(
-            status: Status.success,
-            items: updatedItems,
-            metadata: {'action': 'update', 'productId': event.productId},
-          ),
-        );
-      }
+      return;
     }
+
+    await _refetch(emit, action: 'increment');
   }
 
   Future<void> _onDeleteCartItem(
@@ -122,49 +116,20 @@ class CartBloc extends Bloc<CartEvent, BaseState<CartItemModel>> {
       event.barCode,
     );
 
-    result.fold(
-      (failure) => emit(
+    final failure = result.fold((f) => f, (_) => null);
+    if (failure != null) {
+      emit(
         state.copyWith(
           status: Status.failure,
           failure: failure,
           errorMessage: failure.message,
           metadata: {'action': 'delete', 'productId': event.productId},
         ),
-      ),
-      (_) {
-        final currentItems = state.items;
-        final index = currentItems.indexWhere(
-          (item) => item.productID == event.productId,
-        );
-        if (index >= 0) {
-          final currentQuantity = currentItems[index].salesQuantity;
-          final newQuantity = (currentQuantity - 1).clamp(0, 100);
-          if (newQuantity == 0) {
-            emit(
-              state.copyWith(
-                status: Status.success,
-                items: currentItems
-                    .where((item) => item.productID != event.productId)
-                    .toList(),
-                metadata: {'action': 'delete', 'productId': event.productId},
-              ),
-            );
-          } else {
-            final updatedItems = List<CartItemModel>.from(currentItems);
-            updatedItems[index] = updatedItems[index].copyWith(
-              salesQuantity: newQuantity,
-            );
-            emit(
-              state.copyWith(
-                status: Status.success,
-                items: updatedItems,
-                metadata: {'action': 'delete', 'productId': event.productId},
-              ),
-            );
-          }
-        }
-      },
-    );
+      );
+      return;
+    }
+
+    await _refetch(emit, action: 'delete');
   }
 
   Future<void> _onClearCart(
@@ -188,38 +153,6 @@ class CartBloc extends Bloc<CartEvent, BaseState<CartItemModel>> {
       }
     }
 
-    if (lastFailure == null) {
-      emit(
-        state.copyWith(
-          status: Status.success,
-          items: const [],
-          metadata: {'action': 'clear'},
-        ),
-      );
-      return;
-    }
-
-    // Some units may not have been removed — refetch instead of guessing
-    // at the resulting quantities so local state can't drift from the server.
-    final refetch = await _cartDataSource.getCartItems();
-    refetch.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: Status.failure,
-          failure: failure,
-          errorMessage: failure.message,
-          metadata: {'action': 'clear'},
-        ),
-      ),
-      (items) => emit(
-        state.copyWith(
-          status: Status.failure,
-          failure: lastFailure,
-          errorMessage: lastFailure?.message,
-          items: items,
-          metadata: {'action': 'clear'},
-        ),
-      ),
-    );
+    await _refetch(emit, action: 'clear', carryFailure: lastFailure);
   }
 }

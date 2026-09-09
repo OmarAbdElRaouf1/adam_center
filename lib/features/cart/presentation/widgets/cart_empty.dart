@@ -18,26 +18,37 @@ class CartEmpty extends StatelessWidget {
 
               Expanded(
                 child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/cart_empty.svg',
-                        width: context.screenWidth * 0.6,
-                        height: context.screenHeight * 0.4,
-                      ),
-
-                      Gap(20.h),
-                      Text(
-                        'سلتك فارغة',
-                        textAlign: TextAlign.center,
-                        style: AppTextTheme.heading1.copyWith(
-                          color: AppColors.primaryColor,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeOutBack,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value.clamp(0.0, 1.0),
+                        child: Transform.scale(scale: value, child: child),
+                      );
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/cart_empty.svg',
+                          width: context.screenWidth * 0.6,
+                          height: context.screenHeight * 0.4,
                         ),
-                      ),
-                    ],
+
+                        Gap(20.h),
+                        Text(
+                          'سلتك فارغة',
+                          textAlign: TextAlign.center,
+                          style: AppTextTheme.heading1.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

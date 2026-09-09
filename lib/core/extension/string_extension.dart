@@ -1,8 +1,9 @@
 extension IntParser on String {
   int toInt() {
-    return int.tryParse(this)??0;
+    return int.tryParse(this) ?? 0;
   }
+
   double toDouble() {
-    return double.tryParse(this)??0.0;
+    return double.tryParse(this) ?? 0.0;
   }
 }

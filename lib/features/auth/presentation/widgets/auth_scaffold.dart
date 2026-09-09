@@ -38,12 +38,7 @@ class AuthScaffold extends StatelessWidget {
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
-                  children: [
-                    header,
-                    Gap(28.h),
-                    formCard,
-                    Gap(24.h),
-                  ],
+                  children: [header, Gap(28.h), formCard, Gap(24.h)],
                 ),
               ),
             ),

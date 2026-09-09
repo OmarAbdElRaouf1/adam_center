@@ -25,6 +25,7 @@ class EndPoints {
   static String getOrdersDetails = "Order/GetOrderProductsByCustomerID";
 
   static String searchProducts = "Product/SearchProducts";
+  static String searchProductByBarcode = "Product/SearchProductByBarcode";
 
   static const String addNewAddress = "Customer/AddCustomerAddress";
   static const String addFavorite = "Customer/AddCustomerProduct";

@@ -15,23 +15,6 @@ class CartHeader extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        // BlocBuilder<CartBloc, BaseState<CartItemModel>>(
-        //   builder: (context, state) {
-        //     if (state.items.isEmpty) return const SizedBox.shrink();
-        //     return TextButton.icon(
-        //       onPressed: () => context.read<CartBloc>().add(const ClearCart()),
-        //       icon: Icon(
-        //         Icons.delete_outline,
-        //         color: AppColors.red,
-        //         size: 18.sp,
-        //       ),
-        //       label: Text(
-        //         'Clear Cart'.tr(),
-        //         style: AppTextTheme.body2.copyWith(color: AppColors.red),
-        //       ),
-        //     );
-        //   },
-        // ),
       ],
     );
   }

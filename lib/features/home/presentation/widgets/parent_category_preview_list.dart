@@ -4,6 +4,7 @@ import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/shimmer_skeletons.dart';
 import 'package:the_one_test/features/category_products/data/models/category_model.dart';
 import 'package:the_one_test/features/category_products/presentation/manager/category_bloc/category_bloc.dart';
+import 'package:the_one_test/features/category_products/presentation/manager/category_selection_cubit/category_selection_cubit.dart';
 import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:the_one_test/features/home/presentation/widgets/categories_grid_view_item.dart';
 
@@ -18,7 +19,7 @@ class ParentCategoryPreviewList extends StatelessWidget {
 
         if (state.isLoading) {
           return SizedBox(
-            height: 150.h,
+            height: context.screenHeight * 0.15,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               physics: const NeverScrollableScrollPhysics(),
@@ -34,7 +35,7 @@ class ParentCategoryPreviewList extends StatelessWidget {
         }
 
         return SizedBox(
-          height: 150.h,
+          height: context.screenHeight * 0.15,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -50,6 +51,7 @@ class ParentCategoryPreviewList extends StatelessWidget {
                   title: category.title,
                   image: category.image,
                   onTap: () {
+                    getIt<CategorySelectionCubit>().select(category.id);
                     context.read<NavBarCubit>().changeIndex(1);
                   },
                 ),

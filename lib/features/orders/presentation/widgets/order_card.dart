@@ -41,10 +41,7 @@ class OrderCard extends StatelessWidget {
           Gap(6.h),
           Text(
             '${'Order Date'.tr()} ${context.localizeDigits(order.date)}',
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: onSurface,
-            ),
+            style: TextStyle(fontSize: 12.sp, color: onSurface),
           ),
           Gap(10.h),
           Text(

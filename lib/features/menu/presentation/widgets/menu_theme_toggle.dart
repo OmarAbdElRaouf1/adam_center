@@ -40,12 +40,18 @@ class MenuThemeToggle extends StatelessWidget {
                     ),
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
-                      transitionBuilder: (child, animation) => RotationTransition(
-                        turns: animation,
-                        child: FadeTransition(opacity: animation, child: child),
-                      ),
+                      transitionBuilder: (child, animation) =>
+                          RotationTransition(
+                            turns: animation,
+                            child: FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
+                          ),
                       child: Icon(
-                        isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                        isDark
+                            ? Icons.dark_mode_rounded
+                            : Icons.light_mode_rounded,
                         key: ValueKey(isDark),
                         color: Colors.white,
                         size: 22.sp,
@@ -56,7 +62,10 @@ class MenuThemeToggle extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Dark Mode'.tr(),
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   Switch.adaptive(

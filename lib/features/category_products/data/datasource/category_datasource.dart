@@ -2,7 +2,7 @@ import 'package:the_one_test/core/constant/end_points.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/category_products/data/models/category_model.dart';
 
-abstract class CategoryDatasource {
+abstract interface class CategoryDatasource {
   Future<Either<Failure, List<ParentCategoryModel>>> getMainCategories();
   Future<Either<Failure, List<SubCategoryModel>>> getSubCategories(
     int parentId,
@@ -10,12 +10,12 @@ abstract class CategoryDatasource {
 }
 
 class CategoryDatasourceImpl implements CategoryDatasource {
-  final GenericDataSource genericDataSource;
-  CategoryDatasourceImpl(this.genericDataSource);
+  final GenericDataSource _genericDataSource;
+  CategoryDatasourceImpl(this._genericDataSource);
 
   @override
   Future<Either<Failure, List<ParentCategoryModel>>> getMainCategories() {
-    return genericDataSource.fetchData<ParentCategoryModel>(
+    return _genericDataSource.fetchData<ParentCategoryModel>(
       endpoint: EndPoints.getMainCategory,
       fromJson: ParentCategoryModel.fromJson,
     );
@@ -25,7 +25,7 @@ class CategoryDatasourceImpl implements CategoryDatasource {
   Future<Either<Failure, List<SubCategoryModel>>> getSubCategories(
     int parentId,
   ) {
-    return genericDataSource.fetchData<SubCategoryModel>(
+    return _genericDataSource.fetchData<SubCategoryModel>(
       endpoint: EndPoints.getSubCategory,
       queryParameters: {'Parent': parentId},
       fromJson: SubCategoryModel.fromJson,

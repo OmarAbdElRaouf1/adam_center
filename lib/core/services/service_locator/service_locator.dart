@@ -12,6 +12,7 @@ import 'package:the_one_test/core/services/service_locator/category/category_ser
 import 'package:the_one_test/core/services/service_locator/checkout/checkout_service_locator.dart';
 import 'package:the_one_test/core/services/service_locator/favorites/favorite_service_locator.dart';
 import 'package:the_one_test/core/services/service_locator/home/home_service_locator.dart';
+import 'package:the_one_test/core/services/service_locator/menu/menu_service_locator.dart';
 import 'package:the_one_test/core/services/service_locator/orders/orders_service_locator.dart';
 import '../../constant/end_points.dart';
 import '../../helper/connectivity_service.dart';
@@ -83,4 +84,5 @@ Future<void> setup() async {
   await FavoriteServiceLocator.init(getIt: getIt);
   await OrdersServiceLocator.init(getIt: getIt);
   await AccountServiceLocator.init(getIt: getIt);
+  await MenuServiceLocator.init(getIt: getIt);
 }

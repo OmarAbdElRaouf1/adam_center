@@ -11,6 +11,10 @@ class ProductDescriptionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SeeMoreWidget asserts its text is non-empty and crashes otherwise —
+    // some products genuinely have no description from the backend.
+    if (description.trim().isEmpty) return const SizedBox.shrink();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

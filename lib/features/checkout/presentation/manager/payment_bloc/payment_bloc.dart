@@ -4,6 +4,8 @@ import 'package:the_one_test/features/checkout/data/datasource/place_order_datas
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/payment_methods_section.dart';
 
+part 'payment_event.dart';
+
 class PaymentState extends Equatable {
   const PaymentState({
     required this.subtotal,
@@ -70,12 +72,12 @@ class PaymentState extends Equatable {
   ];
 }
 
-class PaymentCubit extends Cubit<PaymentState> {
+class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   static const double _deliveryFee = 25;
 
   final PlaceOrderDatasource _placeOrderDatasource;
 
-  PaymentCubit(
+  PaymentBloc(
     this._placeOrderDatasource, {
     required double subtotal,
     required DeliveryInfoModel deliveryInfo,
@@ -85,13 +87,24 @@ class PaymentCubit extends Cubit<PaymentState> {
            deliveryFee: _deliveryFee,
            deliveryInfo: deliveryInfo,
          ),
-       );
+       ) {
+    on<SelectPaymentMethod>(_onSelectPaymentMethod);
+    on<ApplyDiscountCode>(_onApplyDiscountCode);
+    on<PlaceOrder>(_onPlaceOrder);
+  }
 
-  void selectMethod(PaymentMethod method) =>
-      emit(state.copyWith(selectedMethod: method));
+  void _onSelectPaymentMethod(
+    SelectPaymentMethod event,
+    Emitter<PaymentState> emit,
+  ) {
+    emit(state.copyWith(selectedMethod: event.method));
+  }
 
-  void applyDiscountCode(String code) {
-    if (code.trim().isEmpty) {
+  void _onApplyDiscountCode(
+    ApplyDiscountCode event,
+    Emitter<PaymentState> emit,
+  ) {
+    if (event.code.trim().isEmpty) {
       emit(
         state.copyWith(
           discountCodeValid: false,
@@ -109,7 +122,10 @@ class PaymentCubit extends Cubit<PaymentState> {
     );
   }
 
-  Future<void> placeOrder() async {
+  Future<void> _onPlaceOrder(
+    PlaceOrder event,
+    Emitter<PaymentState> emit,
+  ) async {
     emit(state.copyWith(isPlacingOrder: true));
     final result = await _placeOrderDatasource.placeOrder(
       deliveryInfo: state.deliveryInfo,

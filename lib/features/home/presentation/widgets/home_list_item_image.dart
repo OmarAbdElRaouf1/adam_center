@@ -1,4 +1,5 @@
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/features/cart/presentation/widgets/add_to_cart_control.dart';
 import 'package:the_one_test/features/favorites/presentation/widgets/favorite_toggle_button.dart';
 
 class HomeListItemImage extends StatelessWidget {
@@ -6,15 +7,15 @@ class HomeListItemImage extends StatelessWidget {
     super.key,
     required this.image,
     required this.productId,
+    required this.barCode,
     required this.isFavorite,
-    this.onAddTap,
     this.onTap,
   });
 
   final String image;
   final int productId;
+  final String barCode;
   final bool isFavorite;
-  final VoidCallback? onAddTap;
   final VoidCallback? onTap;
 
   @override
@@ -60,19 +61,7 @@ class HomeListItemImage extends StatelessWidget {
         Positioned(
           bottom: 2,
           left: 12,
-          child: GestureDetector(
-            onTap: onAddTap,
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                boxShadow: AppShadows.card(context),
-              ),
-              child: const Icon(Icons.add, color: Colors.white, size: 19),
-            ),
-          ),
+          child: AddToCartControl(productId: productId, barCode: barCode),
         ),
       ],
     );

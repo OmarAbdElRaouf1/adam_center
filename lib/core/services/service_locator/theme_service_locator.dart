@@ -4,6 +4,10 @@ import '../../bloc/theme_bloc/theme_bloc.dart';
 
 class ThemeServiceLocator {
   static Future<void> init({required GetIt getIt}) async {
-    getIt.registerFactory(() => ThemeBloc(themeCache: getIt<HiveServiceImpl>())..add(const ThemeLoaded()));
+    getIt.registerFactory(
+      () =>
+          ThemeBloc(themeCache: getIt<HiveServiceImpl>())
+            ..add(const ThemeLoaded()),
+    );
   }
 }

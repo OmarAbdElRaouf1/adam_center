@@ -19,6 +19,8 @@ class OrdersDatasourceImpl implements OrdersDatasource {
     return _genericDataSource.fetchData<OrderModel>(
       endpoint: EndPoints.getPreviousOrders,
       queryParameters: {
+        // Intentionally CustomerID only (no CustomerPhone) — not the same
+        // shape as UserModel.identityParams, do not consolidate.
         if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
       },
       fromJson: OrderModel.fromJson,

@@ -3,7 +3,6 @@ import 'package:the_one_test/core/datasource/generic_data_source.dart';
 import 'package:the_one_test/core/http/either.dart';
 import 'package:the_one_test/core/http/failure.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
-import 'package:the_one_test/core/services/service_locator/service_locator.dart';
 
 abstract interface class DeleteCartDataSource {
   Future<Either<Failure, void>> deleteCartItem(int productId, String barCode);
@@ -11,15 +10,19 @@ abstract interface class DeleteCartDataSource {
 
 class DeleteCartDataSourceImpl implements DeleteCartDataSource {
   final GenericDataSource _genericDataSource;
+  final UserSessionCache _userSessionDatasource;
 
-  DeleteCartDataSourceImpl(this._genericDataSource);
+  DeleteCartDataSourceImpl(
+    this._genericDataSource,
+    this._userSessionDatasource,
+  );
 
   @override
   Future<Either<Failure, void>> deleteCartItem(
     int productId,
     String barCode,
   ) async {
-    final customerId = getIt<UserSessionCache>().getUser()?.customerId;
+    final customerId = _userSessionDatasource.getUser()?.customerId;
     final queryParameters = {
       'CustomerID': customerId.toString(),
       'ProductID': productId.toString(),
@@ -30,16 +33,6 @@ class DeleteCartDataSourceImpl implements DeleteCartDataSource {
       endpoint: EndPoints.deleteOneItemFromBasket,
       queryParameters: queryParameters,
     );
-    return result.fold((failure) => Left(failure), (response) {
-      try {
-        return const Right(null); // Success, return void
-      } catch (e) {
-        return Left(
-          ParsingFailure(
-            message: 'Failed to delete basket item: ${e.toString()}',
-          ),
-        );
-      }
-    });
+    return result.fold((failure) => Left(failure), (_) => const Right(null));
   }
 }

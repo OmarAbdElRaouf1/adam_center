@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'cart_bloc.dart';
 
 abstract class CartEvent extends Equatable {
   const CartEvent();
@@ -14,15 +14,17 @@ class FetchCartItems extends CartEvent {
   List<Object?> get props => [];
 }
 
-class UpdateQuantity extends CartEvent {
+// Adds one unit of the product — works whether it's already in the cart
+// (increments) or not (adds it as a new item), since both are the same
+// "add one unit" call to the server.
+class IncrementItem extends CartEvent {
   final int productId;
-  final int newQuantity;
   final String barCode;
 
-  const UpdateQuantity(this.productId, this.newQuantity, this.barCode);
+  const IncrementItem(this.productId, this.barCode);
 
   @override
-  List<Object?> get props => [productId, newQuantity, barCode];
+  List<Object?> get props => [productId, barCode];
 }
 
 class DeleteCartItem extends CartEvent {

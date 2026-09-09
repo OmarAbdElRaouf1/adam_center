@@ -2,7 +2,6 @@ import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
 import 'package:the_one_test/features/cart/data/datasource/add_to_cart_datasource.dart';
 import 'package:the_one_test/features/cart/data/datasource/delete_cart_datasource.dart';
-import 'package:the_one_test/features/cart/presentation/manager/add_to_cart_bloc/add_to_cart_bloc.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
 
 class CartServiceLocator {
@@ -15,19 +14,20 @@ class CartServiceLocator {
     );
 
     getIt.registerLazySingleton<DeleteCartDataSource>(
-      () => DeleteCartDataSourceImpl(getIt<GenericDataSource>()),
+      () => DeleteCartDataSourceImpl(
+        getIt<GenericDataSource>(),
+        getIt<UserSessionCache>(),
+      ),
     );
 
-    getIt.registerFactory<AddToCartBloc>(
-      () => AddToCartBloc(addToCartDataSource: getIt<AddToCartDataSource>()),
-    );
-
-    // Singleton (not factory): both the Cart tab and Home's top-bar item
-    // count need to observe the exact same cart state.
+    // Singleton (not factory): every "add to cart" control across the app
+    // (Home, Category, Favorites, Product Details, the Cart tab itself, and
+    // Home's top-bar item count) needs to observe the exact same cart state.
     getIt.registerLazySingleton<CartBloc>(
       () => CartBloc(
         cartDataSource: getIt<AddToCartDataSource>(),
         deleteCartDataSource: getIt<DeleteCartDataSource>(),
+        userSessionCache: getIt<UserSessionCache>(),
       ),
     );
   }

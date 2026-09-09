@@ -43,6 +43,8 @@ class UserSessionCacheImpl implements UserSessionCache {
 
   @override
   bool isLoggedIn() {
-    return prefs.getBool(_isLoggedInKey) ?? false;
+    if (!(prefs.getBool(_isLoggedInKey) ?? false)) return false;
+    final user = getUser();
+    return user != null && user.customerId != 0;
   }
 }

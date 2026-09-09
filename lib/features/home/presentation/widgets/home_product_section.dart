@@ -39,10 +39,10 @@ class HomeProductSection extends StatelessWidget {
         ),
         Gap(gap.h),
         if (isLoading)
-          ProductListShimmer(height: 270.h)
+          ProductListShimmer(height: context.screenHeight * 0.27)
         else if (products == null || products!.isEmpty)
           SizedBox(
-            height: 270,
+            height: context.screenHeight * 0.3,
             child: EmptyStateWidget(message: 'No products yet'.tr()),
           )
         else

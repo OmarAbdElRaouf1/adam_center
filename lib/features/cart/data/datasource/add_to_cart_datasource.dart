@@ -3,6 +3,7 @@ import 'package:the_one_test/core/datasource/generic_data_source.dart';
 import 'package:the_one_test/core/http/either.dart';
 import 'package:the_one_test/core/http/failure.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
+import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/cart/data/models/add_to_cart_model.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 
@@ -25,17 +26,7 @@ class AddToCartDataSourceImpl implements AddToCartDataSource {
       endpoint: EndPoints.addToBasket,
       data: request.toJson(),
     );
-    return result.fold((failure) => Left(failure), (response) {
-      try {
-        return const Right(null); // Success, return void
-      } catch (e) {
-        return Left(
-          ParsingFailure(
-            message: 'Failed to process add to Cart response: ${e.toString()}',
-          ),
-        );
-      }
-    });
+    return result.fold((failure) => Left(failure), (_) => const Right(null));
   }
 
   @override
@@ -43,10 +34,7 @@ class AddToCartDataSourceImpl implements AddToCartDataSource {
     final user = _userSessionDatasource.getUser();
     return _genericDataSource.fetchData<CartItemModel>(
       endpoint: EndPoints.getCustomerBasket,
-      queryParameters: {
-        if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
-        if (user != null) 'CustomerPhone': user.customerPhone,
-      },
+      queryParameters: UserModel.identityParams(user),
       fromJson: CartItemModel.fromJson,
     );
   }

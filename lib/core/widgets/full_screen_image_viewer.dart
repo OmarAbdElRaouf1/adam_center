@@ -38,10 +38,7 @@ class FullScreenImageViewer extends StatelessWidget {
               child: Center(
                 child: Hero(
                   tag: heroTag,
-                  child: FlexibleImage(
-                    source: source,
-                    fit: BoxFit.contain,
-                  ),
+                  child: FlexibleImage(source: source, fit: BoxFit.contain),
                 ),
               ),
             ),

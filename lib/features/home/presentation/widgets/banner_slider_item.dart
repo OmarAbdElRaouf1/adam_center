@@ -11,7 +11,8 @@ class BannerSliderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final title = banner['title'];
     final subtitle = banner['subtitle'];
-    final hasText = (title?.isNotEmpty ?? false) || (subtitle?.isNotEmpty ?? false);
+    final hasText =
+        (title?.isNotEmpty ?? false) || (subtitle?.isNotEmpty ?? false);
 
     return Container(
       width: double.infinity,

@@ -1,6 +1,5 @@
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/shimmer_skeletons.dart';
-import 'package:the_one_test/features/home/data/datasource/banner_datasource.dart';
 import 'package:the_one_test/features/home/data/models/banner_model.dart';
 import 'package:the_one_test/features/home/presentation/manager/banner_bloc/banner_bloc.dart';
 import 'package:the_one_test/features/home/presentation/widgets/banner_slider.dart';
@@ -14,8 +13,7 @@ class FetchedBannerSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          BannerBloc(getIt<BannerDatasource>(), endpoint)
-            ..add(const GetBannerEvent()),
+          getIt<BannerBloc>(param1: endpoint)..add(const GetBannerEvent()),
       child: BlocBuilder<BannerBloc, BaseState<BannerModel>>(
         builder: (context, state) {
           if (state.isLoading) {

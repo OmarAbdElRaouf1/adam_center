@@ -345,6 +345,14 @@ class UserModel extends Equatable {
     };
   }
 
+  // Shared request-payload fragment for endpoints that identify the caller
+  // by customer id + phone — spread into a request's `data`/`queryParameters`
+  // map, e.g. `...UserModel.identityParams(user)`.
+  static Map<String, dynamic> identityParams(UserModel? user) => {
+    if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
+    if (user != null) 'CustomerPhone': user.customerPhone,
+  };
+
   @override
   List<Object?> get props => [
     customerId,

@@ -28,8 +28,7 @@ class OrdersBloc extends Bloc<OrdersEvent, BaseState<OrderModel>> {
           errorMessage: failure.message,
         ),
       ),
-      (orders) =>
-          emit(state.copyWith(status: Status.success, items: orders)),
+      (orders) => emit(state.copyWith(status: Status.success, items: orders)),
     );
   }
 }

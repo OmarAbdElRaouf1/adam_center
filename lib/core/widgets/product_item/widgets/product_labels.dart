@@ -46,12 +46,7 @@ class _RibbonClipper extends CustomClipper<Path> {
       ..moveTo(0, 0)
       ..lineTo(size.width, 0)
       ..lineTo(size.width, size.height)
-      ..quadraticBezierTo(
-        size.width * 0.3,
-        size.height,
-        0,
-        size.height * 0.55,
-      )
+      ..quadraticBezierTo(size.width * 0.3, size.height, 0, size.height * 0.55)
       ..close();
   }
 

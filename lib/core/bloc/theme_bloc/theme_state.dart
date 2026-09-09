@@ -6,9 +6,7 @@ class ThemeState extends Equatable {
   const ThemeState({this.themeMode = ThemeMode.system});
 
   ThemeState copyWith({ThemeMode? themeMode}) {
-    return ThemeState(
-      themeMode: themeMode ?? this.themeMode,
-    );
+    return ThemeState(themeMode: themeMode ?? this.themeMode);
   }
 
   @override

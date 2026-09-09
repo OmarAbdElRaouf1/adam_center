@@ -4,20 +4,31 @@ import 'package:the_one_test/core/helper/helper.dart' hide CustomTextFormField;
 import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
 import 'package:the_one_test/core/widgets/widgets/custom_text_field.dart';
 import 'package:the_one_test/core/widgets/widgets/validators.dart';
-import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/auth/data/models/district_model.dart';
 import 'package:the_one_test/features/auth/data/models/governorate_model.dart';
 import 'package:the_one_test/features/auth/presentation/widgets/location_dropdowns.dart';
-import 'package:the_one_test/features/checkout/data/datasource/add_address_datasource.dart';
+import 'package:the_one_test/features/checkout/presentation/manager/add_address_bloc/add_address_bloc.dart';
 
-class AddAddressView extends StatefulWidget {
+class AddAddressView extends StatelessWidget {
   const AddAddressView({super.key});
 
   @override
-  State<AddAddressView> createState() => _AddAddressViewState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<AddAddressBloc>(),
+      child: const _AddAddressForm(),
+    );
+  }
 }
 
-class _AddAddressViewState extends State<AddAddressView> {
+class _AddAddressForm extends StatefulWidget {
+  const _AddAddressForm();
+
+  @override
+  State<_AddAddressForm> createState() => _AddAddressFormState();
+}
+
+class _AddAddressFormState extends State<_AddAddressForm> {
   final _formKey = GlobalKey<FormState>();
   final streetController = TextEditingController();
   final houseController = TextEditingController();
@@ -28,7 +39,6 @@ class _AddAddressViewState extends State<AddAddressView> {
 
   GovernorateModel? _governorate;
   DistrictModel? _district;
-  bool _isSaving = false;
 
   @override
   void dispose() {
@@ -41,14 +51,12 @@ class _AddAddressViewState extends State<AddAddressView> {
     super.dispose();
   }
 
-  Future<void> _save() async {
+  void _save() {
     if (!_formKey.currentState!.validate()) return;
     if (_governorate == null || _district == null) {
       context.showErrorMessage('Please select governorate and district'.tr());
       return;
     }
-
-    setState(() => _isSaving = true);
 
     final fullAddress =
         '${'Governorate'.tr()}: ${_governorate!.name}  '
@@ -56,131 +64,106 @@ class _AddAddressViewState extends State<AddAddressView> {
         '${'Street'.tr()}: ${streetController.text}  '
         '${'House'.tr()}: ${houseController.text}';
 
-    final result = await getIt<AddAddressDatasource>().addAddress(
-      governorateId: _governorate!.id,
-      areaId: _district!.id,
-      districtName: _district!.name,
-      street: streetController.text,
-      houseNumber: houseController.text,
-      block: blockController.text.isEmpty ? null : blockController.text,
-      floor: floorController.text.isEmpty ? null : floorController.text,
-      apartment: apartmentController.text.isEmpty
-          ? null
-          : apartmentController.text,
-      notes: notesController.text.isEmpty ? null : notesController.text,
-      fullAddress: fullAddress,
-      isMainAddress: true,
+    context.read<AddAddressBloc>().add(
+      SaveAddress(
+        governorateId: _governorate!.id,
+        areaId: _district!.id,
+        districtName: _district!.name,
+        street: streetController.text,
+        houseNumber: houseController.text,
+        block: blockController.text.isEmpty ? null : blockController.text,
+        floor: floorController.text.isEmpty ? null : floorController.text,
+        apartment: apartmentController.text.isEmpty
+            ? null
+            : apartmentController.text,
+        notes: notesController.text.isEmpty ? null : notesController.text,
+        fullAddress: fullAddress,
+      ),
     );
-
-    if (!mounted) return;
-    setState(() => _isSaving = false);
-
-    if (!result.isSuccess) {
-      context.showErrorMessage(result.throwError().message);
-      return;
-    }
-
-    // Re-fetch the address from the server rather than trusting what was
-    // just sent, so the cached value matches what the backend actually
-    // stored (e.g. any normalization it applies) instead of a client-side
-    // reconstruction.
-    final addressResult = await getIt<AddAddressDatasource>().getMainAddress();
-    final address = addressResult.fold((_) => null, (address) => address);
-
-    if (address != null) {
-      final accountCubit = getIt<AccountCubit>();
-      final currentUser = accountCubit.state;
-      if (currentUser != null) {
-        await accountCubit.updateUser(
-          currentUser.copyWith(
-            regionId: address['region_id'] as int?,
-            regionName: address['RegionName'] as String?,
-            districtName: address['DistrictName'] as String?,
-            streetName: address['StreetName'] as String?,
-            houseNo: address['HouseNo'] as String?,
-            block: address['Block'] as String?,
-            floor: address['Floor'] as String?,
-            apartment: address['Apartment'] as String?,
-            addressNotes: address['AddressNotes'] as String?,
-            customerAddress: address['CustomerAddress'] as String?,
-            addressId: address['AddressID']?.toString(),
-          ),
-        );
-      }
-    }
-
-    if (!mounted) return;
-    context.showSuccessMessage('Address added'.tr());
-    Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(titleText: 'Add Address'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LocationDropdowns(
-                  onSelectionChanged: (governorate, district) {
-                    setState(() {
-                      _governorate = governorate;
-                      _district = district;
-                    });
-                  },
-                ),
-                Gap(16.h),
-                CustomTextFormField(
-                  hintText: 'Street'.tr(),
-                  controller: streetController,
-                  validator: Validators.validateEmpty,
-                  borderColor: AppColors.primaryColor,
-                ),
-                Gap(16.h),
-                CustomTextFormField(
-                  hintText: 'House Number'.tr(),
-                  controller: houseController,
-                  validator: Validators.validateEmpty,
-                  borderColor: AppColors.primaryColor,
-                ),
-                Gap(16.h),
-                CustomTextFormField(
-                  hintText: 'Block'.tr(),
-                  controller: blockController,
-                  borderColor: AppColors.primaryColor,
-                ),
-                Gap(16.h),
-                CustomTextFormField(
-                  hintText: 'Floor'.tr(),
-                  controller: floorController,
-                  borderColor: AppColors.primaryColor,
-                ),
-                Gap(16.h),
-                CustomTextFormField(
-                  hintText: 'Apartment'.tr(),
-                  controller: apartmentController,
-                  borderColor: AppColors.primaryColor,
-                ),
-                Gap(16.h),
-                CustomTextFormField(
-                  hintText: 'Notes'.tr(),
-                  controller: notesController,
-                  borderColor: AppColors.primaryColor,
-                ),
-                Gap(28.h),
-                CustomElevatedButton.filled(
-                  context: context,
-                  title: _isSaving ? '...'.tr() : 'Save Address'.tr(),
-                  backgroundColor: AppColors.primaryColor,
-                  borderRadius: AppRadius.pill,
-                  onPressed: _isSaving ? () {} : _save,
-                ),
-              ],
+    return BlocListener<AddAddressBloc, BaseState<void>>(
+      listener: (context, state) {
+        if (state.isSuccess) {
+          context.showSuccessMessage('Address added'.tr());
+          Navigator.pop(context, true);
+        } else if (state.isFailure) {
+          context.showErrorMessage(state.errorMessage ?? '');
+        }
+      },
+      child: Scaffold(
+        appBar: const CustomAppBar(titleText: 'Add Address'),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LocationDropdowns(
+                    onSelectionChanged: (governorate, district) {
+                      setState(() {
+                        _governorate = governorate;
+                        _district = district;
+                      });
+                    },
+                  ),
+                  Gap(16.h),
+                  CustomTextFormField(
+                    hintText: 'Street'.tr(),
+                    controller: streetController,
+                    validator: Validators.validateEmpty,
+                    borderColor: AppColors.primaryColor,
+                  ),
+                  Gap(16.h),
+                  CustomTextFormField(
+                    hintText: 'House Number'.tr(),
+                    controller: houseController,
+                    validator: Validators.validateEmpty,
+                    borderColor: AppColors.primaryColor,
+                  ),
+                  Gap(16.h),
+                  CustomTextFormField(
+                    hintText: 'Block'.tr(),
+                    controller: blockController,
+                    borderColor: AppColors.primaryColor,
+                  ),
+                  Gap(16.h),
+                  CustomTextFormField(
+                    hintText: 'Floor'.tr(),
+                    controller: floorController,
+                    borderColor: AppColors.primaryColor,
+                  ),
+                  Gap(16.h),
+                  CustomTextFormField(
+                    hintText: 'Apartment'.tr(),
+                    controller: apartmentController,
+                    borderColor: AppColors.primaryColor,
+                  ),
+                  Gap(16.h),
+                  CustomTextFormField(
+                    hintText: 'Notes'.tr(),
+                    controller: notesController,
+                    borderColor: AppColors.primaryColor,
+                  ),
+                  Gap(28.h),
+                  BlocBuilder<AddAddressBloc, BaseState<void>>(
+                    builder: (context, state) {
+                      final isSaving = state.isLoading;
+                      return CustomElevatedButton.filled(
+                        context: context,
+                        title: isSaving ? '...'.tr() : 'Save Address'.tr(),
+                        backgroundColor: AppColors.primaryColor,
+                        borderRadius: AppRadius.pill,
+                        onPressed: isSaving ? () {} : _save,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

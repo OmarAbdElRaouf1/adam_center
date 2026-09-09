@@ -2,7 +2,7 @@ import 'package:the_one_test/core/constant/end_points.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 
-abstract class SignUpDatasource {
+abstract interface class SignUpDatasource {
   Future<Either<Failure, UserModel>> signUp({
     required String phone,
     required String password,
@@ -16,8 +16,8 @@ abstract class SignUpDatasource {
 }
 
 class SignUpDatasourceImpl implements SignUpDatasource {
-  final GenericDataSource genericDataSource;
-  SignUpDatasourceImpl(this.genericDataSource);
+  final GenericDataSource _genericDataSource;
+  SignUpDatasourceImpl(this._genericDataSource);
 
   @override
   Future<Either<Failure, UserModel>> signUp({
@@ -30,7 +30,7 @@ class SignUpDatasourceImpl implements SignUpDatasource {
     String? governorateName,
     String? districtName,
   }) {
-    return genericDataSource.postData<UserModel>(
+    return _genericDataSource.postData<UserModel>(
       data: {
         "CustomerPhone": phone,
         "passWord": password,

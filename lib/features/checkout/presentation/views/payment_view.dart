@@ -2,9 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
-import 'package:the_one_test/features/checkout/data/datasource/place_order_datasource.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
-import 'package:the_one_test/features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
+import 'package:the_one_test/features/checkout/presentation/manager/payment_bloc/payment_bloc.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/discount_code_field.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/payment_methods_section.dart';
 import 'package:the_one_test/features/checkout/presentation/widgets/payment_summary.dart';
@@ -36,12 +35,11 @@ class _PaymentViewState extends State<PaymentView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => PaymentCubit(
-        getIt<PlaceOrderDatasource>(),
-        subtotal: widget.subtotal,
-        deliveryInfo: widget.deliveryInfo,
+      create: (_) => getIt<PaymentBloc>(
+        param1: widget.subtotal,
+        param2: widget.deliveryInfo,
       ),
-      child: BlocConsumer<PaymentCubit, PaymentState>(
+      child: BlocConsumer<PaymentBloc, PaymentState>(
         listenWhen: (previous, current) =>
             current.discountAttempt != previous.discountAttempt ||
             current.orderPlaced != previous.orderPlaced ||
@@ -84,15 +82,16 @@ class _PaymentViewState extends State<PaymentView> {
                   Gap(10.h),
                   DiscountCodeField(
                     controller: discountController,
-                    onActivate: () => context.read<PaymentCubit>().applyDiscountCode(
-                      discountController.text,
+                    onActivate: () => context.read<PaymentBloc>().add(
+                      ApplyDiscountCode(discountController.text),
                     ),
                   ),
                   Gap(28.h),
                   PaymentMethodsSection(
                     selected: state.selectedMethod,
-                    onSelect: (method) =>
-                        context.read<PaymentCubit>().selectMethod(method),
+                    onSelect: (method) => context.read<PaymentBloc>().add(
+                      SelectPaymentMethod(method),
+                    ),
                   ),
                   Gap(20.h),
                   PaymentSummary(
@@ -109,7 +108,9 @@ class _PaymentViewState extends State<PaymentView> {
                     context: context,
                     onPressed: state.isPlacingOrder
                         ? () {}
-                        : () => context.read<PaymentCubit>().placeOrder(),
+                        : () => context.read<PaymentBloc>().add(
+                            const PlaceOrder(),
+                          ),
                   ),
                   Gap(12.h),
                 ],

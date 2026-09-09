@@ -3,7 +3,8 @@ class AppAssets {
 
   static const String bacSplash = 'assets/images/splash_background.jpg';
   static const String appLogo = 'assets/images/app_logo.png';
-  static const String appLogoIbs = 'assets/images/logo_isssababa-removebg-preview.png';
+  static const String appLogoIbs =
+      'assets/images/logo_isssababa-removebg-preview.png';
   static const String testBanner = 'assets/images/test_baner.png';
   static const String testItem = 'assets/images/testItem.png';
   static const String category = 'assets/images/category.png';
@@ -69,7 +70,6 @@ class AppAssets {
   static const String mobileWalletIcon = 'assets/icons/mobile_wallet.svg';
   static const String fawryIcon = 'assets/icons/Fawry.svg';
   static const String appLogoIb = 'assets/images/logo_ib.png';
-
 
   // videos
   static const String dummyVideo = 'assets/videos/video.mp4';

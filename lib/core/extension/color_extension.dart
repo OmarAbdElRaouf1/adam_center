@@ -36,8 +36,8 @@ mixin HexColor on Color {
     }
   }
 
-  static Color get successColor =>  const Color(0xff054305);
+  static Color get successColor => const Color(0xff054305);
   static Color get primaryColor => const Color.fromRGBO(55, 55, 149, 1.0);
-  static Color get errorColor =>  const Color(0xffFF0000);
-  static Color get greyColor =>  const Color(0xff6B7280);
+  static Color get errorColor => const Color(0xffFF0000);
+  static Color get greyColor => const Color(0xff6B7280);
 }

@@ -12,7 +12,7 @@ class ValidationFailure extends Failure {
   final List<String> errors;
 
   ValidationFailure({required String message, required this.errors})
-      : super(message);
+    : super(message);
 }
 
 class ConnectionFailure extends Failure {
@@ -56,12 +56,9 @@ class SyncAppFailure extends Failure {
 }
 
 class VerifyOTPFailure extends Failure {
-
-
-  VerifyOTPFailure(
-      {required String message})
-      : super(message);
+  VerifyOTPFailure({required String message}) : super(message);
 }
+
 class ParsingFailure extends Failure {
   ParsingFailure({required String message}) : super(message);
 }

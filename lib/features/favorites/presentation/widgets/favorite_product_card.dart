@@ -9,12 +9,10 @@ class FavoriteProductCard extends StatelessWidget {
     super.key,
     required this.product,
     this.onDetailsTap,
-    this.onAddTap,
   });
 
   final Map<String, String> product;
   final VoidCallback? onDetailsTap;
-  final VoidCallback? onAddTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,7 @@ class FavoriteProductCard extends StatelessWidget {
           FavoriteProductImage(
             image: product['image']!,
             productId: int.tryParse(product['id'] ?? '') ?? 0,
-            onAddTap: onAddTap,
+            barCode: product['barCode'] ?? '',
           ),
         ],
       ),

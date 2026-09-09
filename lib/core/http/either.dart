@@ -25,6 +25,7 @@ class Right<L, R> extends Either<L, R> {
     return rightFn(value);
   }
 }
+
 extension EitherExtensions<L, R> on Either<L, R> {
   bool get isError => this is Left<L, R>;
 

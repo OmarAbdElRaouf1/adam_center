@@ -19,7 +19,11 @@ class FavoriteServiceLocator {
       ),
     );
 
-    getIt.registerFactory<FavoriteBloc>(
+    // Singleton (not factory): a toggle on one screen (e.g. Favorites) must
+    // be observed by every FavoriteToggleButton across the app (Home,
+    // Category, Product Details), which only works if they all share the
+    // same bloc instance.
+    getIt.registerLazySingleton<FavoriteBloc>(
       () => FavoriteBloc(getIt<FavoriteDatasource>()),
     );
   }

@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
-import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_event.dart';
 
 import 'cart_quantity_stepper.dart';
 
@@ -62,19 +61,11 @@ class CartItemCard extends StatelessWidget {
               ),
               CartQuantityStepper(
                 quantity: item.salesQuantity,
-                onIncrement: () => context.read<CartBloc>().add(
-                  UpdateQuantity(
-                    item.productID,
-                    item.salesQuantity + 1,
-                    item.barCode,
-                  ),
+                onIncrement: () => getIt<CartBloc>().add(
+                  IncrementItem(item.productID, item.barCode),
                 ),
-                onDecrement: () => context.read<CartBloc>().add(
-                  UpdateQuantity(
-                    item.productID,
-                    item.salesQuantity - 1,
-                    item.barCode,
-                  ),
+                onDecrement: () => getIt<CartBloc>().add(
+                  DeleteCartItem(item.productID, item.barCode),
                 ),
               ),
               Gap(12.w),

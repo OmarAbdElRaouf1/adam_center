@@ -11,9 +11,10 @@ class CartCheckoutBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, BaseState<CartItemModel>>(
+      bloc: getIt<CartBloc>(),
       builder: (context, state) {
         final items = state.items;
-        final subtotal = items.fold<double>(0, (sum, item) => sum + item.total);
+        final subtotal = items.subtotal;
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

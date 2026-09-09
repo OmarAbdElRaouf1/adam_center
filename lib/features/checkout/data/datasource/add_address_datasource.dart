@@ -3,6 +3,8 @@ import 'package:the_one_test/core/datasource/generic_data_source.dart';
 import 'package:the_one_test/core/http/either.dart';
 import 'package:the_one_test/core/http/failure.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
+import 'package:the_one_test/features/auth/data/models/user_model.dart';
+import 'package:the_one_test/features/checkout/data/models/address_model.dart';
 
 abstract interface class AddAddressDatasource {
   Future<Either<Failure, void>> addAddress({
@@ -24,10 +26,10 @@ abstract interface class AddAddressDatasource {
   // server (Customers/GetCustomerAddress) — used right after addAddress()
   // so the UI reflects what the backend actually stored, not a client-side
   // reconstruction of what was sent.
-  Future<Either<Failure, Map<String, dynamic>?>> getMainAddress();
+  Future<Either<Failure, AddressModel?>> getMainAddress();
 
   // All of the customer's saved addresses, for a picker/list UI.
-  Future<Either<Failure, List<Map<String, dynamic>>>> getAddresses();
+  Future<Either<Failure, List<AddressModel>>> getAddresses();
 }
 
 class AddAddressDatasourceImpl implements AddAddressDatasource {
@@ -65,8 +67,7 @@ class AddAddressDatasourceImpl implements AddAddressDatasource {
     final result = await _genericDataSource.postData<void>(
       endpoint: EndPoints.addNewAddress,
       data: {
-        if (user != null && user.customerId != 0) 'CustomerID': user.customerId,
-        if (user != null) 'CustomerPhone': user.customerPhone,
+        ...UserModel.identityParams(user),
         'region_id': governorateId,
         'place_id': areaId,
         'DistrictName': districtName,
@@ -85,27 +86,26 @@ class AddAddressDatasourceImpl implements AddAddressDatasource {
   }
 
   @override
-  Future<Either<Failure, Map<String, dynamic>?>> getMainAddress() async {
+  Future<Either<Failure, AddressModel?>> getMainAddress() async {
     final result = await getAddresses();
-    return result.fold(
-      (failure) => Left(failure),
-      (addresses) {
-        if (addresses.isEmpty) return const Right(null);
-        final main = addresses.where((a) => a['MainAddress'] == 1);
-        return Right(main.isNotEmpty ? main.first : addresses.last);
-      },
-    );
+    return result.fold((failure) => Left(failure), (addresses) {
+      if (addresses.isEmpty) return const Right(null);
+      final main = addresses.where((a) => a.isMain);
+      return Right(main.isNotEmpty ? main.first : addresses.last);
+    });
   }
 
   @override
-  Future<Either<Failure, List<Map<String, dynamic>>>> getAddresses() {
+  Future<Either<Failure, List<AddressModel>>> getAddresses() {
     final user = _userSessionDatasource.getUser();
-    return _genericDataSource.fetchData<Map<String, dynamic>>(
+    return _genericDataSource.fetchData<AddressModel>(
       endpoint: EndPoints.savedAddresses,
       queryParameters: {
+        // Intentionally CustomerPhone only (no CustomerID) — not the same
+        // shape as UserModel.identityParams, do not consolidate.
         if (user != null) 'CustomerPhone': user.customerPhone,
       },
-      fromJson: (json) => json,
+      fromJson: AddressModel.fromJson,
     );
   }
 }

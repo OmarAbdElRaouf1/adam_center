@@ -5,8 +5,7 @@ import 'package:the_one_test/features/category_products/data/models/category_mod
 
 part 'category_event.dart';
 
-class CategoryBloc
-    extends Bloc<CategoryEvent, BaseState<ParentCategoryModel>> {
+class CategoryBloc extends Bloc<CategoryEvent, BaseState<ParentCategoryModel>> {
   final CategoryDatasource categoryDatasource;
 
   CategoryBloc(this.categoryDatasource)

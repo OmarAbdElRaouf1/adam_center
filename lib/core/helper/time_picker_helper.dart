@@ -24,5 +24,6 @@ abstract interface class TimerHelper {
       fn();
     });
   }
+
   static void dispose() => _timer?.cancel();
 }

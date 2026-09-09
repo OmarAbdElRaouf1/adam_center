@@ -1,12 +1,6 @@
-
-
-
 part of "../paginated_bloc/paginated_bloc.dart";
 
-
-
-
-enum Status { initial, loading, success, failure, isLoadingMore,custom }
+enum Status { initial, loading, success, failure, isLoadingMore, custom }
 
 extension BaseStateX<T> on BaseState<T> {
   bool get isInitial => status == Status.initial;
@@ -25,6 +19,7 @@ extension BaseStateX<T> on BaseState<T> {
 
   bool get hasData => data != null;
 }
+
 class BaseState<T> extends Equatable {
   final Status status;
   final String? errorMessage;
@@ -61,7 +56,7 @@ class BaseState<T> extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       data: data ?? this.data,
       items: items ?? this.items,
-      secondaryMetadata: secondaryMetadata?? this.secondaryMetadata,
+      secondaryMetadata: secondaryMetadata ?? this.secondaryMetadata,
       metadata: metadata ?? this.metadata,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       failure: failure ?? this.failure,
@@ -69,5 +64,14 @@ class BaseState<T> extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, errorMessage, data, items, metadata,secondaryMetadata, lastUpdated,failure];
+  List<Object?> get props => [
+    status,
+    errorMessage,
+    data,
+    items,
+    metadata,
+    secondaryMetadata,
+    lastUpdated,
+    failure,
+  ];
 }

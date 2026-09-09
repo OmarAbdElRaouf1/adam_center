@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 enum OrderStatus {
@@ -33,7 +34,7 @@ enum OrderStatus {
   }
 }
 
-class OrderModel {
+class OrderModel extends Equatable {
   const OrderModel({
     required this.orderNumber,
     required this.date,
@@ -77,4 +78,14 @@ class OrderModel {
     }
     return OrderStatus.preparing;
   }
+
+  @override
+  List<Object?> get props => [
+    orderNumber,
+    date,
+    status,
+    address,
+    totalPrice,
+    isPrevious,
+  ];
 }

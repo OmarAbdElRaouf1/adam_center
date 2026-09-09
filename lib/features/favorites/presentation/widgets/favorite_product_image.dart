@@ -1,4 +1,5 @@
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/features/cart/presentation/widgets/add_to_cart_control.dart';
 
 import 'favorite_toggle_button.dart';
 
@@ -7,12 +8,12 @@ class FavoriteProductImage extends StatelessWidget {
     super.key,
     required this.image,
     required this.productId,
-    this.onAddTap,
+    required this.barCode,
   });
 
   final String image;
   final int productId;
-  final VoidCallback? onAddTap;
+  final String barCode;
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +50,10 @@ class FavoriteProductImage extends StatelessWidget {
         PositionedDirectional(
           bottom: -8,
           start: -8,
-          child: GestureDetector(
-            onTap: onAddTap,
-            child: Container(
-              width: 30.w,
-              height: 30.w,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
-              ),
-              child: Icon(Icons.add, color: Colors.white, size: 18.sp),
-            ),
+          child: AddToCartControl(
+            productId: productId,
+            barCode: barCode,
+            size: 30.w,
           ),
         ),
       ],

@@ -203,3 +203,7 @@ extension BasketItemModelExtension on CartItemModel {
     );
   }
 }
+
+extension CartItemListX on List<CartItemModel> {
+  double get subtotal => fold<double>(0, (sum, item) => sum + item.total);
+}

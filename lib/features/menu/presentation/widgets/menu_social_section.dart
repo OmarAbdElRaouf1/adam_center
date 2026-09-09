@@ -30,7 +30,11 @@ class MenuSocialSection extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 16.r,
                   backgroundColor: Theme.of(context).colorScheme.surface,
-                  child: Icon(icon, size: 16.sp, color: Theme.of(context).iconTheme.color),
+                  child: Icon(
+                    icon,
+                    size: 16.sp,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
                 ),
               ),
           ],

@@ -25,9 +25,17 @@ class CartQuantityStepper extends StatelessWidget {
           onTap: onIncrement,
         ),
         Gap(8.w),
-        Text(
-          context.localizeDigits('$quantity'),
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: (child, animation) => ScaleTransition(
+            scale: animation,
+            child: FadeTransition(opacity: animation, child: child),
+          ),
+          child: Text(
+            context.localizeDigits('$quantity'),
+            key: ValueKey(quantity),
+            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+          ),
         ),
         Gap(8.w),
         _StepperButton(
@@ -41,7 +49,7 @@ class CartQuantityStepper extends StatelessWidget {
   }
 }
 
-class _StepperButton extends StatelessWidget {
+class _StepperButton extends StatefulWidget {
   const _StepperButton({
     required this.icon,
     required this.background,
@@ -55,16 +63,38 @@ class _StepperButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
+  State<_StepperButton> createState() => _StepperButtonState();
+}
+
+class _StepperButtonState extends State<_StepperButton> {
+  bool _pressed = false;
+
+  void _setPressed(bool value) {
+    if (widget.onTap == null) return;
+    setState(() => _pressed = value);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      color: background,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.all(6.w),
-          child: Icon(icon, size: 16.sp, color: iconColor),
+    return GestureDetector(
+      onTapDown: (_) => _setPressed(true),
+      onTapUp: (_) => _setPressed(false),
+      onTapCancel: () => _setPressed(false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.85 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: Material(
+          color: widget.background,
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: widget.onTap,
+            child: Padding(
+              padding: EdgeInsets.all(6.w),
+              child: Icon(widget.icon, size: 16.sp, color: widget.iconColor),
+            ),
+          ),
         ),
       ),
     );

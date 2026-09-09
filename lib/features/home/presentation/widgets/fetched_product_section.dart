@@ -1,6 +1,7 @@
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/models/item_model.dart';
 
+import '../../../category_products/data/models/item_model_x.dart';
 import '../../../category_products/presentation/manager/product_bloc/product_bloc.dart';
 import 'home_product_section.dart';
 
@@ -28,20 +29,7 @@ class FetchedProductSection extends StatelessWidget {
             isLoading: state.isLoading,
             products: state.isLoading
                 ? null
-                : state.items
-                      .map(
-                        (item) => {
-                          'id': item.productId.toString(),
-                          'barCode': item.barCode,
-                          'isFavorite': item.isFavorite.toString(),
-                          'image': item.productImage ?? '',
-                          'name': item.productArName,
-                          'description': item.description1 ?? '',
-                          'price': item.price.toString(),
-                          'categoryId': item.categoryId ?? '',
-                        },
-                      )
-                      .toList(),
+                : state.items.map((item) => item.toProductMap()).toList(),
           );
         },
       ),

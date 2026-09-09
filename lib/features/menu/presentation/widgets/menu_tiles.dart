@@ -1,9 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-import 'package:the_one_test/core/local/user_session_datasource.dart';
 import 'package:the_one_test/core/routing/routes.dart';
 import 'package:the_one_test/core/widgets/under_construction_screen.dart';
+import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/account/presentation/views/account_view.dart';
+import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
+import 'package:the_one_test/features/menu/data/datasource/info_pages_datasource.dart';
+import 'package:the_one_test/features/menu/presentation/views/info_images_view.dart';
 import 'package:the_one_test/features/orders/presentation/views/previous_orders_view.dart';
 
 import 'menu_tile.dart';
@@ -21,7 +24,7 @@ void _toggleLanguage(BuildContext context) {
 }
 
 Future<void> _logout(BuildContext context) async {
-  await getIt<UserSessionCache>().clearUser();
+  await getIt<AccountCubit>().logout();
   if (!context.mounted) return;
   Navigator.pushNamedAndRemoveUntil(
     context,
@@ -56,7 +59,15 @@ List<MenuTile> buildMenuTiles(BuildContext context) {
     MenuTile(
       icon: Icons.groups_outlined,
       label: 'About Us'.tr(),
-      onTap: () => _openUnderConstruction(context, 'About Us'.tr()),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => InfoImagesView(
+            title: 'About Us'.tr(),
+            fetcher: () => getIt<InfoPagesDatasource>().getAboutUs(),
+          ),
+        ),
+      ),
     ),
     MenuTile(
       icon: Icons.translate,
@@ -66,7 +77,15 @@ List<MenuTile> buildMenuTiles(BuildContext context) {
     MenuTile(
       icon: Icons.privacy_tip_outlined,
       label: 'Privacy Policy'.tr(),
-      onTap: () => _openUnderConstruction(context, 'Privacy Policy'.tr()),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => InfoImagesView(
+            title: 'Privacy Policy'.tr(),
+            fetcher: () => getIt<InfoPagesDatasource>().getPrivacyPolicy(),
+          ),
+        ),
+      ),
     ),
     MenuTile(
       icon: Icons.logout,
@@ -76,7 +95,10 @@ List<MenuTile> buildMenuTiles(BuildContext context) {
     MenuTile(
       icon: Icons.location_on_outlined,
       label: 'Saved Addresses'.tr(),
-      onTap: () => _openUnderConstruction(context, 'Saved Addresses'.tr()),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ChooseAddressView()),
+      ),
     ),
   ];
 }
