@@ -33,5 +33,4 @@ const List<NavItemData> navBarItems = [
     selectedIcon: Icons.favorite,
     title: 'Favorites',
   ),
-  NavItemData(icon: Icons.menu, selectedIcon: Icons.menu, title: 'Menu'),
 ];

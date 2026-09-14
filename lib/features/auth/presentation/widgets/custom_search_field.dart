@@ -30,20 +30,31 @@ class CustomSearchField extends StatelessWidget {
       onTap: onTap,
       onChanged: onChanged,
 
+      style: TextStyle(fontSize: 13.sp),
       decoration: InputDecoration(
+        isDense: true,
         hintText: 'Search'.tr(),
         hintStyle: TextStyle(
           color: AppColors.primaryColor.withValues(alpha: 0.6),
-          fontSize: 15.sp,
+          fontSize: 13.sp,
+        ),
+        prefixIconConstraints: BoxConstraints(
+          minWidth: 36.w,
+          minHeight: 18.sp,
         ),
         prefixIcon: Icon(
           Icons.search_rounded,
           color: AppColors.primaryColor,
-          size: 22.sp,
+          size: 18.sp,
+        ),
+        suffixIconConstraints: BoxConstraints(
+          minWidth: 32.w,
+          minHeight: 18.sp,
         ),
         suffixIcon: controller?.text.isNotEmpty == true
             ? IconButton(
-                icon: const Icon(Icons.close),
+                icon: Icon(Icons.close, size: 16.sp),
+                padding: EdgeInsets.zero,
                 onPressed: onClear,
                 style: ButtonStyle(
                   foregroundColor: WidgetStateProperty.all(
@@ -52,9 +63,9 @@ class CustomSearchField extends StatelessWidget {
                 ),
               )
             : null,
-        contentPadding: EdgeInsets.symmetric(vertical: 14.h),
+        contentPadding: EdgeInsets.symmetric(vertical: 12.h),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(AppRadius.badge.r),
           borderSide: BorderSide.none,
         ),
         filled: true,

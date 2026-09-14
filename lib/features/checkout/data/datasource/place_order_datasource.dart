@@ -30,11 +30,6 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
     this._addToCartDataSource,
   );
 
-  // The backend's PayID scheme (0=Cash, 2=K-Net, 3=Visa, 4=Mastercard) has no
-  // slot for this app's Wallet/Fawry methods, so those fall back to Cash (0)
-  // until the backend defines real IDs for them.
-  int _payId(PaymentMethod method) => method == PaymentMethod.card ? 3 : 0;
-
   @override
   Future<Either<Failure, String>> placeOrder({
     required DeliveryInfoModel deliveryInfo,
@@ -146,7 +141,7 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
       'UserName': '',
       'TaxesPercent': 0.0,
       'TaxesValue': 0.0,
-      'PayID': _payId(paymentMethod),
+      'PayID': 0,
       'PayValue': total,
       'DistrictName': deliveryInfo.area ?? '',
       'Block': '',

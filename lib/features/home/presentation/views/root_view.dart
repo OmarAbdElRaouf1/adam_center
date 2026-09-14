@@ -17,8 +17,7 @@ import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/na
 import 'package:the_one_test/features/home/presentation/views/categories_view.dart';
 import 'package:the_one_test/features/home/presentation/views/home_view.dart';
 
-import 'package:the_one_test/features/menu/presentation/views/menu_view.dart';
-
+import '../widgets/app_drawer.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class RootView extends StatefulWidget {
@@ -76,7 +75,6 @@ class _RootViewState extends State<RootView> {
       const CategoriesView(),
       const CartView(),
       const FavoritesView(),
-      const MenuView(),
     ];
 
     return MultiBlocProvider(
@@ -95,6 +93,8 @@ class _RootViewState extends State<RootView> {
         },
         child: Scaffold(
           extendBody: true,
+
+          drawer: const AppDrawer(),
 
           body: BlocBuilder<NavBarCubit, int>(
             builder: (context, selectedIndex) {

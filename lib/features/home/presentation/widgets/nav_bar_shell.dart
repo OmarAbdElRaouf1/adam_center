@@ -43,9 +43,8 @@ class NavBarShell extends StatelessWidget {
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final double unselectedWidth = constraints.maxWidth / 6.2;
-              final double selectedWidth =
-                  constraints.maxWidth - (unselectedWidth * 4);
+              final double unselectedWidth = constraints.maxWidth / 8;
+              final double selectedWidth = unselectedWidth * 2.4;
 
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

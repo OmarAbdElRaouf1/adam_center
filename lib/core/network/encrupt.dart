@@ -11,9 +11,9 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 //
 // mazyad
 final basicToken =
-    'Basic MTE5MTEyODE2MzRlYjVhYTpTZk12SU1FNTlOU05qZEVsdlpqK2NDM0ZuaUJBWTBxRGlSM2xqVnU0RU5ZPQ==';
-final privateKey = '7a0847a8ed338cff77b74bc74a8061de';
-final publicKey = '11911281634eb5aa';
+    'Basic MTI5ZGEwZDZlMjI4MzNlMDptdThMZW5uS3p1eTIrTFpRVEQvREk4U1pZVVVSM21VVGZHdEpoRnZnR3ZVPQ==';
+final privateKey = 'b1917428742ffaa5c12b8754434dcef9';
+final publicKey = '129da0d6e22833e0';
 
 dynamic decrypt(String encryptedText, String privateKey, String publicKey) {
   final keyObj = encrypt.Key.fromUtf8(privateKey);

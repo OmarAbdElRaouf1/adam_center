@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
-import 'package:the_one_test/features/checkout/data/models/address_text.dart';
 import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
 
 class CartDeliveryBar extends StatelessWidget {
@@ -40,30 +39,19 @@ class CartDeliveryBar extends StatelessWidget {
             child: BlocBuilder<AccountCubit, UserModel?>(
               bloc: getIt<AccountCubit>(),
               builder: (context, user) {
-                final district =
-                    districtFromCustomerAddress(user?.customerAddress) ??
-                    user?.districtName;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${'Deliver to'.tr()}: ${user?.regionName}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    Gap(2.h),
-                    Text(
-                      '${user?.regionName}, $district',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+                final region = user?.regionName;
+                final label = region == null || region.isEmpty
+                    ? 'Deliver to'.tr()
+                    : '${'Deliver to'.tr()}: $region';
+
+                return Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 );
               },
             ),

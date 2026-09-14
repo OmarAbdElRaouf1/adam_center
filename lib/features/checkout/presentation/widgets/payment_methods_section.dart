@@ -4,7 +4,7 @@ import 'package:the_one_test/core/helper/helper.dart';
 
 import 'payment_method_tile.dart';
 
-enum PaymentMethod { cashOnDelivery, wallet, card, fawry }
+enum PaymentMethod { cashOnDelivery }
 
 class PaymentMethodsSection extends StatelessWidget {
   const PaymentMethodsSection({
@@ -31,24 +31,6 @@ class PaymentMethodsSection extends StatelessWidget {
           label: 'Cash on Delivery'.tr(),
           selected: selected == PaymentMethod.cashOnDelivery,
           onTap: () => onSelect(PaymentMethod.cashOnDelivery),
-        ),
-        PaymentMethodTile(
-          icon: Icons.account_balance_wallet_outlined,
-          label: 'Mobile Wallet'.tr(),
-          selected: selected == PaymentMethod.wallet,
-          onTap: () => onSelect(PaymentMethod.wallet),
-        ),
-        PaymentMethodTile(
-          icon: Icons.credit_card,
-          label: 'Credit / Debit Card'.tr(),
-          selected: selected == PaymentMethod.card,
-          onTap: () => onSelect(PaymentMethod.card),
-        ),
-        PaymentMethodTile(
-          icon: Icons.storefront_outlined,
-          label: 'Fawry'.tr(),
-          selected: selected == PaymentMethod.fawry,
-          onTap: () => onSelect(PaymentMethod.fawry),
         ),
       ],
     );

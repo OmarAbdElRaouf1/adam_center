@@ -14,6 +14,8 @@ extension ItemModelProductMapX on ItemModel {
       'description': description1 ?? '',
       'price': price.toString(),
       'categoryId': categoryId ?? '',
+      'code': productCode,
+      'quantity': stockQuantity.toString(),
     };
   }
 }

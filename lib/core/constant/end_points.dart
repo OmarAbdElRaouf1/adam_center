@@ -1,7 +1,7 @@
 class EndPoints {
   // test
   static const String baseUrl =
-      "http://78.89.159.126:9393/TheOneAPIMazyad/api/";
+      "http://41.38.220.222:9292/TheOneAPIMalkyScarf/api/";
   // mazyad
   // static const String baseUrl = "http://78.89.159.126:9393/TheOneAPIMazyad";
 

@@ -11,7 +11,7 @@ class PaymentState extends Equatable {
     required this.subtotal,
     required this.deliveryFee,
     required this.deliveryInfo,
-    this.selectedMethod = PaymentMethod.card,
+    this.selectedMethod = PaymentMethod.cashOnDelivery,
     this.discountRate = 0,
     this.discountAttempt = 0,
     this.discountCodeValid = true,

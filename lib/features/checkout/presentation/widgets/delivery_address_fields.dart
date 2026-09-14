@@ -31,7 +31,7 @@ class DeliveryAddressFields extends StatelessWidget {
         CustomTextFormField(
           hintText: 'Area'.tr(),
           controller: areaController,
-          readOnly: true,
+          readOnly: false,
           validator: Validators.validateEmpty,
           borderColor: AppColors.primaryColor,
         ),
