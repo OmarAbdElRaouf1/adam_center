@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
+import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/auth/data/datasource/login_datasource.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 
@@ -9,8 +10,9 @@ part 'login_event.dart';
 class LoginBloc extends Bloc<LoginEvent, BaseState<UserModel>> {
   final LoginDatasource loginDatasource;
   final UserSessionCache userSessionDatasource;
+  final AccountCubit accountCubit;
 
-  LoginBloc(this.loginDatasource, this.userSessionDatasource)
+  LoginBloc(this.loginDatasource, this.userSessionDatasource, this.accountCubit)
     : super(BaseState<UserModel>()) {
     on<LoginEvent>(_onLogin);
   }
@@ -30,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, BaseState<UserModel>> {
         );
       },
       (userModel) async {
-        await userSessionDatasource.saveUser(userModel);
+        await accountCubit.updateUser(userModel);
         await userSessionDatasource.setLoggedIn(true);
         emit(
           state.copyWith(

@@ -10,6 +10,9 @@ class AccountActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDarkMode;
+    final contentColor = isDark ? Colors.white : AppColors.primaryColor;
+
     return Column(
       children: [
         CustomElevatedButton.filled(
@@ -25,16 +28,25 @@ class AccountActionButtons extends StatelessWidget {
           borderRadius: AppRadius.pill,
           width: context.screenWidth - 40.w,
           fontSize: 16,
+          icon: Icons.lock_outline,
+          iconOnRight: true,
         ),
         Gap(14.h),
-        CustomElevatedButton.filled(
+        CustomElevatedButton.bordered(
           context: context,
           title: 'Delete Account'.tr(),
           onPressed: () => showDeleteAccountDialog(context),
-          backgroundColor: AppColors.red,
+          widthFactor: (context.screenWidth - 40.w) / context.screenWidth,
+          backgroundColor: Colors.transparent,
+          side: BorderSide(
+            color: isDark ? Colors.white24 : Colors.grey.shade300,
+          ),
+          textColor: contentColor,
+          textStyle: TextStyle(fontSize: 16.sp, color: contentColor),
           borderRadius: AppRadius.pill,
-          width: context.screenWidth - 40.w,
-          fontSize: 16,
+          icon: Icons.delete_outline,
+          iconColor: contentColor,
+          iconOnRight: true,
         ),
       ],
     );

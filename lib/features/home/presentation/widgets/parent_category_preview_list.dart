@@ -5,7 +5,7 @@ import 'package:the_one_test/core/widgets/shimmer_skeletons.dart';
 import 'package:the_one_test/features/category_products/data/models/category_model.dart';
 import 'package:the_one_test/features/category_products/presentation/manager/category_bloc/category_bloc.dart';
 import 'package:the_one_test/features/category_products/presentation/manager/category_selection_cubit/category_selection_cubit.dart';
-import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
+import 'package:the_one_test/features/home/presentation/views/categories_view.dart';
 import 'package:the_one_test/features/home/presentation/widgets/categories_grid_view_item.dart';
 
 class ParentCategoryPreviewList extends StatelessWidget {
@@ -52,7 +52,10 @@ class ParentCategoryPreviewList extends StatelessWidget {
                   image: category.image,
                   onTap: () {
                     getIt<CategorySelectionCubit>().select(category.id);
-                    context.read<NavBarCubit>().changeIndex(1);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CategoriesView()),
+                    );
                   },
                 ),
               );

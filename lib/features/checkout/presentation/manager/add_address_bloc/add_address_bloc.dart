@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/checkout/data/datasource/add_address_datasource.dart';
+import 'package:the_one_test/features/checkout/data/datasource/local_address_region_store.dart';
 import 'package:the_one_test/features/checkout/data/models/address_model.dart';
 
 part 'add_address_event.dart';
@@ -9,9 +10,13 @@ part 'add_address_event.dart';
 class AddAddressBloc extends Bloc<AddAddressEvent, BaseState<void>> {
   final AddAddressDatasource _addAddressDatasource;
   final AccountCubit _accountCubit;
+  final LocalAddressRegionStore _localAddressRegionStore;
 
-  AddAddressBloc(this._addAddressDatasource, this._accountCubit)
-    : super(const BaseState<void>()) {
+  AddAddressBloc(
+    this._addAddressDatasource,
+    this._accountCubit,
+    this._localAddressRegionStore,
+  ) : super(const BaseState<void>()) {
     on<SaveAddress>(_onSaveAddress);
   }
 
@@ -62,6 +67,19 @@ class AddAddressBloc extends Bloc<AddAddressEvent, BaseState<void>> {
       regionName: event.governorateName,
       districtName: event.districtName,
     );
+
+    // Known with certainty right now (the user just picked it from the
+    // governorate -> district cascade) — cache it, keyed by this address's
+    // own id, so selecting this address later shows the right governorate
+    // even though the backend can't be trusted to report it back (see
+    // LocalAddressRegionStore).
+    if (address.addressId != null) {
+      await _localAddressRegionStore.setGovernorateName(
+        address.addressId!,
+        event.governorateName,
+      );
+    }
+
     await _accountCubit.applyAddress(address);
 
     emit(state.copyWith(status: Status.success));

@@ -1,5 +1,6 @@
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
+import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/auth/data/datasource/district_datasource.dart';
 import 'package:the_one_test/features/auth/data/datasource/governorate_datasource.dart';
 import 'package:the_one_test/features/auth/data/datasource/login_datasource.dart';
@@ -28,11 +29,19 @@ class AuthServiceLocator {
     );
 
     getIt.registerFactory<LoginBloc>(
-      () => LoginBloc(getIt<LoginDatasource>(), getIt<UserSessionCache>()),
+      () => LoginBloc(
+        getIt<LoginDatasource>(),
+        getIt<UserSessionCache>(),
+        getIt<AccountCubit>(),
+      ),
     );
 
     getIt.registerFactory<SignupBloc>(
-      () => SignupBloc(getIt<SignUpDatasource>(), getIt<UserSessionCache>()),
+      () => SignupBloc(
+        getIt<SignUpDatasource>(),
+        getIt<UserSessionCache>(),
+        getIt<AccountCubit>(),
+      ),
     );
 
     getIt.registerFactory<GovernorateBloc>(

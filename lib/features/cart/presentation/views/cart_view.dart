@@ -7,11 +7,7 @@ import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_b
 import 'package:the_one_test/features/cart/presentation/widgets/cart_checkout_bar.dart';
 import 'package:the_one_test/features/cart/presentation/widgets/cart_delivery_bar.dart';
 import 'package:the_one_test/features/cart/presentation/widgets/cart_empty.dart';
-import 'package:the_one_test/features/cart/presentation/widgets/cart_header.dart';
 import 'package:the_one_test/features/cart/presentation/widgets/cart_item_card.dart';
-import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
-
-const _cartTabIndex = 2;
 
 class CartView extends StatefulWidget {
   const CartView({super.key});
@@ -29,47 +25,42 @@ class _CartViewState extends State<CartView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NavBarCubit, int>(
-      listenWhen: (_, index) => index == _cartTabIndex,
-      listener: (context, _) => getIt<CartBloc>().add(const FetchCartItems()),
-      child: Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-            child: Column(
-              children: [
-                const CartHeader(),
-                Gap(16.h),
-                CartDeliveryBar(),
-                Gap(16.h),
-                Expanded(
-                  child: BlocBuilder<CartBloc, BaseState<CartItemModel>>(
-                    bloc: getIt<CartBloc>(),
-                    builder: (context, state) {
-                      if (state.isFailure) {
-                        return FailureWidget(
-                          state: state,
-                          errorMessage: state.errorMessage ?? '',
-                          onRetry: () =>
-                              getIt<CartBloc>().add(const FetchCartItems()),
-                        );
-                      }
-                      if (state.items.isEmpty) {
-                        return CartEmpty();
-                      }
-                      return ListView.separated(
-                        itemCount: state.items.length,
-                        separatorBuilder: (_, _) => Gap(14.h),
-                        itemBuilder: (context, index) =>
-                            CartItemCard(item: state.items[index]),
+    return Scaffold(
+      appBar: const CustomAppBar(titleText: 'Cart'),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          child: Column(
+            children: [
+              CartDeliveryBar(),
+              Gap(16.h),
+              Expanded(
+                child: BlocBuilder<CartBloc, BaseState<CartItemModel>>(
+                  bloc: getIt<CartBloc>(),
+                  builder: (context, state) {
+                    if (state.isFailure) {
+                      return FailureWidget(
+                        state: state,
+                        errorMessage: state.errorMessage ?? '',
+                        onRetry: () =>
+                            getIt<CartBloc>().add(const FetchCartItems()),
                       );
-                    },
-                  ),
+                    }
+                    if (state.items.isEmpty) {
+                      return CartEmpty();
+                    }
+                    return ListView.separated(
+                      itemCount: state.items.length,
+                      separatorBuilder: (_, _) => Gap(14.h),
+                      itemBuilder: (context, index) =>
+                          CartItemCard(item: state.items[index]),
+                    );
+                  },
                 ),
-                Gap(10.h),
-                const CartCheckoutBar(),
-              ],
-            ),
+              ),
+              Gap(10.h),
+              const CartCheckoutBar(),
+            ],
           ),
         ),
       ),

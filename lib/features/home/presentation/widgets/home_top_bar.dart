@@ -7,10 +7,11 @@ import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/auth/presentation/widgets/custom_search_field.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
+import 'package:the_one_test/features/cart/presentation/views/cart_view.dart';
 import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
 import 'package:the_one_test/features/favorites/data/datasource/local_favorites_store.dart';
 import 'package:the_one_test/features/favorites/presentation/manager/favorite_bloc/favorite_bloc.dart';
-import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
+import 'package:the_one_test/features/favorites/presentation/views/favorites_view.dart';
 
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({
@@ -43,8 +44,12 @@ class HomeTopBar extends StatelessWidget {
                   children: [
                     InkWell(
                       borderRadius: BorderRadius.circular(24),
-                      onTap: () =>
-                          context.read<NavBarCubit>().changeIndex(3),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const FavoritesView(),
+                        ),
+                      ),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
@@ -112,8 +117,10 @@ class HomeTopBar extends StatelessWidget {
                     Gap(16.w),
                     InkWell(
                       borderRadius: BorderRadius.circular(24),
-                      onTap: () =>
-                          context.read<NavBarCubit>().changeIndex(2),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CartView()),
+                      ),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [

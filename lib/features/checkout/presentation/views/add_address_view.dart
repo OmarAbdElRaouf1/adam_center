@@ -53,14 +53,16 @@ class _AddAddressFormState extends State<_AddAddressForm> {
 
   void _save() {
     if (!_formKey.currentState!.validate()) return;
-    if (_governorate == null || _district == null) {
-      context.showErrorMessage('Please select governorate and district'.tr());
+    if (_governorate == null) {
+      context.showErrorMessage('Please select governorate'.tr());
       return;
     }
 
+    // District is optional — some governorates have none to pick from (see
+    // LocationDropdowns: its district dropdown is simply empty for those).
     final fullAddress =
         '${'Governorate'.tr()}: ${_governorate!.name}  '
-        '${'District'.tr()}: ${_district!.name}  '
+        '${_district != null ? '${'District'.tr()}: ${_district!.name}  ' : ''}'
         '${'Street'.tr()}: ${streetController.text}  '
         '${'House'.tr()}: ${houseController.text}';
 
@@ -68,8 +70,8 @@ class _AddAddressFormState extends State<_AddAddressForm> {
       SaveAddress(
         governorateId: _governorate!.id,
         governorateName: _governorate!.name,
-        areaId: _district!.id,
-        districtName: _district!.name,
+        areaId: _district?.id ?? 0,
+        districtName: _district?.name ?? '',
         street: streetController.text,
         houseNumber: houseController.text,
         block: blockController.text.isEmpty ? null : blockController.text,
