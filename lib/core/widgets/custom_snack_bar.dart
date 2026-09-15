@@ -16,9 +16,10 @@ void showCustomSnackBar(BuildContext context, String text) {
         backgroundColor: AppColors.mainAppColor,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         showCloseIcon: true,
+        width: 260,
       ),
     );
   }

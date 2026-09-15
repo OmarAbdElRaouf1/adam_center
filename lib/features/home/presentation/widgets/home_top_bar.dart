@@ -7,7 +7,7 @@ import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/auth/presentation/widgets/custom_search_field.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
-import 'package:the_one_test/features/checkout/data/models/address_text.dart';
+import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
 import 'package:the_one_test/features/favorites/data/datasource/local_favorites_store.dart';
 import 'package:the_one_test/features/favorites/presentation/manager/favorite_bloc/favorite_bloc.dart';
 import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
@@ -195,39 +195,42 @@ class HomeTopBar extends StatelessWidget {
                     ),
                   ),
                   Gap(2.h),
-                  BlocBuilder<AccountCubit, UserModel?>(
-                    bloc: getIt<AccountCubit>(),
-                    builder: (context, user) {
-                      final district =
-                          districtFromCustomerAddress(
-                            user?.customerAddress,
-                          ) ??
-                          user?.districtName;
-
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.location_on,
-                            color: AppColors.primaryColor,
-                            size: 12.sp,
-                          ),
-                          Gap(2.w),
-                          Text(
-                            [
-                              user?.regionName,
-                              district,
-                            ].whereType<String>().join(', '),
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: AppColors.primaryColor.withValues(
-                                alpha: 0.8,
+                  InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ChooseAddressView(),
+                      ),
+                    ),
+                    child: BlocBuilder<AccountCubit, UserModel?>(
+                      bloc: getIt<AccountCubit>(),
+                      builder: (context, user) {
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: AppColors.primaryColor,
+                              size: 12.sp,
+                            ),
+                            Gap(2.w),
+                            Text(
+                              [
+                                user?.regionName,
+                                user?.districtName,
+                              ].whereType<String>().join(', '),
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.8,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

@@ -9,6 +9,7 @@ abstract class AddAddressEvent extends Equatable {
 
 class SaveAddress extends AddAddressEvent {
   final int governorateId;
+  final String governorateName;
   final int areaId;
   final String districtName;
   final String street;
@@ -21,6 +22,7 @@ class SaveAddress extends AddAddressEvent {
 
   const SaveAddress({
     required this.governorateId,
+    required this.governorateName,
     required this.areaId,
     required this.districtName,
     required this.street,
@@ -35,6 +37,7 @@ class SaveAddress extends AddAddressEvent {
   @override
   List<Object?> get props => [
     governorateId,
+    governorateName,
     areaId,
     districtName,
     street,

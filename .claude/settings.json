@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sleep 2; tail -50 /tmp/flutter_run.log 2>&1; echo \"---procs---\"; ps aux | grep -i \"flutter run\\\\|the_one_test\" | grep -v grep)",
+      "Read(//private/tmp/**)",
+      "Bash(grep -A2 \"bloc:\" /Users/omarraouf/Desktop/Projects/the_one_test/pubspec.lock | head -10; echo \"---\"; grep -n \"EventTransformer\\\\|_transformer\\\\|concurrent\\\\|sequential\" /Users/omarraouf/.pub-cache/hosted/pub.dev/bloc-9.1.0/lib/src/bloc.dart | head -30)",
+      "Read(//Users/omarraouf/.pub-cache/hosted/pub.dev/bloc-9.1.0/lib/src/**)",
+      "Read(//tmp/**)",
+      "Bash(xcrun simctl *)",
+      "Bash(timeout 8 flutter logs -d 4166A601-44EE-4499-A936-AF291A2969B4)",
+      "Bash(curl -s --max-time 8 \"http://41.38.220.222:9292/TheOneAPIMalkyScarf/api/Baner1\")",
+      "Bash(curl -s --max-time 8 \"http://41.38.220.222:9292/TheOneAPIMalkyScarf/api/Category/GetMainCategory\")"
+    ]
+  }
+}

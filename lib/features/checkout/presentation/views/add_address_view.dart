@@ -67,6 +67,7 @@ class _AddAddressFormState extends State<_AddAddressForm> {
     context.read<AddAddressBloc>().add(
       SaveAddress(
         governorateId: _governorate!.id,
+        governorateName: _governorate!.name,
         areaId: _district!.id,
         districtName: _district!.name,
         street: streetController.text,

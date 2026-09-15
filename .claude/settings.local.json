@@ -11,7 +11,12 @@
       "Bash(rmdir manager *)",
       "Bash(mkdir -p presentation/manager/nav_bar_cubit)",
       "Bash(mv manager/nav_bar_cubit.dart presentation/manager/nav_bar_cubit/)",
-      "Bash(flutter analyze *)"
+      "Bash(flutter analyze *)",
+      "Bash(xcrun simctl *)",
+      "Bash(open -a Simulator)",
+      "Bash(flutter run *)",
+      "Bash(tee /tmp/flutter_run.log)",
+      "Bash(echo \"started in background pid $!\")"
     ],
     "additionalDirectories": [
       "/Users/omarraouf/Desktop/Projects/the_one_test/lib/features/auth/models",

@@ -3,6 +3,7 @@ import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/checkout/data/datasource/add_address_datasource.dart';
 import 'package:the_one_test/features/checkout/data/models/address_model.dart';
+import 'package:the_one_test/features/checkout/data/models/address_text.dart';
 
 part 'choose_address_event.dart';
 
@@ -44,7 +45,17 @@ class ChooseAddressBloc
     SelectAddress event,
     Emitter<BaseState<AddressModel>> emit,
   ) async {
-    await _accountCubit.applyAddress(event.address);
+    // DistrictName on the raw address comes back static per customer
+    // profile rather than per address (see districtFromCustomerAddress's
+    // doc comment) — CustomerAddress is the only field that actually
+    // reflects the picked address, so the real district is pulled from
+    // there instead of trusted as-is.
+    final address = event.address.copyWith(
+      districtName:
+          districtFromCustomerAddress(event.address.customerAddress) ??
+          event.address.districtName,
+    );
+    await _accountCubit.applyAddress(address);
     emit(
       state.copyWith(status: Status.success, metadata: {'action': 'select'}),
     );

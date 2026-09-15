@@ -61,6 +61,26 @@ class AddressModel extends Equatable {
   // districtFromCustomerAddress's own doc comment for why).
   String? get districtLabel => districtFromCustomerAddress(customerAddress);
 
+  AddressModel copyWith({String? regionName, String? districtName}) {
+    return AddressModel(
+      regionId: regionId,
+      regionName: regionName ?? this.regionName,
+      districtName: districtName ?? this.districtName,
+      streetName: streetName,
+      houseNo: houseNo,
+      block: block,
+      floor: floor,
+      apartment: apartment,
+      addressNotes: addressNotes,
+      customerAddress: customerAddress,
+      addressId: addressId,
+      arabicName: arabicName,
+      englishName: englishName,
+      customerPhone: customerPhone,
+      isMain: isMain,
+    );
+  }
+
   @override
   List<Object?> get props => [
     regionId,

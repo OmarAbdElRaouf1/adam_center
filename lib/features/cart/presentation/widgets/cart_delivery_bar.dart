@@ -39,10 +39,13 @@ class CartDeliveryBar extends StatelessWidget {
             child: BlocBuilder<AccountCubit, UserModel?>(
               bloc: getIt<AccountCubit>(),
               builder: (context, user) {
-                final region = user?.regionName;
-                final label = region == null || region.isEmpty
+                final location = [
+                  user?.regionName,
+                  user?.districtName,
+                ].whereType<String>().where((s) => s.isNotEmpty).join(', ');
+                final label = location.isEmpty
                     ? 'Deliver to'.tr()
-                    : '${'Deliver to'.tr()}: $region';
+                    : '${'Deliver to'.tr()}: $location';
 
                 return Text(
                   label,
