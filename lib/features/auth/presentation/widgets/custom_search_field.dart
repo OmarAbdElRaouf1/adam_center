@@ -38,19 +38,13 @@ class CustomSearchField extends StatelessWidget {
           color: AppColors.primaryColor.withValues(alpha: 0.6),
           fontSize: 13.sp,
         ),
-        prefixIconConstraints: BoxConstraints(
-          minWidth: 36.w,
-          minHeight: 18.sp,
-        ),
+        prefixIconConstraints: BoxConstraints(minWidth: 36.w, minHeight: 18.sp),
         prefixIcon: Icon(
           Icons.search_rounded,
           color: AppColors.primaryColor,
           size: 18.sp,
         ),
-        suffixIconConstraints: BoxConstraints(
-          minWidth: 32.w,
-          minHeight: 18.sp,
-        ),
+        suffixIconConstraints: BoxConstraints(minWidth: 32.w, minHeight: 18.sp),
         suffixIcon: controller?.text.isNotEmpty == true
             ? IconButton(
                 icon: Icon(Icons.close, size: 16.sp),

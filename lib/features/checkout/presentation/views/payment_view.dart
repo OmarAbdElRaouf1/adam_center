@@ -67,53 +67,57 @@ class _PaymentViewState extends State<PaymentView> {
           return Scaffold(
             key: ValueKey(context.locale.languageCode),
             appBar: const CustomAppBar(titleText: 'Pay'),
-            body: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Do you have a discount code?'.tr(),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Do you have a discount code?'.tr(),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Gap(10.h),
-                  DiscountCodeField(
-                    controller: discountController,
-                    onActivate: () => context.read<PaymentBloc>().add(
-                      ApplyDiscountCode(discountController.text),
+                    Gap(10.h),
+                    DiscountCodeField(
+                      controller: discountController,
+                      onActivate: () => context.read<PaymentBloc>().add(
+                        ApplyDiscountCode(discountController.text),
+                      ),
                     ),
-                  ),
-                  Gap(28.h),
-                  PaymentMethodsSection(
-                    selected: state.selectedMethod,
-                    onSelect: (method) => context.read<PaymentBloc>().add(
-                      SelectPaymentMethod(method),
+                    Gap(28.h),
+                    PaymentMethodsSection(
+                      selected: state.selectedMethod,
+                      onSelect: (method) => context.read<PaymentBloc>().add(
+                        SelectPaymentMethod(method),
+                      ),
                     ),
-                  ),
-                  Gap(20.h),
-                  PaymentSummary(
-                    subtotal: state.subtotal,
-                    deliveryFee: state.deliveryFee,
-                    discountRate: state.discountRate,
-                    discountValue: state.discountValue,
-                    total: state.total,
-                  ),
-                  Gap(28.h),
-                  CustomElevatedButton.filled(
-                    backgroundColor: AppColors.primaryColor,
-                    title: state.isPlacingOrder ? '...'.tr() : 'Pay'.tr(),
-                    context: context,
-                    onPressed: state.isPlacingOrder
-                        ? () {}
-                        : () => context.read<PaymentBloc>().add(
-                            const PlaceOrder(),
-                          ),
-                  ),
-                  Gap(12.h),
-                ],
+                    Gap(20.h),
+                    PaymentSummary(
+                      subtotal: state.subtotal,
+                      deliveryFee: state.deliveryFee,
+                      discountRate: state.discountRate,
+                      discountValue: state.discountValue,
+                      total: state.total,
+                    ),
+                    Gap(28.h),
+                    CustomElevatedButton.filled(
+                      backgroundColor: AppColors.primaryColor,
+                      title: state.isPlacingOrder ? '...'.tr() : 'Pay'.tr(),
+                      context: context,
+                      onPressed: state.isPlacingOrder
+                          ? () {}
+                          : () => context.read<PaymentBloc>().add(
+                              const PlaceOrder(),
+                            ),
+                    ),
+                    Gap(12.h),
+                  ],
+                ),
               ),
             ),
           );

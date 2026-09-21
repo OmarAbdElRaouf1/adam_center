@@ -81,19 +81,11 @@ class _CategoriesSidebarLayoutViewState
           if (state.isLoading) {
             return Column(
               children: [
-                SizedBox(
-                  height: context.screenHeight * 0.11,
-                  width: context.screenWidth,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 5,
-                    itemBuilder: (context, index) => SizedBox(
-                      width: context.screenWidth * 0.19,
-                      child: const CategoryRailShimmer(),
-                    ),
-                  ),
+                _RailRow(
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    for (var i = 0; i < 5; i++) const CategoryRailShimmer(),
+                  ],
                 ),
                 Gap(30.h),
                 Expanded(child: _SubCategoryGridShimmer()),
@@ -110,16 +102,10 @@ class _CategoriesSidebarLayoutViewState
 
           return Column(
             children: [
-              SizedBox(
-                height: context.screenHeight * 0.11,
-                width: context.screenWidth,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  itemCount: parents.length,
-                  itemBuilder: (context, index) => SizedBox(
-                    width: context.screenWidth * 0.19,
-                    child: CategoryRailItem(
+              _RailRow(
+                children: [
+                  for (var index = 0; index < parents.length; index++)
+                    CategoryRailItem(
                       title: parents[index].title,
                       image: parents[index].image,
                       isSelected: index == selectedIndex,
@@ -128,8 +114,7 @@ class _CategoriesSidebarLayoutViewState
                         _selectParent(parents[index]);
                       },
                     ),
-                  ),
-                ),
+                ],
               ),
               Gap(30.h),
               Expanded(
@@ -144,10 +129,10 @@ class _CategoriesSidebarLayoutViewState
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           itemCount: subCategories.length,
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 20,
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 140,
+                                crossAxisSpacing: 16.w,
+                                mainAxisSpacing: 20.h,
                                 childAspectRatio: 0.72,
                               ),
                           itemBuilder: (context, index) {
@@ -184,13 +169,42 @@ class _SubCategoryGridShimmer extends StatelessWidget {
     return GridView.builder(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       itemCount: 9,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 20,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 140,
+        crossAxisSpacing: 16.w,
+        mainAxisSpacing: 20.h,
         childAspectRatio: 0.72,
       ),
       itemBuilder: (context, index) => const CategoryTileShimmer(),
+    );
+  }
+}
+
+/// Horizontal category rail whose height follows its tallest item — a
+/// screen-height fraction overflows on short phones and wastes space on tall
+/// ones.
+class _RailRow extends StatelessWidget {
+  const _RailRow({required this.children, this.physics});
+
+  final List<Widget> children;
+  final ScrollPhysics? physics;
+
+  @override
+  Widget build(BuildContext context) {
+    final itemWidth = (context.screenWidth * 0.19).clamp(72.0, 110.0);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      physics: physics,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final child in children)
+              SizedBox(width: itemWidth, child: child),
+          ],
+        ),
+      ),
     );
   }
 }

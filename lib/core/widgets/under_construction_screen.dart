@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../constant/app_colors.dart';
 import '../extension/context_extension.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UnderConstructionScreen extends StatefulWidget {
   const UnderConstructionScreen({super.key, this.title});
@@ -46,7 +47,7 @@ class _UnderConstructionScreenState extends State<UnderConstructionScreen>
         ),
         titleTextStyle: TextStyle(
           color: isDark ? Colors.white : Colors.black87,
-          fontSize: 18,
+          fontSize: 18.sp,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -63,56 +64,53 @@ class _UnderConstructionScreenState extends State<UnderConstructionScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
                     color: AppColors.mainAppColor.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.construction_rounded,
-                    size: 72,
+                    size: 72.sp,
                     color: AppColors.mainAppColor,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   "under_construction_message".tr(),
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 26.sp,
                     fontWeight: FontWeight.bold,
                     color: isDark ? Colors.white : Colors.black87,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Text(
                   "under_construction_subtitle".tr(),
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: isDark ? Colors.white70 : Colors.black54,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mainAppColor,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 28,
-                      vertical: 14,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 28.w,
+                      vertical: 14.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                  label: Text(
-                    "back".tr(),
-                    style: const TextStyle(fontSize: 18),
-                  ),
+                  icon: Icon(Icons.arrow_back_ios_new_rounded, size: 18.sp),
+                  label: Text("back".tr(), style: TextStyle(fontSize: 18.sp)),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],

@@ -59,29 +59,31 @@ class _ChooseAddressBody extends StatelessWidget {
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Choose Address'.tr(),
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        Gap(4.h),
-                        InkWell(
-                          onTap: () => _addNewAddress(context),
-                          child: Text(
-                            'Add Address'.tr(),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Choose Address'.tr(),
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
                               color: AppColors.primaryColor,
                             ),
                           ),
-                        ),
-                      ],
+                          Gap(4.h),
+                          InkWell(
+                            onTap: () => _addNewAddress(context),
+                            child: Text(
+                              'Add Address'.tr(),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

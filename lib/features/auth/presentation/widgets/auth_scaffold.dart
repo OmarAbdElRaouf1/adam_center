@@ -37,8 +37,18 @@ class AuthScaffold extends StatelessWidget {
             SafeArea(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [header, Gap(28.h), formCard, Gap(24.h)],
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                // Capped so the form card doesn't stretch edge to edge on
+                // tablets / landscape.
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 520),
+                    child: Column(
+                      children: [header, Gap(28.h), formCard, Gap(24.h)],
+                    ),
+                  ),
                 ),
               ),
             ),

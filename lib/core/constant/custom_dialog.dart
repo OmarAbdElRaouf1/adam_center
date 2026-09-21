@@ -14,9 +14,11 @@ void customDialog({
     context: context,
     builder: (context) {
       return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -26,7 +28,7 @@ void customDialog({
               //   height: 150,
               //   repeat: false,
               // ),
-              Gap(5),
+              Gap(5.h),
               Text(
                 title,
                 style: TextStyle(

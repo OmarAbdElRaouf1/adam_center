@@ -12,7 +12,7 @@ class BannerSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: context.screenHeight * 0.2,
+        height: (context.screenWidth * 0.45).clamp(140.0, 260.0),
         viewportFraction: 0.92,
         enlargeCenterPage: true,
         autoPlay: true,

@@ -33,19 +33,14 @@ class EndPoints {
   static const String deleteFavorite = "Customer/DeleteCustomerProduct";
   static const String getFavorite = "Customer/GetCustomerProducts";
   static const String getPreviousOrders = "Order/GetOrdersByCustomerID";
-  static String deleteAccount = "Customer/DeleteCustomerByCustomerID";
   static const String privacyAndPlo = "Privacy";
   static const String savedAddresses = "Customers/GetCustomerAddress";
   static const String deleteAddress = "Customer/DeleteCustomerAddress";
-  static String changePassword = "Customer/ChangePassword";
   static const String aboutUS = "AboutUs";
 
   static const String addEvaluation = "Product/AddEvaluation";
   static const String getProductEvaluationByID =
       "Product/GetProductEvaluationByID";
-
-  /// todo sendVerificationCode
-  static const String sendVerificationCode = "اااا";
 
   //.
   //.

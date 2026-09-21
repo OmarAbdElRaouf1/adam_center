@@ -34,6 +34,29 @@ enum OrderStatus {
   }
 }
 
+class OrderItemModel extends Equatable {
+  const OrderItemModel({
+    required this.arName,
+    required this.enName,
+    required this.quantity,
+  });
+
+  final String arName;
+  final String enName;
+  final num quantity;
+
+  factory OrderItemModel.fromJson(Map<String, dynamic> json) {
+    return OrderItemModel(
+      arName: (json['ProductArName'] ?? '').toString(),
+      enName: (json['ProductEnName'] ?? '').toString(),
+      quantity: (json['Quantity'] as num?) ?? 0,
+    );
+  }
+
+  @override
+  List<Object?> get props => [arName, enName, quantity];
+}
+
 class OrderModel extends Equatable {
   const OrderModel({
     required this.orderNumber,
@@ -42,6 +65,7 @@ class OrderModel extends Equatable {
     required this.address,
     required this.totalPrice,
     required this.isPrevious,
+    this.items = const [],
   });
 
   final String orderNumber;
@@ -55,6 +79,21 @@ class OrderModel extends Equatable {
   final String address;
   final double totalPrice;
   final bool isPrevious;
+  // Not part of the orders list response — filled in from a per-order call to
+  // GetOrderProductsByCustomerID (which is keyed by OrderNo, not CustomerID).
+  final List<OrderItemModel> items;
+
+  OrderModel copyWith({List<OrderItemModel>? items}) {
+    return OrderModel(
+      orderNumber: orderNumber,
+      date: date,
+      status: status,
+      address: address,
+      totalPrice: totalPrice,
+      isPrevious: isPrevious,
+      items: items ?? this.items,
+    );
+  }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
@@ -87,5 +126,6 @@ class OrderModel extends Equatable {
     address,
     totalPrice,
     isPrevious,
+    items,
   ];
 }

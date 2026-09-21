@@ -19,13 +19,13 @@ class LoginView extends StatelessWidget {
         icon: Icons.lock_outline,
         title: 'Login'.tr(),
         subtitle: 'Join us and start your journey'.tr(),
-        topRow: const Align(
+        topRow: Align(
           alignment: AlignmentDirectional.topEnd,
           child: Padding(
-            padding: EdgeInsetsDirectional.only(top: 12, end: 16),
+            padding: EdgeInsetsDirectional.only(top: 12.h, end: 16.w),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [ThemeToggleButton(), Gap(8), LanguageToggle()],
+              children: [ThemeToggleButton(), Gap(8.w), LanguageToggle()],
             ),
           ),
         ),

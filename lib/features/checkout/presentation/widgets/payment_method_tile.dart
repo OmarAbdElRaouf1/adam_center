@@ -37,7 +37,7 @@ class PaymentMethodTile extends StatelessWidget {
               height: 20.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.primaryColor, width: 1.5),
+                border: Border.all(color: AppColors.primaryColor, width: 1.5.w),
               ),
               child: selected
                   ? Center(

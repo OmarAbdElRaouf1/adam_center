@@ -6,6 +6,8 @@
       "Bash(mv manager/add_to_cart/*.dart presentation/manager/add_to_cart_bloc/)",
       "Bash(mv manager/cart/*.dart presentation/manager/cart_bloc/)",
       "Bash(rmdir manager/add_to_cart manager/cart manager)",
+      "Bash(curl:*)",
+      "Bash(openssl:*)",
       "Bash(mkdir -p presentation/manager/favorite_bloc)",
       "Bash(mv manager/*.dart presentation/manager/favorite_bloc/)",
       "Bash(rmdir manager *)",

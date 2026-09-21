@@ -1,9 +1,6 @@
 import 'package:gap/gap.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-import 'package:the_one_test/core/widgets/empty_state_widget.dart';
-import 'package:the_one_test/features/home/presentation/widgets/home_list_view_item.dart';
-import 'package:the_one_test/features/product_details/presentation/views/product_details_view.dart';
+import 'package:the_one_test/features/category_products/presentation/widgets/category_products_grid.dart';
 
 class MoreProductsGridView extends StatelessWidget {
   const MoreProductsGridView({super.key, required this.title, this.products});
@@ -48,38 +45,15 @@ class MoreProductsGridView extends StatelessWidget {
             Gap(20.h),
 
             Expanded(
-              child: products.isEmpty
-                  ? EmptyStateWidget(message: 'No products yet'.tr())
-                  : GridView.builder(
-                      padding: EdgeInsets.only(
-                        left: 20.w,
-                        right: 20.w,
-                        top: 8.h,
-                        bottom: 110.h,
-                      ),
-                      itemCount: products.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 14.w,
-                        mainAxisSpacing: 14.h,
-                        childAspectRatio: 0.68,
-                      ),
-                      itemBuilder: (context, index) {
-                        final product = products[index];
-
-                        return HomeListViewItem(
-                          key: ValueKey(product['id']),
-                          product: product,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProductDetailsView(product: product),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+              child: CategoryProductsGrid(
+                products: products,
+                padding: EdgeInsets.only(
+                  left: 20.w,
+                  right: 20.w,
+                  top: 8.h,
+                  bottom: 110.h,
+                ),
+              ),
             ),
           ],
         ),

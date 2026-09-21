@@ -14,9 +14,9 @@ class OrdersDatasourceImpl implements OrdersDatasource {
   OrdersDatasourceImpl(this._genericDataSource, this._userSessionDatasource);
 
   @override
-  Future<Either<Failure, List<OrderModel>>> getOrders() {
+  Future<Either<Failure, List<OrderModel>>> getOrders() async {
     final user = _userSessionDatasource.getUser();
-    return _genericDataSource.fetchData<OrderModel>(
+    final result = await _genericDataSource.fetchData<OrderModel>(
       endpoint: EndPoints.getPreviousOrders,
       queryParameters: {
         // Intentionally CustomerID only (no CustomerPhone) — not the same
@@ -25,5 +25,20 @@ class OrdersDatasourceImpl implements OrdersDatasource {
       },
       fromJson: OrderModel.fromJson,
     );
+    return result.fold((failure) => Left(failure), (orders) async {
+      final withItems = await Future.wait(orders.map(_withItems));
+      return Right(withItems);
+    });
+  }
+
+  // A failed items call leaves that order without a product list rather than
+  // failing the whole orders screen.
+  Future<OrderModel> _withItems(OrderModel order) async {
+    final result = await _genericDataSource.fetchData<OrderItemModel>(
+      endpoint: EndPoints.getOrdersDetails,
+      queryParameters: {'OrderNo': order.orderNumber},
+      fromJson: OrderItemModel.fromJson,
+    );
+    return result.fold((_) => order, (items) => order.copyWith(items: items));
   }
 }

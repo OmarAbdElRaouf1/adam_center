@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_one_test/core/extension/context_extension.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BouncingBallRefreshIndicator extends StatefulWidget {
   final double progress;
@@ -65,8 +66,8 @@ class _BouncingBallRefreshIndicatorState
             children: [
               // Outer Ball
               Container(
-                width: 40,
-                height: 40,
+                width: 40.w,
+                height: 40.h,
                 decoration: BoxDecoration(
                   color: context.colorScheme.primary,
                   shape: BoxShape.circle,
@@ -80,8 +81,8 @@ class _BouncingBallRefreshIndicatorState
                     offset: Offset(0, _innerBallAnimation.value),
                     // Inner ball bounces vertically
                     child: Container(
-                      width: 20,
-                      height: 20,
+                      width: 20.w,
+                      height: 20.h,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,

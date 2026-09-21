@@ -62,7 +62,10 @@ class AddAddressBloc extends Bloc<AddAddressEvent, BaseState<void>> {
     // what the user actually just picked in this form, which is known with
     // certainty client-side.
     final addressResult = await _addAddressDatasource.getMainAddress();
-    final fetchedAddress = addressResult.fold((_) => null, (address) => address);
+    final fetchedAddress = addressResult.fold(
+      (_) => null,
+      (address) => address,
+    );
     final address = (fetchedAddress ?? const AddressModel()).copyWith(
       regionName: event.governorateName,
       districtName: event.districtName,

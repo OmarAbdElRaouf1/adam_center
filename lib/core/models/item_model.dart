@@ -86,6 +86,8 @@ class ItemModel extends Equatable {
   final String? brandID;
   @HiveField(37)
   final double? customerQuantity;
+  @HiveField(38)
+  final List<String> productImages;
 
   const ItemModel({
     required this.productCode,
@@ -123,6 +125,7 @@ class ItemModel extends Equatable {
     this.unitArName,
     this.brandID,
     this.customerQuantity,
+    this.productImages = const [],
   });
 
   const ItemModel.empty()
@@ -160,7 +163,8 @@ class ItemModel extends Equatable {
       unitArName = null,
       unitEnName = null,
       customerQuantity = 0.0,
-      brandID = null;
+      brandID = null,
+      productImages = const [];
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
@@ -199,6 +203,19 @@ class ItemModel extends Equatable {
       categoryArName: json['CategoryArName'] ?? '',
       categoryEnName: json['CategoryEnName'] ?? '',
       productImage: json['ProductcImage'] ?? '',
+      productImages: (() {
+        final raw = json['ProductImages'] ?? json['Images'];
+        if (raw is List) {
+          return raw
+              .map((e) => e.toString())
+              .where((e) => e.isNotEmpty)
+              .toList();
+        }
+        final single = json['ProductcImage'];
+        return single != null && single.toString().isNotEmpty
+            ? [single.toString()]
+            : <String>[];
+      })(),
       isFavorite: json['IsFavorite'] == 1,
       stockQuantity: json['StockQuantity'] ?? 0.0,
       price: json['Price'] ?? 0.0,
@@ -254,6 +271,7 @@ class ItemModel extends Equatable {
     String? unitEnName,
     String? brandID,
     double? customerQuantity,
+    List<String>? productImages,
   }) {
     return ItemModel(
       productCode: productCode ?? this.productCode,
@@ -291,6 +309,7 @@ class ItemModel extends Equatable {
       unitEnName: unitEnName ?? this.unitEnName,
       brandID: brandID ?? this.brandID,
       customerQuantity: customerQuantity ?? this.customerQuantity,
+      productImages: productImages ?? this.productImages,
     );
   }
 
@@ -338,6 +357,7 @@ CustomerQuantity: $customerQuantity
       'CategoryArName': categoryArName,
       'CategoryEnName': categoryEnName,
       'ProductcImage': productImage,
+      'ProductImages': productImages,
       'IsFavorite': isFavorite ? 1 : 0, // تحويل bool إلى int
       'Price': price,
       'PriceAfterDiscount': priceAfterDiscount,
@@ -422,5 +442,6 @@ CustomerQuantity: $customerQuantity
     unitEnName,
     brandID,
     customerQuantity,
+    productImages,
   ];
 }

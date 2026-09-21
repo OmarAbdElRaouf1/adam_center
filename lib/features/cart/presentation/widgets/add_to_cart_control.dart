@@ -1,8 +1,23 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/core/widgets/custom_snack_bar.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
+import 'package:the_one_test/features/cart/presentation/views/cart_view.dart';
 
 import 'cart_quantity_stepper.dart';
+
+void _showAddedToCartSnackBar(BuildContext context) {
+  showCustomSnackBar(
+    context,
+    'Added to Cart'.tr(),
+    actionLabel: 'View Cart'.tr(),
+    onActionPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CartView()),
+    ),
+  );
+}
 
 /// A small "+" button that turns into a quantity stepper once the product
 /// is in the cart — reflects the shared [CartBloc] state, so it stays in
@@ -19,15 +34,18 @@ class AddToCartControl extends StatelessWidget {
     super.key,
     required this.productId,
     required this.barCode,
-    this.size = 32,
+    required this.stockQuantity,
+    this.size,
   });
 
   final int productId;
   final String barCode;
-  final double size;
+  final int stockQuantity;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
+    final size = this.size ?? 32.w;
     return BlocBuilder<CartBloc, BaseState<CartItemModel>>(
       bloc: getIt<CartBloc>(),
       builder: (context, state) {
@@ -35,6 +53,7 @@ class AddToCartControl extends StatelessWidget {
           (item) => item.productID == productId,
         );
         final quantity = index >= 0 ? state.items[index].salesQuantity : 0;
+        final atStockLimit = quantity >= stockQuantity;
 
         return SizedBox(
           // Fixed on both axes — the stepper (with its padding/border) is
@@ -44,7 +63,7 @@ class AddToCartControl extends StatelessWidget {
           // no matter which state is showing, so the parent's anchor point
           // never moves.
           width: size * 3.6,
-          height: size + 14,
+          height: size + 14.h,
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: AnimatedSwitcher(
@@ -70,9 +89,21 @@ class AddToCartControl extends StatelessWidget {
                   ? _AddButton(
                       key: const ValueKey('add'),
                       size: size,
-                      onTap: () => getIt<CartBloc>().add(
-                        IncrementItem(productId, barCode),
-                      ),
+                      onTap: () {
+                        if (stockQuantity <= 0) {
+                          showCustomSnackBar(
+                            context,
+                            'Out of Stock'.tr(),
+                            icon: Icons.error_outline,
+                            iconColor: Colors.redAccent,
+                          );
+                          return;
+                        }
+                        getIt<CartBloc>().add(
+                          IncrementItem(productId, barCode),
+                        );
+                        _showAddedToCartSnackBar(context);
+                      },
                     )
                   : Container(
                       key: const ValueKey('stepper'),
@@ -83,14 +114,26 @@ class AddToCartControl extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(AppRadius.pill.r),
-                        border: Border.all(color: Colors.white, width: 2),
+                        border: Border.all(color: Colors.white, width: 2.w),
                         boxShadow: AppShadows.card(context),
                       ),
                       child: CartQuantityStepper(
                         quantity: quantity,
-                        onIncrement: () => getIt<CartBloc>().add(
-                          IncrementItem(productId, barCode),
-                        ),
+                        onIncrement: () {
+                          if (atStockLimit) {
+                            showCustomSnackBar(
+                              context,
+                              'Maximum available stock reached'.tr(),
+                              icon: Icons.info_outline,
+                              iconColor: Colors.amber,
+                            );
+                            return;
+                          }
+                          getIt<CartBloc>().add(
+                            IncrementItem(productId, barCode),
+                          );
+                          _showAddedToCartSnackBar(context);
+                        },
                         onDecrement: () => getIt<CartBloc>().add(
                           DeleteCartItem(productId, barCode),
                         ),
@@ -134,7 +177,7 @@ class _AddButtonState extends State<_AddButton> {
           decoration: BoxDecoration(
             color: AppColors.primaryColor,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
+            border: Border.all(color: Colors.white, width: 2.w),
             boxShadow: AppShadows.card(context),
           ),
           child: Icon(Icons.add, color: Colors.white, size: widget.size * 0.55),

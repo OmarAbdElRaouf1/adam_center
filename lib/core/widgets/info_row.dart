@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_text_theme.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class InfoRow extends StatelessWidget {
   const InfoRow({
@@ -21,7 +22,7 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Text.rich(
         TextSpan(
           children: [
@@ -29,10 +30,10 @@ class InfoRow extends StatelessWidget {
               text: label,
               style: AppTextTheme.labelMedium11.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: labelSize,
+                fontSize: labelSize.sp,
               ),
             ),
-            WidgetSpan(child: SizedBox(width: sized)),
+            WidgetSpan(child: SizedBox(width: sized.w)),
             TextSpan(
               text: value,
               style: AppTextTheme.labelMedium11.copyWith(

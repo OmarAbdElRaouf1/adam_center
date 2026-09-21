@@ -19,10 +19,6 @@ import 'package:the_one_test/features/checkout/presentation/manager/payment_bloc
 // AddAddressCubit and ChooseAddressBloc below all fit that shape. A manager
 // with no such flow (pure UI state, or no injected dependency to justify DI)
 // stays a Cubit — e.g. AccountCubit, CategorySelectionCubit, InfoImagesCubit.
-// ChangePasswordCubit is DI-registered (see AccountServiceLocator) and does
-// a single loading/success/failure submit against a datasource, but stays a
-// Cubit rather than Bloc+Event since it's a one-shot action, not a
-// multi-event flow.
 class CheckoutServiceLocator {
   static Future<void> init({required GetIt getIt}) async {
     getIt.registerLazySingleton<PlaceOrderDatasource>(

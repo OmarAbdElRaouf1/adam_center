@@ -95,13 +95,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius.r),
           borderSide:
               widget.borderSide ??
-              BorderSide(color: Colors.grey.shade300, width: 1),
+              BorderSide(color: Colors.grey.shade300, width: 1.w),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius.r),
           borderSide:
               widget.borderSide?.copyWith(color: widget.borderColor) ??
-              BorderSide(color: widget.borderColor, width: 1.5),
+              BorderSide(color: widget.borderColor, width: 1.5.w),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius.r),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:the_one_test/core/constant/app_colors.dart';
 
 class ScannerOverlay extends CustomPainter {
@@ -15,20 +16,18 @@ class ScannerOverlay extends CustomPainter {
     canvas.drawPath(
       Path()
         ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
-        ..addRRect(
-          RRect.fromRectAndRadius(scanRect, const Radius.circular(12)),
-        )
+        ..addRRect(RRect.fromRectAndRadius(scanRect, Radius.circular(12.r)))
         ..fillType = PathFillType.evenOdd,
       backgroundPaint,
     );
 
     final bracketPaint = Paint()
       ..color = AppColors.mainAppColor
-      ..strokeWidth = 4
+      ..strokeWidth = 4.w
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    const double bracketLength = 30;
+    final double bracketLength = 30.w;
 
     canvas.drawLine(
       Offset(left, top + bracketLength),

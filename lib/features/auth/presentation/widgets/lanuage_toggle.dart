@@ -12,26 +12,26 @@ class LanguageToggle extends StatelessWidget {
       onTap: () {
         context.setLocale(isEnglish ? const Locale('ar') : const Locale('en'));
       },
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(20.r),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.language, color: Colors.white, size: 16),
+            Icon(Icons.language, color: Colors.white, size: 16.sp),
 
-            const SizedBox(width: 5),
+            SizedBox(width: 5.w),
 
             Text(
               isEnglish ? 'AR' : 'EN',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: Colors.white,
               ),
             ),

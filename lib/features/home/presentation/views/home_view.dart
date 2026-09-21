@@ -120,7 +120,7 @@ class _HomeViewState extends State<HomeView> {
             padding: EdgeInsets.symmetric(horizontal: 10.w),
             child: Column(
               children: [
-                Gap(context.screenHeight * 0.07),
+                Gap(MediaQuery.paddingOf(context).top + 12.h),
                 HomeTopBar(
                   searchController: _searchController,
                   onSearchChanged: _onSearchChanged,

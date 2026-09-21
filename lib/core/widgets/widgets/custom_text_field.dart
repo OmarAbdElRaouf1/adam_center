@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextFormField extends StatelessWidget {
   /// The controller for the text field.
@@ -82,7 +83,7 @@ class CustomTextFormField extends StatelessWidget {
       child: TextFormField(
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurface,
-          fontSize: 16,
+          fontSize: 16.sp,
         ),
 
         autocorrect: true,
@@ -103,8 +104,8 @@ class CustomTextFormField extends StatelessWidget {
           hintText: hintText,
 
           // hintStyle: AppTextTheme.caption,
-          errorStyle: TextStyle(color: Colors.red, fontSize: 12),
-          labelStyle: TextStyle(color: Colors.red, fontSize: 12),
+          errorStyle: TextStyle(color: Colors.red, fontSize: 12.sp),
+          labelStyle: TextStyle(color: Colors.red, fontSize: 12.sp),
 
           prefixIcon: prefixIcon != null
               ? IconButton(
@@ -112,7 +113,7 @@ class CustomTextFormField extends StatelessWidget {
                   icon: Icon(
                     prefixIcon,
                     color: prefixIconColor ?? borderColor,
-                    size: 18,
+                    size: 18.sp,
                   ),
                 )
               : null,
@@ -127,29 +128,29 @@ class CustomTextFormField extends StatelessWidget {
           filled: true,
           fillColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(borderRadius.r),
             borderSide: BorderSide(
               color: borderColor ?? Color(0xFF15304E),
-              width: 0.5,
+              width: 0.5.w,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(borderRadius.r),
             borderSide: BorderSide(
               color: borderColor ?? Color(0xFF15304E),
-              width: 0.5,
+              width: 0.5.w,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(borderRadius.r),
             borderSide: BorderSide(
               color: borderColor ?? Color(0xFF15304E),
-              width: 1.5,
+              width: 1.5.w,
             ),
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 16.0,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.0.w,
+            vertical: 16.0.h,
           ),
         ),
       ),

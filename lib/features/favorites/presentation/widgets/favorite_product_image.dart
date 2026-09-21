@@ -9,11 +9,13 @@ class FavoriteProductImage extends StatelessWidget {
     required this.image,
     required this.productId,
     required this.barCode,
+    required this.stockQuantity,
   });
 
   final String image;
   final int productId;
   final String barCode;
+  final int stockQuantity;
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +41,21 @@ class FavoriteProductImage extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: -8,
-          right: -8,
+          top: -8.h,
+          right: -8.w,
           child: FavoriteToggleButton(
             productId: productId,
             initialIsFavorite: true,
-            size: 18,
+            size: 18.sp,
           ),
         ),
         PositionedDirectional(
-          bottom: -8,
-          start: -8,
+          bottom: -8.h,
+          start: -8.w,
           child: AddToCartControl(
             productId: productId,
             barCode: barCode,
+            stockQuantity: stockQuantity,
             size: 30.w,
           ),
         ),

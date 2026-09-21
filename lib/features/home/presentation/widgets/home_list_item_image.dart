@@ -9,6 +9,8 @@ class HomeListItemImage extends StatelessWidget {
     required this.productId,
     required this.barCode,
     required this.isFavorite,
+    required this.stockQuantity,
+    this.discountPercentage,
     this.onTap,
   });
 
@@ -16,6 +18,8 @@ class HomeListItemImage extends StatelessWidget {
   final int productId;
   final String barCode;
   final bool isFavorite;
+  final int stockQuantity;
+  final int? discountPercentage;
   final VoidCallback? onTap;
 
   @override
@@ -23,11 +27,11 @@ class HomeListItemImage extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12.w),
           child: GestureDetector(
             onTap: onTap,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.card),
+              borderRadius: BorderRadius.circular(AppRadius.card.r),
               child: Image.network(
                 image,
                 height: context.screenHeight * 0.12,
@@ -49,9 +53,37 @@ class HomeListItemImage extends StatelessWidget {
           ),
         ),
 
+        if (discountPercentage != null && discountPercentage! > 0)
+          Positioned(
+            top: 8.h,
+            left: 8.w,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: AppColors.red,
+                borderRadius: BorderRadius.circular(AppRadius.pill.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.red.withValues(alpha: 0.35),
+                    blurRadius: 6.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
+              ),
+              child: Text(
+                '${context.localizeDigits('$discountPercentage')}%-',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+
         Positioned(
-          top: 8,
-          right: 8,
+          top: 8.h,
+          right: 8.w,
           child: FavoriteToggleButton(
             productId: productId,
             initialIsFavorite: isFavorite,
@@ -59,9 +91,13 @@ class HomeListItemImage extends StatelessWidget {
         ),
 
         Positioned(
-          bottom: 2,
-          left: 12,
-          child: AddToCartControl(productId: productId, barCode: barCode),
+          bottom: 2.h,
+          left: 12.w,
+          child: AddToCartControl(
+            productId: productId,
+            barCode: barCode,
+            stockQuantity: stockQuantity,
+          ),
         ),
       ],
     );

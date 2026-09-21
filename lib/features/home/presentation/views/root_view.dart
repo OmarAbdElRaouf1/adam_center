@@ -39,7 +39,12 @@ class _RootViewState extends State<RootView> {
         now.difference(_lastBackPressTime!) > const Duration(seconds: 3)) {
       _lastBackPressTime = now;
 
-      showCustomSnackBar(context, 'Press back again to exit'.tr());
+      showCustomSnackBar(
+        context,
+        'Press back again to exit'.tr(),
+        icon: Icons.info_outline,
+        iconColor: Colors.white70,
+      );
 
       return;
     }
@@ -50,8 +55,7 @@ class _RootViewState extends State<RootView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          getIt<CategoryBloc>()..add(const GetMainCategoriesEvent()),
+      create: (_) => getIt<CategoryBloc>()..add(const GetMainCategoriesEvent()),
       child: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {

@@ -12,9 +12,12 @@ class DeliveryInfoView extends StatelessWidget {
     return Scaffold(
       key: ValueKey(context.locale.languageCode),
       appBar: const CustomAppBar(titleText: 'Delivery Info'),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        child: DeliveryInfoForm(subtotal: subtotal),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: DeliveryInfoForm(subtotal: subtotal),
+        ),
       ),
     );
   }

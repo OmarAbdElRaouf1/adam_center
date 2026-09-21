@@ -41,32 +41,32 @@ class HelpScreen extends StatelessWidget {
       appBar: CustomAppBar(titleText: 'help'.tr()), // Added localized title
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24.0.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.support_agent,
-                size: 100,
+                size: 100.sp,
                 color: AppColors.mainAppColor,
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: 25.h),
               Text(
                 'support_contact_number'.tr(),
                 style: AppTextTheme.headlineMedium.copyWith(
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               Text(
                 '01096561012',
                 style: AppTextTheme.headlineMedium.copyWith(
                   color: AppColors.secondaryColor,
-                  fontSize: 20,
+                  fontSize: 20.sp,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: 25.h),
 
               // Call Button
               SizedBox(
@@ -84,7 +84,7 @@ class HelpScreen extends StatelessWidget {
                       }
                     }
                   },
-                  icon: const Icon(Icons.phone, size: 24, color: Colors.white),
+                  icon: Icon(Icons.phone, size: 24.sp, color: Colors.white),
                   label: Text(
                     'call_now'.tr(),
                     style: AppTextTheme.body1.copyWith(color: Colors.white),
@@ -92,19 +92,19 @@ class HelpScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.secondaryColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 32.w,
+                      vertical: 16.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     elevation: 4,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // WhatsApp Button
               SizedBox(
@@ -122,7 +122,7 @@ class HelpScreen extends StatelessWidget {
                       }
                     }
                   },
-                  icon: const Icon(Icons.chat, size: 24, color: Colors.white),
+                  icon: Icon(Icons.chat, size: 24.sp, color: Colors.white),
                   label: Text(
                     'contact_via_whatsapp'.tr(),
                     style: AppTextTheme.body1.copyWith(color: Colors.white),
@@ -130,12 +130,12 @@ class HelpScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF25D366), // WhatsApp green
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 32.w,
+                      vertical: 16.h,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     elevation: 4,
                   ),

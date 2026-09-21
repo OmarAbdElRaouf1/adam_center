@@ -11,6 +11,15 @@ class HomeListViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final originalPrice = double.tryParse(product['price'] ?? '') ?? 0;
+    final discountedPrice =
+        double.tryParse(product['priceAfterDiscount'] ?? '') ?? 0;
+    final discountPercentage =
+        discountedPrice > 0 && discountedPrice < originalPrice
+        ? (((originalPrice - discountedPrice) / originalPrice) * 100).round()
+        : null;
+    final stockQuantity = int.tryParse(product['quantity'] ?? '') ?? 0;
+
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 350),
@@ -27,7 +36,7 @@ class HomeListViewItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppRadius.card),
+          borderRadius: BorderRadius.circular(AppRadius.card.r),
           boxShadow: AppShadows.card(context),
         ),
         child: Column(
@@ -38,11 +47,17 @@ class HomeListViewItem extends StatelessWidget {
               productId: int.tryParse(product['id'] ?? '') ?? 0,
               barCode: product['barCode'] ?? '',
               isFavorite: product['isFavorite'] == 'true',
+              stockQuantity: stockQuantity,
+              discountPercentage: discountPercentage,
               onTap: onTap,
             ),
             HomeListItemDetails(
               price: product['price']!,
+              priceAfterDiscount: product['priceAfterDiscount'] ?? '',
+              quantity: product['quantity'] ?? '',
               name: product['name']!,
+              categoryArName: product['categoryArName'] ?? '',
+              categoryEnName: product['categoryEnName'] ?? '',
               description: product['description']!,
             ),
           ],

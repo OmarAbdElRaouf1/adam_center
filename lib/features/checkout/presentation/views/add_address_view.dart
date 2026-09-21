@@ -100,6 +100,7 @@ class _AddAddressFormState extends State<_AddAddressForm> {
         appBar: const CustomAppBar(titleText: 'Add Address'),
         body: SafeArea(
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
             child: Form(
               key: _formKey,
