@@ -55,7 +55,9 @@ extension ContextExtensions on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         showCloseIcon: false,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.r),
+        ),
         content: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -74,8 +76,8 @@ extension ContextExtensions on BuildContext {
         ),
         backgroundColor: colorScheme.surface,
         behavior: SnackBarBehavior.floating,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        margin: const EdgeInsets.only(bottom: 25, right: 20, left: 20),
+        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+        margin: EdgeInsets.only(bottom: 25.h, right: 20.w, left: 20.w),
       ),
     );
   }
@@ -91,7 +93,7 @@ extension ContextExtensions on BuildContext {
           showCloseIcon: false,
           duration: const Duration(seconds: 2),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           content: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,8 +114,8 @@ extension ContextExtensions on BuildContext {
           ),
           backgroundColor: AppColors.primaryColor,
           behavior: SnackBarBehavior.floating,
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          margin: const EdgeInsets.only(bottom: 25, right: 20, left: 20),
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+          margin: EdgeInsets.only(bottom: 25.h, right: 20.w, left: 20.w),
         ),
       );
     });
@@ -123,7 +125,7 @@ extension ContextExtensions on BuildContext {
     showDialog(
       context: this,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
         content: Text(
           text,
           style: AppTextTheme.headlineMedium.copyWith(
@@ -131,7 +133,7 @@ extension ContextExtensions on BuildContext {
           ),
           textAlign: TextAlign.center,
         ),
-        contentPadding: const EdgeInsets.all(20).copyWith(bottom: 40),
+        contentPadding: EdgeInsets.all(20.w).copyWith(bottom: 40.h),
       ),
     );
   }
@@ -144,16 +146,16 @@ extension ContextExtensions on BuildContext {
   }) {
     final overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        left: 16,
-        right: 16,
+        left: 16.w,
+        right: 16.w,
         top: MediaQuery.of(context).padding.top + 10,
         child: Material(
           color: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             child: Row(
               children: [
@@ -185,7 +187,9 @@ extension ContextExtensions on BuildContext {
       builder: (_) => PopScope(
         canPop: canPop,
         child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.r),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -198,7 +202,7 @@ extension ContextExtensions on BuildContext {
               ),
             ],
           ),
-          contentPadding: const EdgeInsets.all(20).copyWith(bottom: 40),
+          contentPadding: EdgeInsets.all(20.w).copyWith(bottom: 40.h),
         ),
       ),
     );

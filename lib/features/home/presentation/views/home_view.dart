@@ -1,10 +1,12 @@
+import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 
 import 'package:the_one_test/features/category_products/presentation/manager/category_bloc/category_bloc.dart';
 import 'package:the_one_test/features/category_products/presentation/manager/product_bloc/product_bloc.dart';
 
-import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:the_one_test/features/home/presentation/views/barcode_scanner_view.dart';
+import 'package:the_one_test/features/home/presentation/views/categories_view.dart';
+import 'package:the_one_test/features/home/presentation/widgets/home_top_bar.dart';
 
 import '../widgets/home_view_body.dart';
 
@@ -91,7 +93,10 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _goToCategories() {
-    context.read<NavBarCubit>().changeIndex(1);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CategoriesView()),
+    );
   }
 
   @override
@@ -107,26 +112,43 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final bool isSearching = _searchController.text.trim().isNotEmpty;
 
-    return SafeArea(
-      bottom: false,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.only(
-          left: 10.w,
-          right: 10.w,
-          top: 5.h,
-          bottom: context.screenHeight * 0.12,
-        ),
-        child: HomeViewBody(
-          searchController: _searchController,
-          isSearching: isSearching,
-          searchBloc: _searchBloc,
-          onSearchChanged: _onSearchChanged,
-          onSearchClear: _onSearchClear,
-          onScanTap: _onScanTap,
-          onSeeAllPressed: _goToCategories,
-          dispatchSearch: _dispatchSearch,
-        ),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Column(
+              children: [
+                Gap(MediaQuery.paddingOf(context).top + 12.h),
+                HomeTopBar(
+                  searchController: _searchController,
+                  onSearchChanged: _onSearchChanged,
+                  onSearchClear: _onSearchClear,
+                  onScanTap: _onScanTap,
+                ),
+                Gap(20.h),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.only(
+                left: 10.w,
+                right: 10.w,
+                bottom: context.screenHeight * 0.05,
+              ),
+              child: HomeViewBody(
+                searchController: _searchController,
+                isSearching: isSearching,
+                searchBloc: _searchBloc,
+                onSeeAllPressed: _goToCategories,
+                dispatchSearch: _dispatchSearch,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -53,13 +53,12 @@ class LanguageDropdownSection extends StatelessWidget {
     final currentLang = context.locale.languageCode;
 
     return Padding(
-      padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
         decoration: BoxDecoration(
           border: Border.all(color: borderColor ?? Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           color:
               backgroundColor ??
               (Theme.of(context).brightness == Brightness.dark

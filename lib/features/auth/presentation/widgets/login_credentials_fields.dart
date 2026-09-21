@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart' hide CustomTextFormField;
 import 'package:the_one_test/core/widgets/widgets/custom_text_field.dart';
 import 'package:the_one_test/core/widgets/widgets/validators.dart';
-import 'package:the_one_test/features/auth/presentation/views/forget_password_view.dart';
 
 class LoginCredentialsFields extends StatelessWidget {
   const LoginCredentialsFields({
@@ -40,22 +39,6 @@ class LoginCredentialsFields extends StatelessWidget {
           controller: passwordController,
           hintText: 'Password'.tr(),
           borderColor: AppColors.primaryColor,
-        ),
-
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ForgetPasswordView()),
-              );
-            },
-            child: Text(
-              'Forgot Password?'.tr(),
-              style: TextStyle(color: AppColors.primaryColor, fontSize: 13),
-            ),
-          ),
         ),
       ],
     );

@@ -22,10 +22,10 @@ class SignupView extends StatelessWidget {
         titleFontSize: 27,
         iconBoxRadius: 22,
         iconBoxBordered: true,
-        topRow: const Align(
+        topRow: Align(
           alignment: AlignmentDirectional.topEnd,
           child: Padding(
-            padding: EdgeInsetsDirectional.only(top: 8, end: 16),
+            padding: EdgeInsetsDirectional.only(top: 8.h, end: 16.w),
             child: LanguageToggle(),
           ),
         ),
@@ -34,7 +34,7 @@ class SignupView extends StatelessWidget {
         borderRadius: 28,
         padding: EdgeInsets.fromLTRB(20.w, 26.h, 20.w, 24.h),
         shadowBlur: 30,
-        shadowOffset: const Offset(0, 12),
+        shadowOffset: Offset(0, 12.h),
         child: BlocProvider(
           create: (context) => getIt<SignupBloc>(),
           child: const SignupForm(),

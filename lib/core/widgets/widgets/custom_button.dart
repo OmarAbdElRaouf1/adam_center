@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomElevatedButton extends StatefulWidget {
   final Widget? child;
@@ -61,10 +62,7 @@ class CustomElevatedButton extends StatefulWidget {
     double widthFactor = 0.9,
     Color overlayColor = Colors.transparent,
     Color? shadowColor,
-    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(
-      horizontal: 15,
-      vertical: 13,
-    ),
+    EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
     Color? backgroundColor,
     double borderRadius = 12,
@@ -81,7 +79,7 @@ class CustomElevatedButton extends StatefulWidget {
     bool iconOnRight = false,
   }) {
     final defaultTextStyle = Theme.of(context).textTheme.labelLarge!.copyWith(
-      fontSize: fontSize ?? 20,
+      fontSize: fontSize ?? 20.sp,
       color: textColor,
       fontWeight: FontWeight.bold,
     );
@@ -92,12 +90,13 @@ class CustomElevatedButton extends StatefulWidget {
       elevation: elevation,
       minimumSize: Size(
         width ?? MediaQuery.of(context).size.width * widthFactor,
-        height ?? 50,
+        height ?? 50.h,
       ),
       overlayColor: overlayColor,
       shadowColor:
           shadowColor ?? Theme.of(context).primaryColor.withValues(alpha: 0.1),
-      padding: padding,
+      padding:
+          padding ?? EdgeInsets.symmetric(horizontal: 15.w, vertical: 13.h),
       textStyle: textStyle ?? defaultTextStyle,
       backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
       borderRadius: borderRadius,
@@ -122,10 +121,7 @@ class CustomElevatedButton extends StatefulWidget {
     double widthFactor = 0.9,
     Color overlayColor = Colors.transparent,
     Color? shadowColor,
-    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(
-      horizontal: 15,
-      vertical: 13,
-    ),
+    EdgeInsetsGeometry? padding,
     TextStyle? textStyle,
     Color backgroundColor = Colors.transparent,
     BorderSide? side,
@@ -139,11 +135,11 @@ class CustomElevatedButton extends StatefulWidget {
   }) {
     final defaultSide = BorderSide(
       color: Theme.of(context).colorScheme.primary,
-      width: 2,
+      width: 2.w,
     );
 
     final defaultTextStyle = Theme.of(context).textTheme.labelLarge!.copyWith(
-      fontSize: 20,
+      fontSize: 20.sp,
       color: textColor ?? Theme.of(context).colorScheme.primary,
     );
 
@@ -151,12 +147,13 @@ class CustomElevatedButton extends StatefulWidget {
       title: title,
       onPressed: onPressed,
       elevation: elevation,
-      minimumSize: Size(MediaQuery.of(context).size.width * widthFactor, 55),
+      minimumSize: Size(MediaQuery.of(context).size.width * widthFactor, 55.h),
       overlayColor: overlayColor,
       shadowColor:
           shadowColor ??
           Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-      padding: padding,
+      padding:
+          padding ?? EdgeInsets.symmetric(horizontal: 15.w, vertical: 13.h),
       textStyle: textStyle ?? defaultTextStyle,
       backgroundColor: backgroundColor,
       side: side ?? defaultSide,
@@ -237,7 +234,7 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton>
     final iconWidget = Icon(
       widget.icon,
       color: widget.iconColor ?? widget.textColor,
-      size: widget.iconSize,
+      size: widget.iconSize.sp,
     );
 
     return Stack(
@@ -250,8 +247,8 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton>
               : Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsetsDirectional.only(
-              start: widget.iconOnRight ? 0 : 24,
-              end: widget.iconOnRight ? 24 : 0,
+              start: widget.iconOnRight ? 0 : 24.w,
+              end: widget.iconOnRight ? 24.w : 0,
             ),
             child: iconWidget,
           ),
@@ -264,7 +261,7 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton>
   Widget build(BuildContext context) {
     final double initialWidth =
         widget.minimumSize?.width ?? MediaQuery.of(context).size.width * 0.9;
-    final double buttonHeight = widget.minimumSize?.height ?? 50;
+    final double buttonHeight = widget.minimumSize?.height ?? 50.h;
     final double targetWidth = buttonHeight; // Make it circular
 
     return AnimatedBuilder(
@@ -288,7 +285,7 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton>
                 padding: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
-                    widget.borderRadius ?? 40,
+                    (widget.borderRadius ?? 40).r,
                   ),
                   side: widget.side ?? BorderSide.none,
                 ),
@@ -317,10 +314,10 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton>
                         ),
                       ),
                       child: SizedBox(
-                        width: widget.loaderSize,
-                        height: widget.loaderSize,
+                        width: widget.loaderSize.w,
+                        height: widget.loaderSize.w,
                         child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
+                          strokeWidth: 2.5.w,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             widget.textColor ?? Colors.white,
                           ),

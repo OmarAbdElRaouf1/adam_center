@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/custom_snack_bar.dart';
 import 'package:the_one_test/features/favorites/presentation/widgets/favorite_toggle_button.dart';
+import 'package:the_one_test/features/product_details/presentation/widgets/product_action_bar.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/product_description_section.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/product_image_gallery.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/product_info_section.dart';
@@ -26,11 +27,21 @@ class ProductDetailsView extends StatelessWidget {
         mode: LaunchMode.externalApplication,
       );
       if (!launched && context.mounted) {
-        showCustomSnackBar(context, 'Unable to open WhatsApp'.tr());
+        showCustomSnackBar(
+          context,
+          'Unable to open WhatsApp'.tr(),
+          icon: Icons.error_outline,
+          iconColor: Colors.redAccent,
+        );
       }
     } catch (_) {
       if (context.mounted) {
-        showCustomSnackBar(context, 'Unable to open WhatsApp'.tr());
+        showCustomSnackBar(
+          context,
+          'Unable to open WhatsApp'.tr(),
+          icon: Icons.error_outline,
+          iconColor: Colors.redAccent,
+        );
       }
     }
   }
@@ -38,6 +49,11 @@ class ProductDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productId = int.tryParse(product['id'] ?? '') ?? 0;
+    final images = (product['images'] ?? '')
+        .split('|')
+        .where((image) => image.isNotEmpty)
+        .toList();
+    final galleryImages = images.isNotEmpty ? images : [product['image'] ?? ''];
 
     return Scaffold(
       appBar: AppBar(
@@ -63,34 +79,40 @@ class ProductDetailsView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppRadius.card.r),
                     boxShadow: AppShadows.card(context),
                   ),
-                  child: InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            ProductImageGallery(images: [product['image']!]),
-                      ),
-                    ),
-                    child: ProductImageGallery(images: [product['image']!]),
-                  ),
+                  child: ProductImageGallery(images: galleryImages),
                 ),
               ),
               Gap(20.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: ProductInfoSection(name: product['name']!),
-                  ),
+                  Expanded(child: ProductInfoSection(name: product['name']!)),
                   FavoriteToggleButton(
                     productId: productId,
                     initialIsFavorite: product['isFavorite'] == 'true',
-                    size: 24,
+                    size: 24.sp,
                   ),
                 ],
               ),
               Gap(16.h),
-              _WhatsAppInquiryButton(onPressed: () => _openWhatsApp(context)),
+              Row(
+                children: [
+                  Expanded(
+                    child: ProductActionBar(
+                      productId: productId,
+                      barCode: product['barCode'] ?? '',
+                      stockQuantity:
+                          int.tryParse(product['quantity'] ?? '') ?? 0,
+                    ),
+                  ),
+                  Gap(12.w),
+                  Expanded(
+                    child: _WhatsAppInquiryButton(
+                      onPressed: () => _openWhatsApp(context),
+                    ),
+                  ),
+                ],
+              ),
               Gap(20.h),
               Text(
                 'Choose Unit'.tr(),
@@ -102,8 +124,6 @@ class ProductDetailsView extends StatelessWidget {
               ),
               Gap(10.h),
               ProductUnitCard(
-                productId: productId,
-                barCode: product['barCode'] ?? '',
                 code: product['code'] ?? '',
                 price: product['price'] ?? '',
                 quantity: product['quantity'] ?? '',
@@ -139,11 +159,11 @@ class _WhatsAppInquiryButton extends StatelessWidget {
       height: 52.h,
       child: Material(
         color: _whatsappGreen,
-        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderRadius: BorderRadius.circular(AppRadius.pill.r),
         elevation: 4,
         shadowColor: _whatsappGreen.withValues(alpha: 0.4),
         child: InkWell(
-          borderRadius: BorderRadius.circular(AppRadius.pill),
+          borderRadius: BorderRadius.circular(AppRadius.pill.r),
           onTap: onPressed,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -157,13 +177,17 @@ class _WhatsAppInquiryButton extends StatelessWidget {
                   BlendMode.srcIn,
                 ),
               ),
-              Gap(10.w),
-              Text(
-                'Send Inquiry'.tr(),
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              Gap(8.w),
+              Flexible(
+                child: Text(
+                  'Send Inquiry'.tr(),
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

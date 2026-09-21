@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:the_one_test/core/extension/context_extension.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomShimmerWidget extends StatelessWidget {
   final double? height;
@@ -10,15 +11,15 @@ class CustomShimmerWidget extends StatelessWidget {
 
   const CustomShimmerWidget({
     super.key,
-    this.height = 50,
+    this.height,
     this.shape = BoxShape.rectangle,
     this.width = double.infinity,
     this.highlightColor,
   });
 
   const CustomShimmerWidget.circular({super.key, this.highlightColor})
-    : height = 20,
-      width = 20,
+    : height = null,
+      width = null,
       shape = BoxShape.circle;
 
   @override
@@ -34,14 +35,14 @@ class CustomShimmerWidget extends StatelessWidget {
       baseColor: baseColor,
       highlightColor: effectiveHighlightColor,
       child: Container(
-        height: height,
-        width: width,
+        height: height ?? (shape == BoxShape.circle ? 20.w : 50.h),
+        width: width ?? (shape == BoxShape.circle ? 20.w : null),
         decoration: BoxDecoration(
           color: baseColor,
           shape: shape!,
           borderRadius: shape == BoxShape.circle
               ? null
-              : BorderRadius.circular(10),
+              : BorderRadius.circular(10.r),
         ),
       ),
     );

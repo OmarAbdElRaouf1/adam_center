@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/core/widgets/custom_snack_bar.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
 
@@ -61,9 +62,20 @@ class CartItemCard extends StatelessWidget {
               ),
               CartQuantityStepper(
                 quantity: item.salesQuantity,
-                onIncrement: () => getIt<CartBloc>().add(
-                  IncrementItem(item.productID, item.barCode),
-                ),
+                onIncrement: () {
+                  if (item.salesQuantity >= item.stockQuantity) {
+                    showCustomSnackBar(
+                      context,
+                      'Maximum available stock reached'.tr(),
+                      icon: Icons.info_outline,
+                      iconColor: Colors.amber,
+                    );
+                    return;
+                  }
+                  getIt<CartBloc>().add(
+                    IncrementItem(item.productID, item.barCode),
+                  );
+                },
                 onDecrement: () => getIt<CartBloc>().add(
                   DeleteCartItem(item.productID, item.barCode),
                 ),

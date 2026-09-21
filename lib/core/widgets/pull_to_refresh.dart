@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../helper/logger.dart';
 import 'bunsing_ball_refresh_indecator.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PullToRefresh extends StatefulWidget {
   final Widget Function(ScrollController controller) builder;
@@ -170,11 +171,11 @@ class _PullToRefreshState extends State<PullToRefresh> {
               child: Center(
                 child:
                     widget.loadingIndicator ??
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
+                    Padding(
+                      padding: EdgeInsets.all(8.0.w),
                       child: SizedBox(
-                        height: 20,
-                        width: 20,
+                        height: 20.h,
+                        width: 20.w,
                         child: CircularProgressIndicator.adaptive(),
                       ),
                     ),
@@ -184,7 +185,7 @@ class _PullToRefreshState extends State<PullToRefresh> {
           // Pull-to-refresh indicator
           if ((widget.enableRefresh && (_dragOffset > 0 || _isRefreshing)))
             Positioned(
-              top: widget.topPadding ?? 20,
+              top: widget.topPadding ?? 20.h,
               left: 0,
               right: 0,
               child: Center(

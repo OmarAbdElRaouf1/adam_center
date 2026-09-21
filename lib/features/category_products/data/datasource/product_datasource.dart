@@ -111,10 +111,7 @@ class ProductDatasourceImpl implements ProductDatasource {
     final user = _userSessionDatasource.getUser();
     return _genericDataSource.fetchData<ItemModel>(
       endpoint: EndPoints.searchProductByBarcode,
-      queryParameters: {
-        'Barcode': barcode,
-        ...UserModel.identityParams(user),
-      },
+      queryParameters: {'Barcode': barcode, ...UserModel.identityParams(user)},
       fromJson: ItemModel.fromJson,
     );
   }

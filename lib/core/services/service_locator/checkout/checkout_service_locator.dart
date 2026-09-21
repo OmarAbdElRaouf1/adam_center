@@ -1,8 +1,12 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
 import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
+import 'package:the_one_test/features/auth/data/datasource/district_datasource.dart';
+import 'package:the_one_test/features/auth/data/datasource/governorate_datasource.dart';
 import 'package:the_one_test/features/cart/data/datasource/add_to_cart_datasource.dart';
 import 'package:the_one_test/features/checkout/data/datasource/add_address_datasource.dart';
+import 'package:the_one_test/features/checkout/data/datasource/local_address_region_store.dart';
 import 'package:the_one_test/features/checkout/data/datasource/place_order_datasource.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
 import 'package:the_one_test/features/checkout/presentation/manager/add_address_bloc/add_address_bloc.dart';
@@ -14,11 +18,7 @@ import 'package:the_one_test/features/checkout/presentation/manager/payment_bloc
 // mutate -> emit loading/success/failure against a datasource) — PaymentBloc,
 // AddAddressCubit and ChooseAddressBloc below all fit that shape. A manager
 // with no such flow (pure UI state, or no injected dependency to justify DI)
-// stays a Cubit — e.g. AccountCubit, CategorySelectionCubit, NavBarCubit,
-// InfoImagesCubit. ChangePasswordCubit is DI-registered (see
-// AccountServiceLocator) and does a single loading/success/failure submit
-// against a datasource, but stays a Cubit rather than Bloc+Event since it's
-// a one-shot action, not a multi-event flow.
+// stays a Cubit — e.g. AccountCubit, CategorySelectionCubit, InfoImagesCubit.
 class CheckoutServiceLocator {
   static Future<void> init({required GetIt getIt}) async {
     getIt.registerLazySingleton<PlaceOrderDatasource>(
@@ -34,15 +34,24 @@ class CheckoutServiceLocator {
         getIt<UserSessionCache>(),
       ),
     );
+    getIt.registerLazySingleton<LocalAddressRegionStore>(
+      () => LocalAddressRegionStore(getIt<SharedPreferences>()),
+    );
     getIt.registerFactory<ChooseAddressBloc>(
       () => ChooseAddressBloc(
         getIt<AddAddressDatasource>(),
         getIt<AccountCubit>(),
+        getIt<LocalAddressRegionStore>(),
+        getIt<GovernorateDatasource>(),
+        getIt<DistrictDatasource>(),
       ),
     );
     getIt.registerFactory<AddAddressBloc>(
-      () =>
-          AddAddressBloc(getIt<AddAddressDatasource>(), getIt<AccountCubit>()),
+      () => AddAddressBloc(
+        getIt<AddAddressDatasource>(),
+        getIt<AccountCubit>(),
+        getIt<LocalAddressRegionStore>(),
+      ),
     );
 
     // Factory-with-param since PaymentBloc needs runtime subtotal +

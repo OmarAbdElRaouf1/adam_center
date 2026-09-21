@@ -4,6 +4,12 @@
 // The top-level region_id/RegionName/DistrictName fields are static per
 // customer profile and never change per address, so they can't be trusted
 // for display. This pulls the district back out of that composed string.
+//
+// Note there's no governorate in that template — the backend's own
+// regenerated string only ever carries المنطقة/القطعة/الشارع, confirmed by
+// this doc comment before any of the fixes around it existed. The
+// governorate has to come from LocalAddressRegionStore instead (see
+// ChooseAddressBloc and AddAddressBloc) rather than from this string.
 String? districtFromCustomerAddress(String? customerAddress) {
   if (customerAddress == null || customerAddress.isEmpty) return null;
   for (final part in customerAddress.split('  ')) {

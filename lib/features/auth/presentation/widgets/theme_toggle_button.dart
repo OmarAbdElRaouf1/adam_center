@@ -14,9 +14,9 @@ class ThemeToggleButton extends StatelessWidget {
           onTap: () => context.read<ThemeBloc>().add(
             ThemeChanged(isDark ? ThemeMode.light : ThemeMode.dark),
           ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.18),
               shape: BoxShape.circle,
@@ -32,7 +32,7 @@ class ThemeToggleButton extends StatelessWidget {
                 isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
                 key: ValueKey(isDark),
                 color: Colors.white,
-                size: 16,
+                size: 16.sp,
               ),
             ),
           ),

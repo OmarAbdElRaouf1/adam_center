@@ -37,14 +37,14 @@ class ProductPriceSection extends StatelessWidget {
               ),
             ),
             if (hasDiscount && !hasLimit) ...[
-              const SizedBox(width: 4),
+              SizedBox(width: 4.w),
               Text(
                 'instead_of'.tr(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextTheme.labelSmall9Bold,
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4.w),
               Text(
                 '${price.toStringAsFixed(2)} $currency',
                 maxLines: 1,

@@ -5,9 +5,7 @@ import 'package:the_one_test/core/models/item_model.dart';
 import 'package:the_one_test/features/category_products/data/models/item_model_x.dart';
 import 'package:the_one_test/features/category_products/presentation/manager/product_bloc/product_bloc.dart';
 import 'package:the_one_test/features/category_products/presentation/widgets/category_product_grid_shimmer.dart';
-import 'package:the_one_test/features/home/presentation/widgets/home_list_view_item.dart';
-
-import '../views/product_details_view.dart';
+import 'package:the_one_test/features/category_products/presentation/widgets/category_products_grid.dart';
 
 class SimilarProductsSection extends StatelessWidget {
   const SimilarProductsSection({
@@ -56,29 +54,11 @@ class SimilarProductsSection extends StatelessWidget {
                 ),
               ),
               Gap(12.h),
-              GridView.builder(
+              CategoryProductsGrid(
+                products: items,
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: items.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 14.w,
-                  mainAxisSpacing: 14.h,
-                  childAspectRatio: 0.68,
-                ),
-                itemBuilder: (context, index) {
-                  final product = items[index];
-                  return HomeListViewItem(
-                    key: ValueKey(product['id']),
-                    product: product,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductDetailsView(product: product),
-                      ),
-                    ),
-                  );
-                },
               ),
             ],
           );

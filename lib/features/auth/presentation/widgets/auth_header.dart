@@ -32,11 +32,11 @@ class AuthHeader extends StatelessWidget {
         ?topRow,
         Gap(12.h),
         Container(
-          width: context.screenWidth * 0.15,
-          height: context.screenWidth * 0.15,
+          width: (context.screenWidth * 0.15).clamp(52.0, 80.0),
+          height: (context.screenWidth * 0.15).clamp(52.0, 80.0),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: iconBoxBordered ? 0.15 : 0.2),
-            borderRadius: BorderRadius.circular(iconBoxRadius),
+            borderRadius: BorderRadius.circular(iconBoxRadius.r),
             border: iconBoxBordered
                 ? Border.all(color: Colors.white.withValues(alpha: 0.2))
                 : null,
@@ -46,6 +46,7 @@ class AuthHeader extends StatelessWidget {
         Gap(16.h),
         Text(
           title,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
             fontSize: titleFontSize.sp,
@@ -56,6 +57,7 @@ class AuthHeader extends StatelessWidget {
           Gap(8.h),
           Text(
             subtitle!,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.75),
               fontSize: 14.sp,

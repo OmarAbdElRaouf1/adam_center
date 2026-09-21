@@ -57,8 +57,6 @@ class AppAssets {
       'assets/icons/cus_services.svg';
   static const String deleteIcon = 'assets/icons/deleteIcon.svg';
   static const String editeIcon = 'assets/icons/edit_icon.svg';
-  static const String deleteAccountIcon = 'assets/icons/delete_account.svg';
-  static const String changePasswordIcon = 'assets/icons/secret_password.svg';
   static const String fallBackBanner1 = 'assets/images/banner.jpg';
   static const String fallBackBanner2 = 'assets/images/banner2.jpg';
   static const String fallBackBanner3 = 'assets/images/banner3.jpg';

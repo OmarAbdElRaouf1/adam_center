@@ -33,10 +33,12 @@ class CartEmpty extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          'assets/images/cart_empty.svg',
-                          width: context.screenWidth * 0.6,
-                          height: context.screenHeight * 0.4,
+                        Flexible(
+                          child: SvgPicture.asset(
+                            'assets/images/cart_empty.svg',
+                            width: context.screenWidth * 0.6,
+                            height: context.screenHeight * 0.4,
+                          ),
                         ),
 
                         Gap(20.h),

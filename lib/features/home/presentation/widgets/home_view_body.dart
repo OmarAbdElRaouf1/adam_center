@@ -11,7 +11,6 @@ import 'package:the_one_test/features/category_products/presentation/widgets/cat
 import 'package:the_one_test/features/home/presentation/widgets/custom_row.dart';
 import 'package:the_one_test/features/home/presentation/widgets/fetched_banner_section.dart';
 import 'package:the_one_test/features/home/presentation/widgets/fetched_product_section.dart';
-import 'package:the_one_test/features/home/presentation/widgets/home_top_bar.dart';
 import 'package:the_one_test/features/home/presentation/widgets/parent_category_preview_list.dart';
 import 'package:the_one_test/features/home/presentation/widgets/text_banner.dart';
 
@@ -21,9 +20,6 @@ class HomeViewBody extends StatelessWidget {
     required this.searchController,
     required this.isSearching,
     required this.searchBloc,
-    required this.onSearchChanged,
-    required this.onSearchClear,
-    required this.onScanTap,
     required this.onSeeAllPressed,
     required this.dispatchSearch,
   });
@@ -32,9 +28,6 @@ class HomeViewBody extends StatelessWidget {
   final bool isSearching;
   final ProductBloc searchBloc;
 
-  final ValueChanged<String> onSearchChanged;
-  final VoidCallback onSearchClear;
-  final VoidCallback onScanTap;
   final VoidCallback onSeeAllPressed;
   final void Function(String query) dispatchSearch;
 
@@ -43,15 +36,6 @@ class HomeViewBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeTopBar(
-          searchController: searchController,
-          onSearchChanged: onSearchChanged,
-          onSearchClear: onSearchClear,
-          onScanTap: onScanTap,
-        ),
-
-        Gap(20.h),
-
         if (isSearching)
           BlocBuilder<ProductBloc, BaseState<ItemModel>>(
             bloc: searchBloc,
@@ -136,7 +120,7 @@ class HomeViewBody extends StatelessWidget {
 
           FetchedBannerSlider(endpoint: EndPoints.bannerThree),
 
-          Gap(40.h),
+          // Gap(40.h),
         ],
       ],
     );

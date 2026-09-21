@@ -51,14 +51,14 @@ class AdvancedCounterBox extends StatelessWidget {
                   color: context.isDarkMode
                       ? Colors.white24
                       : AppColors.mainAppColor.withValues(alpha: 0.2),
-                  width: 1,
+                  width: 1.w,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.mainAppColor.withValues(alpha: 0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                    spreadRadius: 1,
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                    spreadRadius: 1.r,
                   ),
                 ],
               ),
@@ -80,7 +80,7 @@ class AdvancedCounterBox extends StatelessWidget {
                           color: context.isDarkMode
                               ? Colors.white38
                               : AppColors.mainAppColor.withValues(alpha: 0.3),
-                          width: 1,
+                          width: 1.w,
                         ),
                       ),
                       child: Material(
@@ -94,7 +94,7 @@ class AdvancedCounterBox extends StatelessWidget {
                                     width: 11.w,
                                     height: 11.h,
                                     child: CircularProgressIndicator(
-                                      strokeWidth: 2,
+                                      strokeWidth: 2.w,
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         context.isDarkMode
                                             ? Colors.white
@@ -153,8 +153,8 @@ class AdvancedCounterBox extends StatelessWidget {
                             color: AppColors.mainAppColor.withValues(
                               alpha: 0.3,
                             ),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
+                            blurRadius: 4.r,
+                            offset: Offset(0, 2.h),
                           ),
                         ],
                       ),
@@ -171,7 +171,7 @@ class AdvancedCounterBox extends StatelessWidget {
                                     width: 11.w,
                                     height: 11.h,
                                     child: CircularProgressIndicator(
-                                      strokeWidth: 2,
+                                      strokeWidth: 2.w,
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.white,
                                       ),

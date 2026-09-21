@@ -1,8 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:the_one_test/core/http/either.dart';
-import 'package:the_one_test/core/http/failure.dart';
 import 'package:the_one_test/core/local/user_session_datasource.dart';
-import 'package:the_one_test/features/account/data/datasource/delete_account_datasource.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/checkout/data/models/address_model.dart';
 
@@ -13,9 +10,8 @@ import 'package:the_one_test/features/checkout/data/models/address_model.dart';
 // screen already showing it — Home and Cart in particular.
 class AccountCubit extends Cubit<UserModel?> {
   final UserSessionCache _userSessionCache;
-  final DeleteAccountDatasource _deleteAccountDatasource;
 
-  AccountCubit(UserSessionCache userSessionCache, this._deleteAccountDatasource)
+  AccountCubit(UserSessionCache userSessionCache)
     : _userSessionCache = userSessionCache,
       super(userSessionCache.getUser());
 
@@ -27,15 +23,6 @@ class AccountCubit extends Cubit<UserModel?> {
   Future<void> logout() async {
     await _userSessionCache.clearUser();
     emit(null);
-  }
-
-  Future<Either<Failure, void>> deleteAccount() async {
-    final result = await _deleteAccountDatasource.deleteAccount();
-    return result.fold((failure) => Left(failure), (_) async {
-      await _userSessionCache.clearUser();
-      emit(null);
-      return const Right(null);
-    });
   }
 
   // Applies a saved/newly-added address to the current user profile. Shared

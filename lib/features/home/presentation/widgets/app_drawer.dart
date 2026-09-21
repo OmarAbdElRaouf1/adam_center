@@ -6,17 +6,12 @@ import 'package:the_one_test/core/widgets/under_construction_screen.dart';
 import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
 import 'package:the_one_test/features/account/presentation/views/account_view.dart';
 import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
-import 'package:the_one_test/features/home/presentation/manager/nav_bar_cubit/nav_bar_cubit.dart';
+import 'package:the_one_test/features/favorites/presentation/views/favorites_view.dart';
 import 'package:the_one_test/features/menu/data/datasource/info_pages_datasource.dart';
 import 'package:the_one_test/features/menu/presentation/views/info_images_view.dart';
 import 'package:the_one_test/features/menu/presentation/widgets/menu_theme_toggle.dart';
 import 'package:the_one_test/features/menu/presentation/widgets/menu_version_footer.dart';
 import 'package:the_one_test/features/orders/presentation/views/previous_orders_view.dart';
-
-void _goToTab(BuildContext context, int index) {
-  Navigator.pop(context);
-  context.read<NavBarCubit>().changeIndex(index);
-}
 
 void _openPage(BuildContext context, Widget page) {
   Navigator.pop(context);
@@ -77,7 +72,7 @@ class AppDrawer extends StatelessWidget {
                     _DrawerNavTile(
                       icon: Icons.home_outlined,
                       label: 'Home'.tr(),
-                      onTap: () => _goToTab(context, 0),
+                      onTap: () => Navigator.pop(context),
                     ),
                     _DrawerNavTile(
                       icon: Icons.person_outline,
@@ -87,7 +82,7 @@ class AppDrawer extends StatelessWidget {
                     _DrawerNavTile(
                       icon: Icons.favorite_border,
                       label: 'Favorites'.tr(),
-                      onTap: () => _goToTab(context, 3),
+                      onTap: () => _openPage(context, const FavoritesView()),
                     ),
                     _DrawerNavTile(
                       icon: Icons.receipt_long_outlined,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/models/item_model.dart';
+import 'package:the_one_test/core/widgets/custom_snack_bar.dart';
 import 'package:the_one_test/features/favorites/data/datasource/local_favorites_store.dart';
 import 'package:the_one_test/features/favorites/presentation/manager/favorite_bloc/favorite_bloc.dart';
 
@@ -16,12 +17,12 @@ class FavoriteToggleButton extends StatefulWidget {
     super.key,
     required this.productId,
     required this.initialIsFavorite,
-    this.size = 20,
+    this.size,
   });
 
   final int productId;
   final bool initialIsFavorite;
-  final double size;
+  final double? size;
 
   @override
   State<FavoriteToggleButton> createState() => _FavoriteToggleButtonState();
@@ -43,10 +44,13 @@ class _FavoriteToggleButtonState extends State<FavoriteToggleButton> {
       listener: (context, state) {
         if (state.isSuccess) {
           setState(() => _isFavorite = !_isFavorite);
-          context.showSuccessMessage(
+          showCustomSnackBar(
+            context,
             _isFavorite
                 ? 'Added to favorites'.tr()
                 : 'Removed from favorites'.tr(),
+            icon: _isFavorite ? Icons.favorite : Icons.favorite_border,
+            iconColor: _isFavorite ? Colors.red : Colors.white70,
           );
         } else if (state.isFailure) {
           context.showErrorMessage(state.errorMessage ?? '');
@@ -64,7 +68,7 @@ class _FavoriteToggleButtonState extends State<FavoriteToggleButton> {
           duration: const Duration(milliseconds: 100),
           curve: Curves.easeOut,
           child: Container(
-            padding: const EdgeInsets.all(5),
+            padding: EdgeInsets.all(5.w),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               shape: BoxShape.circle,
@@ -80,7 +84,7 @@ class _FavoriteToggleButtonState extends State<FavoriteToggleButton> {
                 _isFavorite ? Icons.favorite : Icons.favorite_border,
                 key: ValueKey(_isFavorite),
                 color: _isFavorite ? Colors.red : AppColors.primaryColor,
-                size: widget.size,
+                size: widget.size ?? 20.sp,
               ),
             ),
           ),

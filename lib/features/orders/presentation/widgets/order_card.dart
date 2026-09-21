@@ -43,6 +43,44 @@ class OrderCard extends StatelessWidget {
             '${'Order Date'.tr()} ${context.localizeDigits(order.date)}',
             style: TextStyle(fontSize: 12.sp, color: onSurface),
           ),
+          if (order.items.isNotEmpty) ...[
+            Gap(10.h),
+            Text(
+              'Order Items'.tr(),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: onSurface,
+              ),
+            ),
+            Gap(4.h),
+            for (final item in order.items)
+              Padding(
+                padding: EdgeInsets.only(bottom: 2.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        context.localizeDigits(_itemName(context, item)),
+                        style: TextStyle(fontSize: 13.5.sp, height: 1.5),
+                      ),
+                    ),
+                    Gap(8.w),
+                    Text(
+                      context.localizeDigits(
+                        '${'Quantity'.tr()}: ${_formatQuantity(item.quantity)}',
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
           Gap(10.h),
           Text(
             'Delivery Address'.tr(),
@@ -74,4 +112,13 @@ class OrderCard extends StatelessWidget {
       ),
     );
   }
+
+  String _itemName(BuildContext context, OrderItemModel item) {
+    final preferred = context.isArabic ? item.arName : item.enName;
+    return preferred.isNotEmpty ? preferred : item.arName;
+  }
+
+  String _formatQuantity(num quantity) => quantity == quantity.truncate()
+      ? quantity.toInt().toString()
+      : quantity.toString();
 }

@@ -24,7 +24,7 @@ class CategoriesListViewItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.badge),
+                borderRadius: BorderRadius.circular(AppRadius.badge.r),
                 child: Image.network(
                   image,
                   width: constraints.maxWidth,

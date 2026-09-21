@@ -16,7 +16,7 @@ class ProductCardShimmer extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.codGray : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: isDark ? Colors.white12 : Colors.grey.shade200,
         ),
@@ -36,18 +36,18 @@ class ProductCardShimmer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const CustomShimmerWidget(height: 12, width: double.infinity),
+                CustomShimmerWidget(height: 12.h, width: double.infinity),
                 SizedBox(height: 6.h),
-                CustomShimmerWidget(height: 12, width: 80.w),
+                CustomShimmerWidget(height: 12.h, width: 80.w),
                 SizedBox(height: 10.h),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: CustomShimmerWidget(height: 18, width: 60.w),
+                  child: CustomShimmerWidget(height: 18.h, width: 60.w),
                 ),
                 SizedBox(height: 10.h),
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
-                  child: CustomShimmerWidget(height: 32, width: 64.w),
+                  child: CustomShimmerWidget(height: 32.h, width: 64.w),
                 ),
               ],
             ),
@@ -149,7 +149,7 @@ class ListRowShimmer extends StatelessWidget {
             height: rowHeight,
             decoration: BoxDecoration(
               color: isDark ? AppColors.codGray : Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
                 color: isDark ? Colors.white12 : Colors.grey.shade200,
               ),
@@ -163,14 +163,11 @@ class ListRowShimmer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const CustomShimmerWidget(
-                        height: 12,
-                        width: double.infinity,
-                      ),
+                      CustomShimmerWidget(height: 12.h, width: double.infinity),
                       SizedBox(height: 8.h),
-                      CustomShimmerWidget(height: 12, width: 120.w),
+                      CustomShimmerWidget(height: 12.h, width: 120.w),
                       SizedBox(height: 8.h),
-                      CustomShimmerWidget(height: 12, width: 80.w),
+                      CustomShimmerWidget(height: 12.h, width: 80.w),
                     ],
                   ),
                 ),
@@ -197,7 +194,7 @@ class CategoryTileShimmer extends StatelessWidget {
           child: CustomShimmerWidget(width: double.infinity, height: null),
         ),
         SizedBox(height: 6.h),
-        CustomShimmerWidget(height: 10, width: 44.w),
+        CustomShimmerWidget(height: 10.h, width: 44.w),
       ],
     );
   }
@@ -221,7 +218,7 @@ class CategoryRailShimmer extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           SizedBox(height: 6.h),
-          CustomShimmerWidget(height: 9, width: 32.w),
+          CustomShimmerWidget(height: 9.h, width: 32.w),
         ],
       ),
     );
@@ -233,13 +230,13 @@ class CategoryRailShimmer extends StatelessWidget {
 class BlockShimmer extends StatelessWidget {
   const BlockShimmer({
     super.key,
-    this.height = 100,
+    this.height,
     this.width,
     this.margin,
     this.borderRadius,
   });
 
-  final double height;
+  final double? height;
   final double? width;
   final EdgeInsetsGeometry? margin;
   final BorderRadiusGeometry? borderRadius;
@@ -249,8 +246,8 @@ class BlockShimmer extends StatelessWidget {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: ClipRRect(
-        borderRadius: borderRadius ?? BorderRadius.circular(12),
-        child: CustomShimmerWidget(height: height, width: width),
+        borderRadius: borderRadius ?? BorderRadius.circular(12.r),
+        child: CustomShimmerWidget(height: height ?? 100.h, width: width),
       ),
     );
   }

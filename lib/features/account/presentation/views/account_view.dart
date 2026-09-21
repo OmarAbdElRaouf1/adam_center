@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/features/account/presentation/manager/account_cubit/account_cubit.dart';
-import 'package:the_one_test/features/account/presentation/widgets/account_action_buttons.dart';
+import 'package:the_one_test/features/account/presentation/widgets/account_header.dart';
 import 'package:the_one_test/features/account/presentation/widgets/account_info_fields.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 
@@ -18,7 +18,6 @@ class _AccountViewState extends State<AccountView> {
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   bool _controllersHydrated = false;
 
   @override
@@ -52,21 +51,28 @@ class _AccountViewState extends State<AccountView> {
         return Scaffold(
           key: ValueKey(context.locale.languageCode),
           appBar: const CustomAppBar(titleText: 'My Account'),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-            child: Form(
-              key: _formKey,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: AccountHeader(
+                      name: [user?.englishName, user?.lastName]
+                          .whereType<String>()
+                          .where((s) => s.isNotEmpty)
+                          .join(' '),
+                    ),
+                  ),
+                  Gap(24.h),
                   AccountInfoFields(
                     firstNameController: firstNameController,
                     lastNameController: lastNameController,
                     phoneController: phoneController,
                     emailController: emailController,
                   ),
-                  Gap(32.h),
-                  const AccountActionButtons(),
                 ],
               ),
             ),

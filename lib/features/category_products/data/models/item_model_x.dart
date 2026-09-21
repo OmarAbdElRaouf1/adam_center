@@ -13,9 +13,13 @@ extension ItemModelProductMapX on ItemModel {
       'name': productArName,
       'description': description1 ?? '',
       'price': price.toString(),
+      'priceAfterDiscount': priceAfterDiscount.toString(),
       'categoryId': categoryId ?? '',
+      'categoryArName': categoryArName,
+      'categoryEnName': categoryEnName,
       'code': productCode,
-      'quantity': stockQuantity.toString(),
+      'quantity': stockQuantity.toInt().toString(),
+      'images': productImages.join('|'),
     };
   }
 }

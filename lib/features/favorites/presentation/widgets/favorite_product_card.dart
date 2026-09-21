@@ -38,6 +38,7 @@ class FavoriteProductCard extends StatelessWidget {
             image: product['image']!,
             productId: int.tryParse(product['id'] ?? '') ?? 0,
             barCode: product['barCode'] ?? '',
+            stockQuantity: int.tryParse(product['quantity'] ?? '') ?? 0,
           ),
         ],
       ),
