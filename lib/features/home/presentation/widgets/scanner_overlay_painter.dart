@@ -22,7 +22,7 @@ class ScannerOverlay extends CustomPainter {
     );
 
     final bracketPaint = Paint()
-      ..color = AppColors.mainAppColor
+      ..color = AppColors.primaryColor
       ..strokeWidth = 4.w
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

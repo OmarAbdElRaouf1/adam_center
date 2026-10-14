@@ -12,12 +12,14 @@ class CategoryProductsGrid extends StatelessWidget {
     this.padding,
     this.shrinkWrap = false,
     this.physics,
+    this.controller,
   });
 
   final List<Map<String, String>> products;
   final EdgeInsetsGeometry? padding;
   final bool shrinkWrap;
   final ScrollPhysics? physics;
+  final ScrollController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class CategoryProductsGrid extends StatelessWidget {
         final columns = (constraints.maxWidth / 190).floor().clamp(2, 4);
         final rowCount = (products.length / columns).ceil();
         return ListView.separated(
+          controller: controller,
           padding:
               padding ?? EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
           shrinkWrap: shrinkWrap,

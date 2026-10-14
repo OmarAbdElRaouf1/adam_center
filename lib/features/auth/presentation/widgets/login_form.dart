@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/auth/presentation/manager/login_bloc/login_bloc.dart';
 import 'package:the_one_test/features/auth/presentation/views/signup_view.dart';
 import 'package:the_one_test/features/auth/presentation/widgets/auth_switch_link.dart';
 import 'package:the_one_test/features/auth/presentation/widgets/login_credentials_fields.dart';
 import 'package:the_one_test/features/home/presentation/views/root_view.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_button.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -56,9 +56,9 @@ class _LoginFormState extends State<LoginForm> {
 
               Gap(12.h),
 
-              CustomElevatedButton.filled(
-                backgroundColor: AppColors.primaryColor,
-                title: state.isLoading ? 'Logging in...'.tr() : 'Login'.tr(),
+              StoreButton(
+                label: 'Login'.tr(),
+                isLoading: state.isLoading,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     context.read<LoginBloc>().add(
@@ -69,7 +69,6 @@ class _LoginFormState extends State<LoginForm> {
                     );
                   }
                 },
-                context: context,
               ),
 
               Gap(16.h),

@@ -16,14 +16,14 @@ class LanguageToggle extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.18),
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
+          border: Border.all(color: Colors.grey.shade300),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.language, color: Colors.white, size: 16.sp),
+            Icon(Icons.language, color: AppColors.primaryColor, size: 16.sp),
 
             SizedBox(width: 5.w),
 
@@ -32,7 +32,7 @@ class LanguageToggle extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 12.sp,
-                color: Colors.white,
+                color: AppColors.primaryColor,
               ),
             ),
           ],

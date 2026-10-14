@@ -7,12 +7,10 @@ import 'package:the_one_test/features/cart/data/datasource/add_to_cart_datasourc
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
-import 'package:the_one_test/features/checkout/presentation/widgets/payment_methods_section.dart';
 
 abstract interface class PlaceOrderDatasource {
   Future<Either<Failure, String>> placeOrder({
     required DeliveryInfoModel deliveryInfo,
-    required PaymentMethod paymentMethod,
     required double subtotal,
     required double discount,
     required double total,
@@ -33,7 +31,6 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
   @override
   Future<Either<Failure, String>> placeOrder({
     required DeliveryInfoModel deliveryInfo,
-    required PaymentMethod paymentMethod,
     required double subtotal,
     required double discount,
     required double total,
@@ -44,7 +41,6 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
       (cartItems) => _placeOrderForCartItems(
         cartItems: cartItems,
         deliveryInfo: deliveryInfo,
-        paymentMethod: paymentMethod,
         subtotal: subtotal,
         discount: discount,
         total: total,
@@ -55,7 +51,6 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
   Future<Either<Failure, String>> _placeOrderForCartItems({
     required List<CartItemModel> cartItems,
     required DeliveryInfoModel deliveryInfo,
-    required PaymentMethod paymentMethod,
     required double subtotal,
     required double discount,
     required double total,
@@ -111,12 +106,14 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
       'OrderDate': now,
       'DeliveryDate': now,
       ...UserModel.identityParams(user),
-      'CustomerName': user?.arabicName ?? user?.englishName ?? '',
+      'CustomerName': deliveryInfo.name.isNotEmpty
+          ? deliveryInfo.name
+          : user?.arabicName ?? user?.englishName ?? '',
       'CustomerEnName': user?.englishName ?? '',
       'CustomerAddress': deliveryInfo.fullAddress,
       'OnlineStoreId': 1,
       'TotalValue': subtotal,
-      'Details': '',
+      'Details': deliveryInfo.notes,
       'Additions': 0.0,
       'OrderTime': '',
       'Discount': discount,
@@ -143,17 +140,17 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
       'TaxesValue': 0.0,
       'PayID': 0,
       'PayValue': total,
-      'DistrictName': deliveryInfo.area ?? '',
-      'Block': '',
+      'DistrictName': deliveryInfo.area,
+      'Block': deliveryInfo.block,
       'Street': deliveryInfo.street,
-      'House': deliveryInfo.houseNumber,
+      'House': deliveryInfo.house,
       'PaymentID': '',
       'GroupID': 0,
-      'SecondPhone': '',
-      'Gada': '',
+      'SecondPhone': deliveryInfo.phone,
+      'Gada': deliveryInfo.gada,
       'Email': deliveryInfo.email,
-      'Floor': '',
-      'Apartment': '',
+      'Floor': deliveryInfo.floor,
+      'Apartment': deliveryInfo.apartment,
       'DeliveryDay': '',
       'DeliveryID': 0,
       'OrderAddress': deliveryInfo.fullAddress,
@@ -163,7 +160,7 @@ class PlaceOrderDatasourceImpl implements PlaceOrderDatasource {
       'MapCustomerAddress': '',
       'MapPlaceID': '',
       'DiscountPointsValue': 0.0,
-      'RegionName': '',
+      'RegionName': deliveryInfo.governorate,
       'NotAllowNegativeOutput': false,
     };
 

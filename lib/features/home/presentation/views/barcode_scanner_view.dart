@@ -4,9 +4,8 @@ import 'package:the_one_test/features/home/presentation/widgets/scanner_app_bar.
 import 'package:the_one_test/features/home/presentation/widgets/scanner_instructions_banner.dart';
 import 'package:the_one_test/features/home/presentation/widgets/scanner_overlay_painter.dart';
 
-// Pops with the scanned code as the route result — the caller (Home) is
-// responsible for feeding it into its own search, matching how this app's
-// search already lives inline on Home rather than as a separate screen.
+// Pops with the scanned code as the route result — the caller (Home or the
+// search page) runs the search with it.
 class BarcodeScannerView extends StatefulWidget {
   const BarcodeScannerView({super.key});
 

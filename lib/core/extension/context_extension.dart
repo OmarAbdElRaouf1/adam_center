@@ -1,5 +1,6 @@
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/core/widgets/custom_snack_bar.dart';
 
 extension ContextExtensions on BuildContext {
   double get screenHeight => MediaQuery.of(this).size.height;
@@ -51,34 +52,11 @@ extension ContextExtensions on BuildContext {
   FocusScopeNode get foucsScopeNode => FocusScope.of(this);
 
   void showErrorMessage(String message) {
-    ScaffoldMessenger.of(this).clearSnackBars();
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        showCloseIcon: false,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        content: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                message,
-                style: AppTextTheme.headlineMedium.copyWith(
-                  color: colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Gap(10.w),
-            const Icon(Icons.error, color: Colors.red),
-          ],
-        ),
-        backgroundColor: colorScheme.surface,
-        behavior: SnackBarBehavior.floating,
-        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
-        margin: EdgeInsets.only(bottom: 25.h, right: 20.w, left: 20.w),
-      ),
+    showCustomSnackBar(
+      this,
+      message,
+      icon: Icons.error_rounded,
+      iconColor: Colors.red,
     );
   }
 
@@ -87,37 +65,10 @@ extension ContextExtensions on BuildContext {
     Color color = Colors.green,
     IconData icon = Icons.check_circle,
   }) {
+    // Deferred a frame like before, so it's safe to call from listeners
+    // that run mid-build.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(this).showSnackBar(
-        SnackBar(
-          showCloseIcon: false,
-          duration: const Duration(seconds: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          content: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  message,
-
-                  style: AppTextTheme.headlineMedium.copyWith(
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Gap(10.w),
-              Icon(icon, color: color),
-            ],
-          ),
-          backgroundColor: AppColors.primaryColor,
-          behavior: SnackBarBehavior.floating,
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
-          margin: EdgeInsets.only(bottom: 25.h, right: 20.w, left: 20.w),
-        ),
-      );
+      showCustomSnackBar(this, message, icon: icon, iconColor: color);
     });
   }
 

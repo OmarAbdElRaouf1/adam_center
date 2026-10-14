@@ -1,13 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart' hide CustomTextFormField;
-import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
 import 'package:the_one_test/core/widgets/widgets/custom_text_field.dart';
 import 'package:the_one_test/core/widgets/widgets/validators.dart';
 import 'package:the_one_test/features/auth/data/models/district_model.dart';
 import 'package:the_one_test/features/auth/data/models/governorate_model.dart';
 import 'package:the_one_test/features/auth/presentation/widgets/location_dropdowns.dart';
 import 'package:the_one_test/features/checkout/presentation/manager/add_address_bloc/add_address_bloc.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_button.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_page.dart';
 
 class AddAddressView extends StatelessWidget {
   const AddAddressView({super.key});
@@ -96,78 +97,80 @@ class _AddAddressFormState extends State<_AddAddressForm> {
           context.showErrorMessage(state.errorMessage ?? '');
         }
       },
-      child: Scaffold(
-        appBar: const CustomAppBar(titleText: 'Add Address'),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  LocationDropdowns(
-                    onSelectionChanged: (governorate, district) {
-                      setState(() {
-                        _governorate = governorate;
-                        _district = district;
-                      });
-                    },
-                  ),
-                  Gap(16.h),
-                  CustomTextFormField(
-                    hintText: 'Street'.tr(),
-                    controller: streetController,
-                    validator: Validators.validateEmpty,
-                    borderColor: AppColors.primaryColor,
-                  ),
-                  Gap(16.h),
-                  CustomTextFormField(
-                    hintText: 'House Number'.tr(),
-                    controller: houseController,
-                    validator: Validators.validateEmpty,
-                    borderColor: AppColors.primaryColor,
-                  ),
-                  Gap(16.h),
-                  CustomTextFormField(
-                    hintText: 'Block'.tr(),
-                    controller: blockController,
-                    borderColor: AppColors.primaryColor,
-                  ),
-                  Gap(16.h),
-                  CustomTextFormField(
-                    hintText: 'Floor'.tr(),
-                    controller: floorController,
-                    borderColor: AppColors.primaryColor,
-                  ),
-                  Gap(16.h),
-                  CustomTextFormField(
-                    hintText: 'Apartment'.tr(),
-                    controller: apartmentController,
-                    borderColor: AppColors.primaryColor,
-                  ),
-                  Gap(16.h),
-                  CustomTextFormField(
-                    hintText: 'Notes'.tr(),
-                    controller: notesController,
-                    borderColor: AppColors.primaryColor,
-                  ),
-                  Gap(28.h),
-                  BlocBuilder<AddAddressBloc, BaseState<void>>(
-                    builder: (context, state) {
-                      final isSaving = state.isLoading;
-                      return CustomElevatedButton.filled(
-                        context: context,
-                        title: isSaving ? '...'.tr() : 'Save Address'.tr(),
-                        backgroundColor: AppColors.primaryColor,
-                        borderRadius: AppRadius.pill,
-                        onPressed: isSaving ? () {} : _save,
-                      );
-                    },
-                  ),
-                ],
-              ),
+      child: StorePage(
+        title: 'Add Address'.tr(),
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 80.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LocationDropdowns(
+                  onSelectionChanged: (governorate, district) {
+                    setState(() {
+                      _governorate = governorate;
+                      _district = district;
+                    });
+                  },
+                ),
+                Gap(16.h),
+                CustomTextFormField(
+                  hintText: 'Street'.tr(),
+                  controller: streetController,
+                  validator: Validators.validateEmpty,
+                  borderColor: Colors.grey.shade300,
+                  prefixIconColor: AppColors.primaryColor,
+                ),
+                Gap(16.h),
+                CustomTextFormField(
+                  hintText: 'House Number'.tr(),
+                  controller: houseController,
+                  validator: Validators.validateEmpty,
+                  borderColor: Colors.grey.shade300,
+                  prefixIconColor: AppColors.primaryColor,
+                ),
+                Gap(16.h),
+                CustomTextFormField(
+                  hintText: 'Block'.tr(),
+                  controller: blockController,
+                  borderColor: Colors.grey.shade300,
+                  prefixIconColor: AppColors.primaryColor,
+                ),
+                Gap(16.h),
+                CustomTextFormField(
+                  hintText: 'Floor'.tr(),
+                  controller: floorController,
+                  borderColor: Colors.grey.shade300,
+                  prefixIconColor: AppColors.primaryColor,
+                ),
+                Gap(16.h),
+                CustomTextFormField(
+                  hintText: 'Apartment'.tr(),
+                  controller: apartmentController,
+                  borderColor: Colors.grey.shade300,
+                  prefixIconColor: AppColors.primaryColor,
+                ),
+                Gap(16.h),
+                CustomTextFormField(
+                  hintText: 'Notes'.tr(),
+                  controller: notesController,
+                  borderColor: Colors.grey.shade300,
+                  prefixIconColor: AppColors.primaryColor,
+                ),
+                Gap(28.h),
+                BlocBuilder<AddAddressBloc, BaseState<void>>(
+                  builder: (context, state) {
+                    final isSaving = state.isLoading;
+                    return StoreButton(
+                      label: 'Save Address'.tr(),
+                      isLoading: isSaving,
+                      onPressed: _save,
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),

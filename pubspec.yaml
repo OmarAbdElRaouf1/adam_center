@@ -72,6 +72,7 @@ dependencies:
   see_more: ^2.2.0
   shared_preferences: ^2.5.5
   pull_to_refresh: ^2.0.0
+  font_awesome_flutter: ^11.0.0
 
 dev_dependencies:
   build_runner: ^2.4.11
@@ -102,6 +103,11 @@ flutter:
     - assets/icons/
     - assets/translations/
     - assets/images/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Variable.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
   # For details regarding adding assets from package dependencies, see

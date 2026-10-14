@@ -43,29 +43,46 @@ class ProductActionBar extends StatelessWidget {
             state.isLoading && state.metadata['productId'] == productId;
         final atStockLimit = quantity >= stockQuantity;
 
+        if (stockQuantity <= 0) {
+          return Container(
+            width: double.infinity,
+            height: 52.h,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade400,
+              borderRadius: BorderRadius.circular(AppRadius.badge.r),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Out of Stock'.tr(),
+                  style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                ),
+                Gap(12.w),
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.white,
+                  size: 24.sp,
+                ),
+              ],
+            ),
+          );
+        }
+
         if (quantity == 0) {
           return SizedBox(
             width: double.infinity,
             height: 52.h,
             child: Material(
               color: AppColors.primaryColor,
-              borderRadius: BorderRadius.circular(AppRadius.pill.r),
+              borderRadius: BorderRadius.circular(AppRadius.badge.r),
               elevation: 4,
               shadowColor: AppColors.primaryColor.withValues(alpha: 0.4),
               child: InkWell(
-                borderRadius: BorderRadius.circular(AppRadius.pill.r),
+                borderRadius: BorderRadius.circular(AppRadius.badge.r),
                 onTap: isLoading
                     ? null
                     : () {
-                        if (stockQuantity <= 0) {
-                          showCustomSnackBar(
-                            context,
-                            'Out of Stock'.tr(),
-                            icon: Icons.error_outline,
-                            iconColor: Colors.redAccent,
-                          );
-                          return;
-                        }
                         getIt<CartBloc>().add(
                           IncrementItem(productId, barCode),
                         );
@@ -116,7 +133,7 @@ class ProductActionBar extends StatelessWidget {
           height: 52.h,
           decoration: BoxDecoration(
             color: AppColors.primaryColor,
-            borderRadius: BorderRadius.circular(AppRadius.pill.r),
+            borderRadius: BorderRadius.circular(AppRadius.badge.r),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

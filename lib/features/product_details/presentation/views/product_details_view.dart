@@ -1,199 +1,228 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-import 'package:the_one_test/core/widgets/custom_snack_bar.dart';
 import 'package:the_one_test/features/favorites/presentation/widgets/favorite_toggle_button.dart';
+import 'package:the_one_test/features/home/presentation/widgets/home_chat_button.dart';
+import 'package:the_one_test/features/home/presentation/widgets/home_list_view_item.dart';
+import 'package:the_one_test/features/home/presentation/widgets/home_section_title.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_header.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_scaffold.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/product_action_bar.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/product_description_section.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/product_image_gallery.dart';
-import 'package:the_one_test/features/product_details/presentation/widgets/product_info_section.dart';
-import 'package:the_one_test/features/product_details/presentation/widgets/product_unit_card.dart';
 import 'package:the_one_test/features/product_details/presentation/widgets/similar_products_section.dart';
 
-class ProductDetailsView extends StatelessWidget {
+class ProductDetailsView extends StatefulWidget {
   const ProductDetailsView({super.key, required this.product});
 
   final Map<String, String> product;
 
-  static const _whatsappNumber = '201026536149';
+  @override
+  State<ProductDetailsView> createState() => _ProductDetailsViewState();
+}
 
-  Future<void> _openWhatsApp(BuildContext context) async {
-    final whatsappUri = Uri.parse('https://wa.me/$_whatsappNumber');
+class _ProductDetailsViewState extends State<ProductDetailsView> {
+  final _scrollController = ScrollController();
+  bool _showScrollTop = false;
 
-    try {
-      final launched = await launchUrl(
-        whatsappUri,
-        mode: LaunchMode.externalApplication,
-      );
-      if (!launched && context.mounted) {
-        showCustomSnackBar(
-          context,
-          'Unable to open WhatsApp'.tr(),
-          icon: Icons.error_outline,
-          iconColor: Colors.redAccent,
-        );
-      }
-    } catch (_) {
-      if (context.mounted) {
-        showCustomSnackBar(
-          context,
-          'Unable to open WhatsApp'.tr(),
-          icon: Icons.error_outline,
-          iconColor: Colors.redAccent,
-        );
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final show = _scrollController.offset > 600;
+      if (show != _showScrollTop) setState(() => _showScrollTop = show);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
     final productId = int.tryParse(product['id'] ?? '') ?? 0;
     final images = (product['images'] ?? '')
         .split('|')
         .where((image) => image.isNotEmpty)
         .toList();
     final galleryImages = images.isNotEmpty ? images : [product['image'] ?? ''];
+    final color = product['color'] ?? '';
+    final size = product['size'] ?? '';
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
-          onPressed: () => Navigator.maybePop(context),
+    return StoreScaffold(
+      bottomNavigationBar: _BottomBar(
+        child: ProductActionBar(
+          productId: productId,
+          barCode: product['barCode'] ?? '',
+          stockQuantity: int.tryParse(product['quantity'] ?? '') ?? 0,
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.card.r),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(AppRadius.card.r),
-                    boxShadow: AppShadows.card(context),
-                  ),
-                  child: ProductImageGallery(images: galleryImages),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedScale(
+            scale: _showScrollTop ? 1 : 0,
+            duration: const Duration(milliseconds: 200),
+            child: SizedBox.square(
+              dimension: 56.w,
+              child: FloatingActionButton(
+                heroTag: null,
+                elevation: 4,
+                shape: const CircleBorder(),
+                backgroundColor: AppColors.primaryColor.withValues(alpha: 0.85),
+                foregroundColor: Colors.white,
+                onPressed: () => _scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOut,
                 ),
+                child: Icon(Icons.arrow_upward_rounded, size: 28.sp),
               ),
-              Gap(20.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: ProductInfoSection(name: product['name']!)),
-                  FavoriteToggleButton(
-                    productId: productId,
-                    initialIsFavorite: product['isFavorite'] == 'true',
-                    size: 24.sp,
-                  ),
-                ],
-              ),
-              Gap(16.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: ProductActionBar(
-                      productId: productId,
-                      barCode: product['barCode'] ?? '',
-                      stockQuantity:
-                          int.tryParse(product['quantity'] ?? '') ?? 0,
-                    ),
-                  ),
-                  Gap(12.w),
-                  Expanded(
-                    child: _WhatsAppInquiryButton(
-                      onPressed: () => _openWhatsApp(context),
-                    ),
-                  ),
-                ],
-              ),
-              Gap(20.h),
-              Text(
-                'Choose Unit'.tr(),
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              Gap(10.h),
-              ProductUnitCard(
-                code: product['code'] ?? '',
-                price: product['price'] ?? '',
-                quantity: product['quantity'] ?? '',
-              ),
-              Gap(20.h),
-              const Divider(),
-              Gap(10.h),
-              ProductDescriptionSection(description: product['description']!),
-              Gap(24.h),
-              SimilarProductsSection(
-                excludeName: product['name']!,
-                categoryId: int.tryParse(product['categoryId'] ?? ''),
-              ),
-            ],
+            ),
           ),
+          Gap(14.h),
+          const HomeChatButton(),
+        ],
+      ),
+      // Builder: the body's own context, whose MediaQuery bottom padding
+      // includes the add-to-cart bar the page scrolls behind.
+      body: Builder(
+        builder: (context) => Column(
+          children: [
+            const StoreHeader(action: StoreHeaderCartAction()),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.paddingOf(context).bottom + 40.h,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        ProductImageGallery(images: galleryImages),
+                        PositionedDirectional(
+                          top: 16.h,
+                          end: 16.w,
+                          child: FavoriteToggleButton(
+                            productId: productId,
+                            initialIsFavorite: product['isFavorite'] == 'true',
+                            size: 24.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Gap(20.h),
+                          Text(
+                            product['name'] ?? '',
+                            style: TextStyle(
+                              fontSize: 24.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Gap(14.h),
+                          Text(
+                            '${'SKU'.tr()}: ${product['code'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          Gap(18.h),
+                          ProductDescriptionSection(
+                            description: product['description'] ?? '',
+                          ),
+                          Gap(24.h),
+                          ProductPriceText(product: product, fontSize: 30),
+                        ],
+                      ),
+                    ),
+                    if (color.isNotEmpty) ...[
+                      Gap(24.h),
+                      _OptionSection(title: 'Color'.tr(), value: color),
+                    ],
+                    if (size.isNotEmpty) ...[
+                      Gap(24.h),
+                      _OptionSection(title: 'Size'.tr(), value: size),
+                    ],
+                    Gap(36.h),
+                    SimilarProductsSection(
+                      excludeName: product['name'] ?? '',
+                      categoryId: int.tryParse(product['categoryId'] ?? ''),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _WhatsAppInquiryButton extends StatelessWidget {
-  const _WhatsAppInquiryButton({required this.onPressed});
+/// Section title with a trailing line and the product's option (a product
+/// here is a single variant, so its one value shows as selected).
+class _OptionSection extends StatelessWidget {
+  const _OptionSection({required this.title, required this.value});
 
-  static const _whatsappGreen = Color(0xFF25D366);
-
-  final VoidCallback onPressed;
+  final String title;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52.h,
-      child: Material(
-        color: _whatsappGreen,
-        borderRadius: BorderRadius.circular(AppRadius.pill.r),
-        elevation: 4,
-        shadowColor: _whatsappGreen.withValues(alpha: 0.4),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppRadius.pill.r),
-          onTap: onPressed,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/icons/whatsapp.svg',
-                width: 20.sp,
-                height: 20.sp,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
-                ),
-              ),
-              Gap(8.w),
-              Flexible(
-                child: Text(
-                  'Send Inquiry'.tr(),
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        HomeSectionTitle(
+          title: title,
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+        ),
+        Gap(16.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(AppRadius.badge.r),
+              border: Border.all(color: AppColors.primaryColor, width: 1.5),
+            ),
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 16.sp, color: AppColors.primaryColor),
+            ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _BottomBar extends StatelessWidget {
+  const _BottomBar({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 16.h),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+        boxShadow: AppShadows.raised(context),
       ),
+      child: SafeArea(top: false, child: child),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:the_one_test/features/cart/data/models/cart_model.dart';
 import 'package:the_one_test/features/cart/presentation/manager/cart_bloc/cart_bloc.dart';
 
 import 'cart_quantity_stepper.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_network_image.dart';
 
 class CartItemCard extends StatelessWidget {
   const CartItemCard({super.key, required this.item});
@@ -14,92 +15,82 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageSize = 96.w;
+    final placeholder = Container(
+      color: AppColors.primaryColor.withValues(alpha: 0.06),
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.image_not_supported_outlined,
+        color: AppColors.primaryColor.withValues(alpha: 0.4),
+      ),
+    );
+
     return Container(
-      padding: EdgeInsets.all(14.w),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.card.r),
-        border: Border.all(color: AppColors.primaryColor, width: 1.6.w),
-        boxShadow: AppShadows.card(context),
+        borderRadius: BorderRadius.circular(AppRadius.badge.r),
       ),
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.localizeDigits(item.productName),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.badge.r),
+            child: SizedBox.square(
+              dimension: imageSize,
+              child: StoreNetworkImage(
+                url: item.productImage,
+                placeholder: placeholder,
+              ),
+            ),
           ),
-          Gap(10.h),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.localizeDigits(
-                        '${'Price'.tr()}: ${item.price.toStringAsFixed(0)} جنيه',
-                      ),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                    Gap(4.h),
-                    Text(
-                      context.localizeDigits(
-                        '${'Total'.tr()}: ${item.total.toStringAsFixed(0)} جنيه',
-                      ),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ],
+          Gap(14.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.localizeDigits(item.productName),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 16.sp),
                 ),
-              ),
-              CartQuantityStepper(
-                quantity: item.salesQuantity,
-                onIncrement: () {
-                  if (item.salesQuantity >= item.stockQuantity) {
-                    showCustomSnackBar(
-                      context,
-                      'Maximum available stock reached'.tr(),
-                      icon: Icons.info_outline,
-                      iconColor: Colors.amber,
-                    );
-                    return;
-                  }
-                  getIt<CartBloc>().add(
-                    IncrementItem(item.productID, item.barCode),
-                  );
-                },
-                onDecrement: () => getIt<CartBloc>().add(
-                  DeleteCartItem(item.productID, item.barCode),
+                Gap(8.h),
+                Text(
+                  context.localizeDigits(
+                    '${item.price.toStringAsFixed(0)} ${'EGP'.tr()}',
+                  ),
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    color: AppColors.primaryColor.withValues(alpha: 0.75),
+                  ),
                 ),
-              ),
-              Gap(12.w),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: Image.network(
-                  item.productImage,
-                  width: 60.w,
-                  height: 60.w,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Container(
-                    width: 60.w,
-                    height: 60.w,
-                    color: Colors.grey.shade100,
-                    child: const Icon(
-                      Icons.image_not_supported_outlined,
-                      color: Colors.grey,
+                Gap(10.h),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: CartQuantityStepper(
+                    quantity: item.salesQuantity,
+                    onIncrement: () {
+                      if (item.salesQuantity >= item.stockQuantity) {
+                        showCustomSnackBar(
+                          context,
+                          'Maximum available stock reached'.tr(),
+                          icon: Icons.info_outline,
+                          iconColor: Colors.amber,
+                        );
+                        return;
+                      }
+                      getIt<CartBloc>().add(
+                        IncrementItem(item.productID, item.barCode),
+                      );
+                    },
+                    onDecrement: () => getIt<CartBloc>().add(
+                      DeleteCartItem(item.productID, item.barCode),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

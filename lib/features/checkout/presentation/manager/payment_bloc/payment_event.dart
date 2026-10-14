@@ -7,15 +7,6 @@ abstract class PaymentEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SelectPaymentMethod extends PaymentEvent {
-  final PaymentMethod method;
-
-  const SelectPaymentMethod(this.method);
-
-  @override
-  List<Object?> get props => [method];
-}
-
 class ApplyDiscountCode extends PaymentEvent {
   final String code;
 
@@ -26,5 +17,10 @@ class ApplyDiscountCode extends PaymentEvent {
 }
 
 class PlaceOrder extends PaymentEvent {
-  const PlaceOrder();
+  final DeliveryInfoModel deliveryInfo;
+
+  const PlaceOrder(this.deliveryInfo);
+
+  @override
+  List<Object?> get props => [deliveryInfo];
 }

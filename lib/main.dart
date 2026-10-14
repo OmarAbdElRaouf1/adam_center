@@ -44,8 +44,12 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<ThemeBloc, ThemeState>(
             builder: (context, themeState) {
               return MaterialApp(
-                theme: AppThemeData.light,
-                darkTheme: AppThemeData.dark,
+                theme: _withStoreFont(AppThemeData.light).copyWith(
+                  // A touch lighter than the core theme's #F3F3F3 so the
+                  // white cards still stand out.
+                  scaffoldBackgroundColor: const Color(0xFFF8F8F8),
+                ),
+                darkTheme: _withStoreFont(AppThemeData.dark),
                 themeMode: themeState.themeMode,
 
                 localizationsDelegates: context.localizationDelegates,
@@ -69,3 +73,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/// Cairo (bundled in assets/fonts) over the app themes — text styles that
+/// set no fontFamily of their own inherit it.
+ThemeData _withStoreFont(ThemeData theme) => theme.copyWith(
+  textTheme: theme.textTheme.apply(fontFamily: 'Cairo'),
+  primaryTextTheme: theme.primaryTextTheme.apply(fontFamily: 'Cairo'),
+);

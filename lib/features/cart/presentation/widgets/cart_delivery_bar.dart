@@ -5,68 +5,50 @@ import 'package:the_one_test/features/account/presentation/manager/account_cubit
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
 import 'package:the_one_test/features/checkout/presentation/views/choose_address_view.dart';
 
+/// Info line under the cart items: the delivery address, or a prompt to add
+/// one. Tapping it opens the address picker.
 class CartDeliveryBar extends StatelessWidget {
   const CartDeliveryBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.card.r),
-        boxShadow: AppShadows.card(context),
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ChooseAddressView()),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.location_on_outlined,
-              color: AppColors.primaryColor,
-              size: 20.sp,
-            ),
-          ),
-          Gap(10.w),
-          // AccountCubit is a shared, app-wide singleton — reading it here
-          // via `bloc:` means an address change made from Home (or anywhere
-          // else) shows up here immediately too.
-          Expanded(
-            child: BlocBuilder<AccountCubit, UserModel?>(
-              bloc: getIt<AccountCubit>(),
-              builder: (context, user) {
-                final location = [
-                  user?.regionName,
-                  user?.districtName,
-                ].whereType<String>().where((s) => s.isNotEmpty).join(', ');
-                final label = location.isEmpty
-                    ? 'Deliver to'.tr()
-                    : '${'Deliver to'.tr()}: $location';
+      // AccountCubit is a shared, app-wide singleton — reading it here via
+      // `bloc:` means an address change made anywhere else shows up here
+      // immediately too.
+      child: BlocBuilder<AccountCubit, UserModel?>(
+        bloc: getIt<AccountCubit>(),
+        builder: (context, user) {
+          final location = [
+            user?.regionName,
+            user?.districtName,
+          ].whereType<String>().where((s) => s.isNotEmpty).join(', ');
+          final label = location.isEmpty
+              ? 'Add your address to calculate shipping'.tr()
+              : '${'Deliver to'.tr()}: $location';
 
-                return Text(
+          return Row(
+            children: [
+              Icon(Icons.info_outline, color: Colors.grey, size: 24.sp),
+              Gap(10.w),
+              Expanded(
+                child: Text(
                   label,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 15.sp,
+                    color: Colors.grey.shade600,
                   ),
-                );
-              },
-            ),
-          ),
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ChooseAddressView()),
-            ),
-            icon: Icon(Icons.chevron_left, color: AppColors.primaryColor),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

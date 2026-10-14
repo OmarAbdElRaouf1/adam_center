@@ -14,24 +14,31 @@ class OrdersTabToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _TabButton(
-            label: 'My Current Orders'.tr(),
-            selected: !showPrevious,
-            onTap: () => onChanged(false),
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.badge.r),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _TabButton(
+              label: 'My Current Orders'.tr(),
+              selected: !showPrevious,
+              onTap: () => onChanged(false),
+            ),
           ),
-        ),
-        Gap(10.w),
-        Expanded(
-          child: _TabButton(
-            label: 'My Previous Orders'.tr(),
-            selected: showPrevious,
-            onTap: () => onChanged(true),
+          Gap(4.w),
+          Expanded(
+            child: _TabButton(
+              label: 'My Previous Orders'.tr(),
+              selected: showPrevious,
+              onTap: () => onChanged(true),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -51,24 +58,23 @@ class _TabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24.r),
-      child: Container(
+      borderRadius: BorderRadius.circular(AppRadius.chip.r),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(vertical: 12.h),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: selected ? AppColors.primaryColor : Colors.white,
-          borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(
-            color: selected ? AppColors.primaryColor : Colors.grey.shade300,
-          ),
+          color: selected
+              ? AppColors.primaryColor.withValues(alpha: 0.75)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppRadius.chip.r),
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
-            color: selected ? Colors.white : Colors.black87,
+            fontSize: 14.sp,
+            color: selected ? Colors.white : Colors.grey.shade700,
           ),
         ),
       ),

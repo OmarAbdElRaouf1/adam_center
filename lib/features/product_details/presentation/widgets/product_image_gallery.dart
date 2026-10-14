@@ -35,65 +35,61 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
   Widget build(BuildContext context) {
     final hasMultipleImages = widget.images.length > 1;
 
-    return Column(
-      children: [
-        SizedBox(
-          height: (context.screenHeight * 0.3).clamp(220.0, 420.0),
-          width: double.infinity,
-          child: hasMultipleImages
-              ? PageView.builder(
-                  controller: _pageController,
-                  itemCount: widget.images.length,
-                  onPageChanged: (index) =>
-                      setState(() => _currentPage = index),
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => _openFullScreen(index),
-                    child: Image.network(
-                      widget.images[index],
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, _, _) => Icon(
-                        Icons.image_not_supported_outlined,
-                        color: Colors.grey,
-                        size: 48.sp,
-                      ),
-                    ),
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () => _openFullScreen(0),
-                  child: Image.network(
-                    widget.images.first,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => Icon(
-                      Icons.image_not_supported_outlined,
-                      color: Colors.grey,
-                      size: 48.sp,
-                    ),
-                  ),
-                ),
+    Widget image(int index) => GestureDetector(
+      onTap: () => _openFullScreen(index),
+      child: Image.network(
+        widget.images[index],
+        fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => Icon(
+          Icons.image_not_supported_outlined,
+          color: Colors.grey,
+          size: 48.sp,
         ),
-        if (hasMultipleImages) ...[
-          SizedBox(height: 10.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              widget.images.length,
-              (index) => AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: EdgeInsets.symmetric(horizontal: 3.w),
-                width: _currentPage == index ? 16.w : 6.w,
-                height: 6.w,
-                decoration: BoxDecoration(
-                  color: _currentPage == index
-                      ? AppColors.primaryColor
-                      : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(3.r),
+      ),
+    );
+
+    return Container(
+      height: context.screenWidth * 1.05,
+      width: double.infinity,
+      color: Theme.of(context).colorScheme.surface,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Positioned.fill(
+            child: hasMultipleImages
+                ? PageView.builder(
+                    controller: _pageController,
+                    itemCount: widget.images.length,
+                    onPageChanged: (index) =>
+                        setState(() => _currentPage = index),
+                    itemBuilder: (context, index) => image(index),
+                  )
+                : image(0),
+          ),
+          if (hasMultipleImages)
+            Padding(
+              padding: EdgeInsets.only(bottom: 14.h),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  widget.images.length,
+                  (index) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: EdgeInsets.symmetric(horizontal: 3.w),
+                    width: _currentPage == index ? 12.w : 7.w,
+                    height: _currentPage == index ? 12.w : 7.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentPage == index
+                          ? AppColors.primaryColor
+                          : Colors.grey.shade300,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
-      ],
+      ),
     );
   }
 }

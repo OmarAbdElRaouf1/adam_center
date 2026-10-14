@@ -4,6 +4,7 @@ import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/failure_widget.dart';
 import 'package:the_one_test/core/widgets/shimmer_skeletons.dart';
 import 'package:the_one_test/features/menu/data/models/info_image_model.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_page.dart';
 import 'package:the_one_test/features/menu/presentation/manager/info_images_cubit/info_images_cubit.dart';
 
 class InfoImagesView extends StatelessWidget {
@@ -19,13 +20,13 @@ class InfoImagesView extends StatelessWidget {
       // the caller, not a getIt-managed dependency — there's nothing for DI
       // to wire together here.
       create: (_) => InfoImagesCubit(fetcher)..fetch(),
-      child: Scaffold(
-        appBar: AppBar(title: Text(title), centerTitle: true),
-        body: BlocBuilder<InfoImagesCubit, BaseState<InfoImageModel>>(
+      child: StorePage(
+        title: title,
+        child: BlocBuilder<InfoImagesCubit, BaseState<InfoImageModel>>(
           builder: (context, state) {
             if (state.isLoading || state.isInitial) {
               return ListView(
-                padding: EdgeInsets.all(16.w),
+                padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 16.h),
                 children: List.generate(
                   3,
                   (_) => BlockShimmer(
@@ -46,11 +47,11 @@ class InfoImagesView extends StatelessWidget {
               return Center(child: Text('No data available'.tr()));
             }
             return ListView.separated(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 100.h),
               itemCount: state.items.length,
               separatorBuilder: (_, _) => Gap(16.h),
               itemBuilder: (context, index) => ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.card.r),
+                borderRadius: BorderRadius.circular(AppRadius.badge.r),
                 child: Image.network(
                   state.items[index].imagePath,
                   fit: BoxFit.cover,

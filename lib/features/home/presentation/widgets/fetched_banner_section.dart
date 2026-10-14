@@ -18,9 +18,8 @@ class FetchedBannerSlider extends StatelessWidget {
         builder: (context, state) {
           if (state.isLoading) {
             return BlockShimmer(
-              height: (context.screenWidth * 0.45).clamp(140.0, 260.0),
-              margin: EdgeInsets.symmetric(horizontal: 4.w),
-              borderRadius: BorderRadius.circular(AppRadius.sheet.r),
+              height: BannerSlider.heightOf(context),
+              borderRadius: BorderRadius.zero,
             );
           }
           if (state.items.isEmpty) {

@@ -16,12 +16,12 @@ class PriceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(
-      fontSize: emphasized ? 16.sp : 13.sp,
-      fontWeight: emphasized ? FontWeight.bold : FontWeight.w500,
-      color: emphasized ? AppColors.primaryColor : Colors.grey.shade700,
+      fontSize: emphasized ? 22.sp : 16.sp,
+      fontWeight: emphasized ? FontWeight.w600 : FontWeight.w400,
+      color: emphasized ? AppColors.primaryColor.withValues(alpha: 0.85) : null,
     );
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.h),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

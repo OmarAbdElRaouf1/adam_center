@@ -12,11 +12,10 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return Container(
-      padding: EdgeInsets.all(14.w),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.card.r),
-        boxShadow: AppShadows.card(context),
+        borderRadius: BorderRadius.circular(AppRadius.badge.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,23 +24,26 @@ class OrderCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                order.status.label.tr(),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: order.status.color,
-                ),
-              ),
-              Text(
                 '${'Order Number'.tr()} ${context.localizeDigits(order.orderNumber)}',
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: order.status.color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppRadius.pill.r),
+                ),
+                child: Text(
+                  order.status.label.tr(),
+                  style: TextStyle(fontSize: 12.sp, color: order.status.color),
+                ),
               ),
             ],
           ),
           Gap(6.h),
           Text(
             '${'Order Date'.tr()} ${context.localizeDigits(order.date)}',
-            style: TextStyle(fontSize: 12.sp, color: onSurface),
+            style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade600),
           ),
           if (order.items.isNotEmpty) ...[
             Gap(10.h),
@@ -73,8 +75,7 @@ class OrderCard extends StatelessWidget {
                       ),
                       style: TextStyle(
                         fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor,
+                        color: AppColors.primaryColor.withValues(alpha: 0.75),
                       ),
                     ),
                   ],
@@ -96,16 +97,16 @@ class OrderCard extends StatelessWidget {
             style: TextStyle(fontSize: 13.5.sp, height: 1.5),
           ),
           Gap(10.h),
-          Divider(height: 1, color: Theme.of(context).dividerTheme.color),
+          Divider(height: 1, color: Colors.grey.shade200),
           Gap(10.h),
           Text(
             context.localizeDigits(
               '${'Total Price'.tr()}: ${order.totalPrice.toStringAsFixed(2)} ${'EGP'.tr()}',
             ),
             style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryColor,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor.withValues(alpha: 0.75),
             ),
           ),
         ],

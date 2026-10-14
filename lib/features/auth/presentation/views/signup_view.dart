@@ -13,15 +13,9 @@ class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
-      headerHeightFactor: 0.38.h,
       header: AuthHeader(
-        icon: Icons.person_add_alt_1_rounded,
         title: 'Sign Up'.tr(),
         subtitle: 'Join us and start your journey'.tr(),
-        iconSize: 34,
-        titleFontSize: 27,
-        iconBoxRadius: 22,
-        iconBoxBordered: true,
         topRow: Align(
           alignment: AlignmentDirectional.topEnd,
           child: Padding(
@@ -31,10 +25,6 @@ class SignupView extends StatelessWidget {
         ),
       ),
       formCard: AuthFormCard(
-        borderRadius: 28,
-        padding: EdgeInsets.fromLTRB(20.w, 26.h, 20.w, 24.h),
-        shadowBlur: 30,
-        shadowOffset: Offset(0, 12.h),
         child: BlocProvider(
           create: (context) => getIt<SignupBloc>(),
           child: const SignupForm(),

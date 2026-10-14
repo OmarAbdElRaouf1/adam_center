@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_one_test/features/checkout/data/datasource/place_order_datasource.dart';
 import 'package:the_one_test/features/checkout/data/models/delivery_info_model.dart';
-import 'package:the_one_test/features/checkout/presentation/widgets/payment_methods_section.dart';
 
 part 'payment_event.dart';
 
@@ -11,7 +10,6 @@ class PaymentState extends Equatable {
     required this.subtotal,
     required this.deliveryFee,
     required this.deliveryInfo,
-    this.selectedMethod = PaymentMethod.cashOnDelivery,
     this.discountRate = 0,
     this.discountAttempt = 0,
     this.discountCodeValid = true,
@@ -23,7 +21,6 @@ class PaymentState extends Equatable {
   final double subtotal;
   final double deliveryFee;
   final DeliveryInfoModel deliveryInfo;
-  final PaymentMethod selectedMethod;
   final double discountRate;
   final int discountAttempt;
   final bool discountCodeValid;
@@ -35,7 +32,7 @@ class PaymentState extends Equatable {
   double get total => subtotal + deliveryFee - discountValue;
 
   PaymentState copyWith({
-    PaymentMethod? selectedMethod,
+    DeliveryInfoModel? deliveryInfo,
     double? discountRate,
     int? discountAttempt,
     bool? discountCodeValid,
@@ -46,8 +43,7 @@ class PaymentState extends Equatable {
     return PaymentState(
       subtotal: subtotal,
       deliveryFee: deliveryFee,
-      deliveryInfo: deliveryInfo,
-      selectedMethod: selectedMethod ?? this.selectedMethod,
+      deliveryInfo: deliveryInfo ?? this.deliveryInfo,
       discountRate: discountRate ?? this.discountRate,
       discountAttempt: discountAttempt ?? this.discountAttempt,
       discountCodeValid: discountCodeValid ?? this.discountCodeValid,
@@ -62,7 +58,6 @@ class PaymentState extends Equatable {
     subtotal,
     deliveryFee,
     deliveryInfo,
-    selectedMethod,
     discountRate,
     discountAttempt,
     discountCodeValid,
@@ -88,16 +83,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
            deliveryInfo: deliveryInfo,
          ),
        ) {
-    on<SelectPaymentMethod>(_onSelectPaymentMethod);
     on<ApplyDiscountCode>(_onApplyDiscountCode);
     on<PlaceOrder>(_onPlaceOrder);
-  }
-
-  void _onSelectPaymentMethod(
-    SelectPaymentMethod event,
-    Emitter<PaymentState> emit,
-  ) {
-    emit(state.copyWith(selectedMethod: event.method));
   }
 
   void _onApplyDiscountCode(
@@ -126,10 +113,12 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     PlaceOrder event,
     Emitter<PaymentState> emit,
   ) async {
-    emit(state.copyWith(isPlacingOrder: true));
+    // Payment is always cash on delivery.
+    emit(
+      state.copyWith(isPlacingOrder: true, deliveryInfo: event.deliveryInfo),
+    );
     final result = await _placeOrderDatasource.placeOrder(
       deliveryInfo: state.deliveryInfo,
-      paymentMethod: state.selectedMethod,
       subtotal: state.subtotal,
       discount: state.discountValue,
       total: state.total,

@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 import 'package:the_one_test/core/widgets/empty_state_widget.dart';
 import 'package:the_one_test/core/widgets/shimmer_skeletons.dart';
-import 'package:the_one_test/features/home/presentation/widgets/custom_row.dart';
+import 'package:the_one_test/features/home/presentation/widgets/home_section_title.dart';
 import 'package:the_one_test/features/home/presentation/widgets/home_list_view.dart';
 import 'package:the_one_test/features/home/presentation/widgets/more_products_grid_view.dart';
 
@@ -26,10 +26,11 @@ class HomeProductSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomRow(
+        HomeSectionTitle(
           title: title,
-          seeAll: 'See All'.tr(),
-          onSeeAllPressed: () => Navigator.push(
+          padding: EdgeInsets.symmetric(horizontal: 6.w),
+          actionLabel: 'See All'.tr(),
+          onAction: () => Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) =>

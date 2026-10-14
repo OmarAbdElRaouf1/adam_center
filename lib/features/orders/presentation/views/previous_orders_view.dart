@@ -8,6 +8,7 @@ import 'package:the_one_test/features/orders/data/models/order_model.dart';
 import 'package:the_one_test/features/orders/presentation/manager/orders_bloc/orders_bloc.dart';
 import 'package:the_one_test/features/orders/presentation/widgets/order_card.dart';
 import 'package:the_one_test/features/orders/presentation/widgets/orders_tab_toggle.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_page.dart';
 
 class PreviousOrdersView extends StatefulWidget {
   const PreviousOrdersView({super.key});
@@ -23,13 +24,13 @@ class _PreviousOrdersViewState extends State<PreviousOrdersView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<OrdersBloc>()..add(const FetchOrders()),
-      child: Scaffold(
+      child: StorePage(
         key: ValueKey(context.locale.languageCode),
-        appBar: const CustomAppBar(titleText: 'My Previous Orders'),
-        body: Column(
+        title: 'My Orders'.tr(),
+        child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+              padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 16.h),
               child: OrdersTabToggle(
                 showPrevious: _showPrevious,
                 onChanged: (value) => setState(() => _showPrevious = value),
@@ -58,9 +59,9 @@ class _PreviousOrdersViewState extends State<PreviousOrdersView> {
                           message: 'No orders yet'.tr(),
                         )
                       : ListView.separated(
-                          padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
+                          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 100.h),
                           itemCount: orders.length,
-                          separatorBuilder: (_, _) => Gap(14.h),
+                          separatorBuilder: (_, _) => Gap(12.h),
                           itemBuilder: (context, index) =>
                               OrderCard(order: orders[index]),
                         );

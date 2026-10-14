@@ -128,7 +128,6 @@ class _PullToRefreshState extends State<PullToRefresh> {
             final minScroll = notification.metrics.minScrollExtent;
             final currentScroll = notification.metrics.pixels;
             overscroll = currentScroll - minScroll;
-            loggerInfo("overscroll =========> $overscroll");
             if ((currentScroll - minScroll) > -100) {
               isOverScroll = true;
             } else if (currentScroll > maxScroll) {

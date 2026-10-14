@@ -29,7 +29,8 @@ class LoginCredentialsFields extends StatelessWidget {
           prefixIcon: Icons.phone,
           controller: phoneController,
           validator: Validators.phoneNumberValidator,
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
+          prefixIconColor: AppColors.primaryColor,
         ),
 
         Gap(16.h),
@@ -38,7 +39,7 @@ class LoginCredentialsFields extends StatelessWidget {
           validator: Validators.passwordValidator,
           controller: passwordController,
           hintText: 'Password'.tr(),
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
         ),
       ],
     );

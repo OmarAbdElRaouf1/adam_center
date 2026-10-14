@@ -5,6 +5,7 @@ import 'package:the_one_test/features/account/presentation/manager/account_cubit
 import 'package:the_one_test/features/account/presentation/widgets/account_header.dart';
 import 'package:the_one_test/features/account/presentation/widgets/account_info_fields.dart';
 import 'package:the_one_test/features/auth/data/models/user_model.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_page.dart';
 
 class AccountView extends StatefulWidget {
   const AccountView({super.key});
@@ -48,33 +49,30 @@ class _AccountViewState extends State<AccountView> {
       bloc: getIt<AccountCubit>(),
       builder: (context, user) {
         _hydrateControllers(user);
-        return Scaffold(
+        return StorePage(
           key: ValueKey(context.locale.languageCode),
-          appBar: const CustomAppBar(titleText: 'My Account'),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: AccountHeader(
-                      name: [user?.englishName, user?.lastName]
-                          .whereType<String>()
-                          .where((s) => s.isNotEmpty)
-                          .join(' '),
-                    ),
-                  ),
-                  Gap(24.h),
-                  AccountInfoFields(
-                    firstNameController: firstNameController,
-                    lastNameController: lastNameController,
-                    phoneController: phoneController,
-                    emailController: emailController,
-                  ),
-                ],
-              ),
+          title: 'My Account'.tr(),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 100.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AccountHeader(
+                  name: [
+                    user?.englishName,
+                    user?.lastName,
+                  ].whereType<String>().where((s) => s.isNotEmpty).join(' '),
+                ),
+                Gap(28.h),
+                StoreSectionLabel('Personal Information'.tr()),
+                Gap(14.h),
+                AccountInfoFields(
+                  firstNameController: firstNameController,
+                  lastNameController: lastNameController,
+                  phoneController: phoneController,
+                  emailController: emailController,
+                ),
+              ],
             ),
           ),
         );

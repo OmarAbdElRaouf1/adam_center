@@ -11,6 +11,7 @@ class CustomSearchField extends StatelessWidget {
     this.onChanged,
     this.onClear,
     this.fillColor,
+    this.suffix,
   });
 
   final TextEditingController? controller;
@@ -20,6 +21,9 @@ class CustomSearchField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onClear;
   final Color? fillColor;
+
+  /// Shown at the end of the field while it is empty.
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +54,14 @@ class CustomSearchField extends StatelessWidget {
                 icon: Icon(Icons.close, size: 16.sp),
                 padding: EdgeInsets.zero,
                 onPressed: onClear,
-                style: ButtonStyle(
-                  foregroundColor: WidgetStateProperty.all(
-                    AppColors.primaryColor,
-                  ),
+                style: IconButton.styleFrom(
+                  foregroundColor: AppColors.primaryColor,
+                  minimumSize: Size(32.w, 32.h),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
               )
-            : null,
-        contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+            : suffix,
+        contentPadding: EdgeInsets.symmetric(vertical: 6.h),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.badge.r),
           borderSide: BorderSide.none,

@@ -18,9 +18,9 @@ class ThemeToggleButton extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18),
+              color: Theme.of(context).colorScheme.surface,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
+              border: Border.all(color: Colors.grey.shade300),
             ),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
@@ -31,7 +31,7 @@ class ThemeToggleButton extends StatelessWidget {
               child: Icon(
                 isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
                 key: ValueKey(isDark),
-                color: Colors.white,
+                color: AppColors.primaryColor,
                 size: 16.sp,
               ),
             ),

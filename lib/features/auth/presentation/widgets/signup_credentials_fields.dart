@@ -33,7 +33,8 @@ class SignupCredentialsFields extends StatelessWidget {
           prefixIcon: Icons.person,
           controller: firstNameController,
           validator: Validators.firstNameValidator,
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
+          prefixIconColor: AppColors.primaryColor,
         ),
 
         Gap(16.h),
@@ -43,7 +44,8 @@ class SignupCredentialsFields extends StatelessWidget {
           prefixIcon: Icons.person,
           controller: lastNameController,
           validator: Validators.lastNameValidator,
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
+          prefixIconColor: AppColors.primaryColor,
         ),
 
         Gap(16.h),
@@ -58,7 +60,8 @@ class SignupCredentialsFields extends StatelessWidget {
           keyboardType: TextInputType.phone,
           validator: Validators.phoneNumberValidator,
           controller: phoneController,
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
+          prefixIconColor: AppColors.primaryColor,
         ),
 
         Gap(16.h),
@@ -68,7 +71,8 @@ class SignupCredentialsFields extends StatelessWidget {
           prefixIcon: Icons.email,
           controller: emailController,
           validator: Validators.emailValidator,
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
+          prefixIconColor: AppColors.primaryColor,
         ),
 
         Gap(16.h),
@@ -77,7 +81,7 @@ class SignupCredentialsFields extends StatelessWidget {
           controller: passwordController,
           hintText: 'Password'.tr(),
           validator: Validators.passwordValidator,
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
         ),
         Gap(16.h),
 
@@ -88,7 +92,7 @@ class SignupCredentialsFields extends StatelessWidget {
             value: value,
             Password: passwordController.text,
           ),
-          borderColor: AppColors.primaryColor,
+          borderColor: Colors.grey.shade300,
         ),
       ],
     );

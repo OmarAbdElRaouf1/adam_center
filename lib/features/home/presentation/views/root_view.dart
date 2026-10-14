@@ -13,9 +13,17 @@ import 'package:the_one_test/features/category_products/presentation/manager/cat
 import 'package:the_one_test/features/home/presentation/views/home_view.dart';
 
 import '../widgets/app_drawer.dart';
+import '../widgets/home_bottom_nav_bar.dart';
+import '../widgets/home_chat_button.dart';
 
 class RootView extends StatefulWidget {
   const RootView({super.key});
+
+  // Routes currently showing a RootView, so inner pages can pop back to
+  // home by identity (see popToStoreRoot).
+  static final Set<Route<dynamic>> _routes = {};
+
+  static bool isRootRoute(Route<dynamic> route) => _routes.contains(route);
 
   @override
   State<RootView> createState() => _RootViewState();
@@ -23,6 +31,7 @@ class RootView extends StatefulWidget {
 
 class _RootViewState extends State<RootView> {
   DateTime? _lastBackPressTime;
+  Route<dynamic>? _route;
 
   @override
   void initState() {
@@ -30,6 +39,23 @@ class _RootViewState extends State<RootView> {
 
     // Fetch cart once when RootView is initialized.
     getIt<CartBloc>().add(const FetchCartItems());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null && route != _route) {
+      if (_route != null) RootView._routes.remove(_route);
+      _route = route;
+      RootView._routes.add(route);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_route != null) RootView._routes.remove(_route);
+    super.dispose();
   }
 
   void _handleBack(BuildContext context) {
@@ -65,6 +91,9 @@ class _RootViewState extends State<RootView> {
           extendBody: true,
           drawer: const AppDrawer(),
           body: const HomeView(),
+          floatingActionButton: const HomeChatButton(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          bottomNavigationBar: const HomeBottomNavBar(current: HomeTab.home),
         ),
       ),
     );

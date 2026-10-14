@@ -6,9 +6,8 @@ flutter_native_splash:
   fullscreen: true # default false
 
 
-  # android_12:
-  #   # background color
-  #   color: "#08431D"
-  #   # color_dark: "#042a49"
-
-  #   image: assets/images/splash_screen_+android12.png
+  # Android 12+ only allows a centered icon (no full-screen image): the
+  # round emblem on black, sized to sit inside the system's icon circle.
+  android_12:
+    color: "#000000"
+    image: assets/images/splash_android12.png

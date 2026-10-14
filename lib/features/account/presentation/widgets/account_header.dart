@@ -1,6 +1,8 @@
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
 
+/// Grey avatar circle with the user's name under it (same look as the
+/// drawer header).
 class AccountHeader extends StatelessWidget {
   const AccountHeader({super.key, required this.name});
 
@@ -8,27 +10,23 @@ class AccountHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
-    final contentColor = isDark ? Colors.white : AppColors.primaryColor;
-
     return Column(
       children: [
-        CircleAvatar(
-          radius: 44.r,
-          backgroundColor: isDark
-              ? Colors.white10
-              : AppColors.primaryColor.withValues(alpha: 0.1),
-          child: Icon(Icons.person, size: 48.sp, color: contentColor),
+        Container(
+          width: 100.w,
+          height: 100.w,
+          decoration: BoxDecoration(
+            color: AppColors.grey.withValues(alpha: 0.45),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.person_rounded, color: Colors.white, size: 60.sp),
         ),
         if (name.isNotEmpty) ...[
-          Gap(12.h),
+          Gap(14.h),
           Text(
             name,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: contentColor,
-            ),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w500),
           ),
         ],
       ],

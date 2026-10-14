@@ -16,7 +16,6 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return AuthScaffold(
       header: AuthHeader(
-        icon: Icons.lock_outline,
         title: 'Login'.tr(),
         subtitle: 'Join us and start your journey'.tr(),
         topRow: Align(

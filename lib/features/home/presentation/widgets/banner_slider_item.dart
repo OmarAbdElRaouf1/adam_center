@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_network_image.dart';
 
 class BannerSliderItem extends StatelessWidget {
   const BannerSliderItem({super.key, required this.banner});
@@ -14,32 +14,14 @@ class BannerSliderItem extends StatelessWidget {
     final hasText =
         (title?.isNotEmpty ?? false) || (subtitle?.isNotEmpty ?? false);
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.sheet.r),
-        boxShadow: AppShadows.card(context),
-      ),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          CachedNetworkImage(
-            imageUrl: banner['image'] ?? '',
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
-              color: AppColors.primaryColor.withValues(alpha: 0.08),
-            ),
-            errorWidget: (context, url, error) => Container(
-              color: AppColors.primaryColor.withValues(alpha: 0.12),
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.image_not_supported_outlined,
-                color: AppColors.primaryColor.withValues(alpha: 0.4),
-                size: 32.sp,
-              ),
-            ),
+          StoreNetworkImage(
+            url: banner['image'] ?? '',
+            placeholder: const _BannerPlaceholder(),
           ),
           if (hasText)
             Container(
@@ -93,6 +75,23 @@ class BannerSliderItem extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _BannerPlaceholder extends StatelessWidget {
+  const _BannerPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.primaryColor.withValues(alpha: 0.12),
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.image_not_supported_outlined,
+        color: AppColors.primaryColor.withValues(alpha: 0.4),
+        size: 32.sp,
       ),
     );
   }

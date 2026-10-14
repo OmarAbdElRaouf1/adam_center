@@ -26,19 +26,19 @@ class AccountInfoFields extends StatelessWidget {
           icon: Icons.person_outline,
           controller: firstNameController,
         ),
-        Gap(14.h),
+        Gap(12.h),
         _AccountInfoField(
           hintText: 'Last Name'.tr(),
           icon: Icons.person_outline,
           controller: lastNameController,
         ),
-        Gap(14.h),
+        Gap(12.h),
         _AccountInfoField(
           hintText: 'Phone'.tr(),
           icon: Icons.phone_outlined,
           controller: phoneController,
         ),
-        Gap(14.h),
+        Gap(12.h),
         _AccountInfoField(
           hintText: 'Email'.tr(),
           icon: Icons.email_outlined,
@@ -64,23 +64,18 @@ class _AccountInfoField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
-    final borderColor = isDark ? Colors.white24 : Colors.grey.shade300;
-    final contentColor = isDark ? Colors.white : AppColors.primaryColor;
     final value = controller.text;
 
     return Container(
       height: 56.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.codGray : Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.card.r),
-        border: Border.all(color: borderColor),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.badge.r),
       ),
-      alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          Icon(icon, size: 20.sp, color: contentColor),
+          Icon(icon, size: 22.sp, color: AppColors.primaryColor),
           Gap(12.w),
           Expanded(
             child: Text(
@@ -88,11 +83,8 @@ class _AccountInfoField extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: value.isEmpty
-                    ? (isDark ? Colors.white38 : Colors.grey.shade400)
-                    : contentColor,
+                fontSize: 15.sp,
+                color: value.isEmpty ? Colors.grey.shade400 : null,
               ),
             ),
           ),

@@ -20,23 +20,19 @@ class ProductDescriptionSection extends StatelessWidget {
       children: [
         Text(
           'Description'.tr(),
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primaryColor,
-          ),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
         ),
 
-        Gap(8.h),
+        Gap(10.h),
 
         SeeMoreWidget(
           description,
 
           trimMode: TrimMode.line,
-          maxLines: 1,
+          maxLines: 3,
 
           textStyle: TextStyle(
-            fontSize: 13.sp,
+            fontSize: 15.sp,
             height: 1.6,
             color: Colors.grey.shade700,
           ),

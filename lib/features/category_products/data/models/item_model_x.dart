@@ -20,6 +20,9 @@ extension ItemModelProductMapX on ItemModel {
       'code': productCode,
       'quantity': stockQuantity.toInt().toString(),
       'images': productImages.join('|'),
+      'color': colorArName ?? '',
+      'size': sizeName ?? '',
+      'date': registrationDate,
     };
   }
 }

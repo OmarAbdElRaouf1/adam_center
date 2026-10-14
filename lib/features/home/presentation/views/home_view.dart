@@ -1,14 +1,13 @@
-import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
-
 import 'package:the_one_test/features/category_products/presentation/manager/category_bloc/category_bloc.dart';
-import 'package:the_one_test/features/category_products/presentation/manager/product_bloc/product_bloc.dart';
 
 import 'package:the_one_test/features/home/presentation/views/barcode_scanner_view.dart';
-import 'package:the_one_test/features/home/presentation/views/categories_view.dart';
+import 'package:the_one_test/features/home/presentation/views/search_view.dart';
+import 'package:the_one_test/features/home/presentation/widgets/floating_header_layout.dart';
 import 'package:the_one_test/features/home/presentation/widgets/home_top_bar.dart';
 
 import '../widgets/home_view_body.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_pull_to_refresh.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -18,59 +17,22 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final TextEditingController _searchController = TextEditingController();
+  // Bumped on pull-to-refresh: a new key rebuilds the body, so every banner
+  // and product section re-creates its bloc and fetches again.
+  int _refreshCount = 0;
 
-  final ProductBloc _searchBloc = getIt<ProductBloc>();
-
-  Timer? _debounce;
-
-  List<int> _matchedCategoryIds(String query) {
-    final categories = context.read<CategoryBloc>().state.items;
-
-    return categories
-        .where(
-          (category) =>
-              category.title.toLowerCase().contains(query.toLowerCase()),
-        )
-        .map((category) => category.id)
-        .whereType<int>()
-        .toList();
+  Future<void> _onRefresh() async {
+    final categoryBloc = context.read<CategoryBloc>();
+    categoryBloc.add(const GetMainCategoriesEvent());
+    setState(() => _refreshCount++);
+    await untilLoaded(categoryBloc);
   }
 
-  void _dispatchSearch(String query) {
-    if (query.trim().isEmpty) return;
-
-    _searchBloc.add(
-      GetSearchResultsEvent(
-        query.trim(),
-        categoryIds: _matchedCategoryIds(query),
-      ),
+  void _openSearch({String? query}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => SearchView(initialQuery: query)),
     );
-  }
-
-  void _onSearchChanged(String value) {
-    _debounce?.cancel();
-
-    setState(() {});
-
-    final query = value.trim();
-
-    if (query.isEmpty) {
-      return;
-    }
-
-    _debounce = Timer(
-      const Duration(milliseconds: 200),
-      () => _dispatchSearch(query),
-    );
-  }
-
-  void _onSearchClear() {
-    _debounce?.cancel();
-
-    _searchController.clear();
-
-    setState(() {});
   }
 
   Future<void> _onScanTap() async {
@@ -79,76 +41,26 @@ class _HomeViewState extends State<HomeView> {
       MaterialPageRoute(builder: (_) => const BarcodeScannerView()),
     );
 
-    if (!mounted || code == null || code.isEmpty) {
-      return;
-    }
-
-    _debounce?.cancel();
-
-    _searchController.text = code;
-
-    setState(() {});
-
-    _dispatchSearch(code);
-  }
-
-  void _goToCategories() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const CategoriesView()),
-    );
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    _searchController.dispose();
-    _searchBloc.close();
-
-    super.dispose();
+    if (!mounted || code == null || code.isEmpty) return;
+    _openSearch(query: code);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isSearching = _searchController.text.trim().isNotEmpty;
-
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            child: Column(
-              children: [
-                Gap(MediaQuery.paddingOf(context).top + 12.h),
-                HomeTopBar(
-                  searchController: _searchController,
-                  onSearchChanged: _onSearchChanged,
-                  onSearchClear: _onSearchClear,
-                  onScanTap: _onScanTap,
-                ),
-                Gap(20.h),
-              ],
-            ),
+    return FloatingHeaderLayout(
+      header: HomeTopBar(onSearchTap: _openSearch, onScanTap: _onScanTap),
+      bodyBuilder: (context, topInset) => StorePullToRefresh(
+        topInset: topInset,
+        onRefresh: _onRefresh,
+        builder: (controller) => SingleChildScrollView(
+          controller: controller,
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.only(
+            top: topInset,
+            bottom: MediaQuery.paddingOf(context).bottom + 40.h,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.only(
-                left: 10.w,
-                right: 10.w,
-                bottom: context.screenHeight * 0.05,
-              ),
-              child: HomeViewBody(
-                searchController: _searchController,
-                isSearching: isSearching,
-                searchBloc: _searchBloc,
-                onSeeAllPressed: _goToCategories,
-                dispatchSearch: _dispatchSearch,
-              ),
-            ),
-          ),
-        ],
+          child: HomeViewBody(key: ValueKey(_refreshCount)),
+        ),
       ),
     );
   }

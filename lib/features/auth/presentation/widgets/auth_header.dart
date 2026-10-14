@@ -1,29 +1,20 @@
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_logo.dart';
 
-/// The icon-circle + title (+ optional subtitle) block shown at the top of
-/// every auth screen, sitting on the primary-color hero background.
+/// Top of every auth screen: the store logo and the title (+ optional
+/// subtitle).
 class AuthHeader extends StatelessWidget {
   const AuthHeader({
     super.key,
-    required this.icon,
     required this.title,
     this.subtitle,
     this.topRow,
-    this.iconSize = 32,
-    this.titleFontSize = 26,
-    this.iconBoxRadius = 20,
-    this.iconBoxBordered = false,
   });
 
-  final IconData icon;
   final String title;
   final String? subtitle;
   final Widget? topRow;
-  final double iconSize;
-  final double titleFontSize;
-  final double iconBoxRadius;
-  final bool iconBoxBordered;
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +22,15 @@ class AuthHeader extends StatelessWidget {
       children: [
         ?topRow,
         Gap(12.h),
-        Container(
-          width: (context.screenWidth * 0.15).clamp(52.0, 80.0),
-          height: (context.screenWidth * 0.15).clamp(52.0, 80.0),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: iconBoxBordered ? 0.15 : 0.2),
-            borderRadius: BorderRadius.circular(iconBoxRadius.r),
-            border: iconBoxBordered
-                ? Border.all(color: Colors.white.withValues(alpha: 0.2))
-                : null,
-          ),
-          child: Icon(icon, color: Colors.white, size: iconSize.sp),
-        ),
-        Gap(16.h),
+        StoreLogo(size: 120.w),
+        Gap(18.h),
         Text(
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white,
-            fontSize: titleFontSize.sp,
-            fontWeight: FontWeight.bold,
+            fontSize: 28.sp,
+            fontWeight: FontWeight.w500,
+            color: AppColors.primaryColor.withValues(alpha: 0.75),
           ),
         ),
         if (subtitle != null) ...[
@@ -58,10 +38,7 @@ class AuthHeader extends StatelessWidget {
           Text(
             subtitle!,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.75),
-              fontSize: 14.sp,
-            ),
+            style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
           ),
         ],
       ],

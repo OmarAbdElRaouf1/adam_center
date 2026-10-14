@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:the_one_test/core/helper/helper.dart' hide CustomTextFormField;
-import 'package:the_one_test/core/widgets/widgets/custom_button.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_button.dart';
 import 'package:the_one_test/core/widgets/widgets/custom_text_field.dart';
 import 'package:the_one_test/core/widgets/widgets/validators.dart';
 import 'package:the_one_test/features/auth/data/models/district_model.dart';
@@ -91,14 +91,15 @@ class _SignupFormState extends State<SignupForm> {
                 hintText: 'Notes on Address'.tr(),
                 validator: Validators.notesOnAddress,
                 controller: notesController,
-                borderColor: AppColors.primaryColor,
+                borderColor: Colors.grey.shade300,
+                prefixIconColor: AppColors.primaryColor,
               ),
 
               Gap(24.h),
 
-              CustomElevatedButton.filled(
-                backgroundColor: AppColors.primaryColor,
-                title: state.isLoading ? 'Signing up...'.tr() : 'Sign Up'.tr(),
+              StoreButton(
+                label: 'Sign Up'.tr(),
+                isLoading: state.isLoading,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     context.read<SignupBloc>().add(
@@ -115,7 +116,6 @@ class _SignupFormState extends State<SignupForm> {
                     );
                   }
                 },
-                context: context,
               ),
 
               Gap(12.h),
