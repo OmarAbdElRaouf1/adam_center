@@ -21,9 +21,9 @@ class AuthHeader extends StatelessWidget {
     return Column(
       children: [
         ?topRow,
-        Gap(12.h),
-        StoreLogo(size: 120.w),
-        Gap(18.h),
+        Gap(16.h),
+        StoreLogo(size: 130.w),
+        Gap(24.h),
         Text(
           title,
           textAlign: TextAlign.center,

@@ -30,8 +30,11 @@ class ProductBloc extends Bloc<ProductEvent, BaseState<ItemModel>> {
       (event, emit) =>
           _fetch(emit, productDatasource.getBiggestDiscountProducts()),
     );
+    on<GetSuggestedProductsEvent>(_onSuggested);
     on<GetSearchResultsEvent>(_onSearch);
   }
+
+  static const _maxSuggestions = 30;
 
   Future<void> _fetch(
     Emitter<BaseState<ItemModel>> emit,
@@ -75,6 +78,37 @@ class ProductBloc extends Bloc<ProductEvent, BaseState<ItemModel>> {
     // instead of emitting and re-triggering another grid rebuild.
     if (requestId != _searchRequestId) return;
 
+    _emitMerged(emit, results);
+  }
+
+  // There's no "random products" endpoint, so this mixes the home
+  // sections' lists and shuffles them — a fresh pick on every load.
+  Future<void> _onSuggested(
+    GetSuggestedProductsEvent event,
+    Emitter<BaseState<ItemModel>> emit,
+  ) async {
+    emit(state.copyWith(status: Status.loading, errorMessage: null));
+
+    final results = await Future.wait([
+      productDatasource.getNewProducts(),
+      productDatasource.getBestSellers(),
+      productDatasource.getBiggestDiscountProducts(),
+    ]);
+
+    _emitMerged(
+      emit,
+      results,
+      transform: (items) => (items..shuffle()).take(_maxSuggestions).toList(),
+    );
+  }
+
+  // De-duplicates [results] by product id; fails only when every request
+  // failed, so one broken endpoint doesn't hide the others' products.
+  void _emitMerged(
+    Emitter<BaseState<ItemModel>> emit,
+    List<Either<Failure, List<ItemModel>>> results, {
+    List<ItemModel> Function(List<ItemModel> items)? transform,
+  }) {
     final merged = <int, ItemModel>{};
     Failure? lastFailure;
     var anySuccess = false;
@@ -98,6 +132,12 @@ class ProductBloc extends Bloc<ProductEvent, BaseState<ItemModel>> {
       return;
     }
 
-    emit(state.copyWith(status: Status.success, items: merged.values.toList()));
+    final items = merged.values.toList();
+    emit(
+      state.copyWith(
+        status: Status.success,
+        items: transform?.call(items) ?? items,
+      ),
+    );
   }
 }

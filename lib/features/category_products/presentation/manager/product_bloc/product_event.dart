@@ -28,6 +28,12 @@ class GetBiggestDiscountProductsEvent extends ProductEvent {
   const GetBiggestDiscountProductsEvent();
 }
 
+/// A shuffled mix of new, best-selling and discounted products, shown on
+/// the search page before anything is typed.
+class GetSuggestedProductsEvent extends ProductEvent {
+  const GetSuggestedProductsEvent();
+}
+
 class GetSearchResultsEvent extends ProductEvent {
   const GetSearchResultsEvent(this.searchKey, {this.categoryIds = const []});
 

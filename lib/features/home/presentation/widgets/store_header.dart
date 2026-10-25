@@ -45,6 +45,7 @@ class StoreHeader extends StatelessWidget {
             height: 52.h,
             child: Stack(
               alignment: Alignment.center,
+              clipBehavior: Clip.none,
               children: [
                 StoreLogo(size: 50.h),
                 PositionedDirectional(

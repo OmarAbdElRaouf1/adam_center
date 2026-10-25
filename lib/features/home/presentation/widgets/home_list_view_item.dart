@@ -48,40 +48,47 @@ class HomeListViewItem extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 14.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product['name'] ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 15.sp, height: 1.4),
-                  ),
-                  Gap(10.h),
-                  ProductPriceText(product: product, fontSize: 18),
-                  Gap(12.h),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 38.h,
-                    child: FilledButton(
-                      onPressed: onTap,
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor.withValues(
-                          alpha: 0.75,
+            // Expanded + Spacer: the card is stretched to its row's tallest
+            // card (see HomeListView / CategoryProductsGrid), so price and
+            // button sit on the bottom edge and line up across the row no
+            // matter how many lines the name takes.
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 14.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product['name'] ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 15.sp, height: 1.4),
+                    ),
+                    Gap(10.h),
+                    const Spacer(),
+                    ProductPriceText(product: product, fontSize: 18),
+                    Gap(12.h),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 38.h,
+                      child: FilledButton(
+                        onPressed: onTap,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor.withValues(
+                            alpha: 0.75,
+                          ),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.zero,
+                          shape: const StadiumBorder(),
                         ),
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.zero,
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Text(
-                        'View'.tr(),
-                        style: TextStyle(fontSize: 14.sp),
+                        child: Text(
+                          'View'.tr(),
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

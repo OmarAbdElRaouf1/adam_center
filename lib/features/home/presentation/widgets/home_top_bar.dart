@@ -24,6 +24,7 @@ class HomeTopBar extends StatelessWidget {
             height: 52.h,
             child: Stack(
               alignment: Alignment.center,
+              clipBehavior: Clip.none,
               children: [
                 StoreLogo(size: 50.h),
                 PositionedDirectional(
@@ -52,12 +53,11 @@ class HomeTopBar extends StatelessWidget {
             child: CustomSearchField(
               readOnly: true,
               onTap: onSearchTap,
-              fillColor: Theme.of(context).colorScheme.surface,
               suffix: IconButton(
-                icon: Icon(Icons.qr_code_scanner_rounded, size: 18.sp),
+                icon: Icon(Icons.qr_code_scanner_rounded, size: 22.sp),
                 padding: EdgeInsets.zero,
                 style: IconButton.styleFrom(
-                  minimumSize: Size(36.w, 32.h),
+                  minimumSize: Size(40.w, 40.h),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 color: AppColors.primaryColor,

@@ -27,47 +27,54 @@ class CustomSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OutlineInputBorder border(double alpha, double width) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppRadius.badge.r),
+      borderSide: BorderSide(
+        color: AppColors.primaryColor.withValues(alpha: alpha),
+        width: width,
+      ),
+    );
+
     return TextField(
       controller: controller,
       autofocus: autofocus,
       readOnly: readOnly,
       onTap: onTap,
       onChanged: onChanged,
-
-      style: TextStyle(fontSize: 13.sp),
+      cursorColor: AppColors.primaryColor,
+      style: TextStyle(fontSize: 15.sp),
       decoration: InputDecoration(
         isDense: true,
-        hintText: 'Search'.tr(),
+        hintText: 'Search for products'.tr(),
         hintStyle: TextStyle(
-          color: AppColors.primaryColor.withValues(alpha: 0.6),
-          fontSize: 13.sp,
+          color: AppColors.primaryColor.withValues(alpha: 0.85),
+          fontSize: 15.sp,
         ),
-        prefixIconConstraints: BoxConstraints(minWidth: 36.w, minHeight: 18.sp),
+        prefixIconConstraints: BoxConstraints(minWidth: 44.w, minHeight: 24.sp),
         prefixIcon: Icon(
           Icons.search_rounded,
           color: AppColors.primaryColor,
-          size: 18.sp,
+          size: 24.sp,
         ),
-        suffixIconConstraints: BoxConstraints(minWidth: 32.w, minHeight: 18.sp),
+        suffixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 24.sp),
         suffixIcon: controller?.text.isNotEmpty == true
             ? IconButton(
-                icon: Icon(Icons.close, size: 16.sp),
+                icon: Icon(Icons.close, size: 20.sp),
                 padding: EdgeInsets.zero,
                 onPressed: onClear,
                 style: IconButton.styleFrom(
                   foregroundColor: AppColors.primaryColor,
-                  minimumSize: Size(32.w, 32.h),
+                  minimumSize: Size(40.w, 40.h),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
               )
             : suffix,
-        contentPadding: EdgeInsets.symmetric(vertical: 6.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.badge.r),
-          borderSide: BorderSide.none,
-        ),
+        contentPadding: EdgeInsets.symmetric(vertical: 13.h),
+        border: border(0.55, 1.2),
+        enabledBorder: border(0.55, 1.2),
+        focusedBorder: border(1, 1.8),
         filled: true,
-        fillColor: fillColor ?? Colors.grey.withValues(alpha: 0.1),
+        fillColor: fillColor ?? AppColors.primaryColor.withValues(alpha: 0.08),
       ),
     );
   }

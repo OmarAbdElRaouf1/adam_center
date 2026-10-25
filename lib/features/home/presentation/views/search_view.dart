@@ -12,8 +12,10 @@ import 'package:the_one_test/features/category_products/presentation/widgets/cat
 import 'package:the_one_test/features/category_products/presentation/widgets/product_sort.dart';
 import 'package:the_one_test/features/home/presentation/views/barcode_scanner_view.dart';
 import 'package:the_one_test/features/home/presentation/widgets/home_bottom_nav_bar.dart';
+import 'package:the_one_test/features/home/presentation/widgets/home_section_title.dart';
 import 'package:the_one_test/features/home/presentation/widgets/store_breadcrumb.dart';
 import 'package:the_one_test/features/home/presentation/widgets/store_header.dart';
+import 'package:the_one_test/features/home/presentation/widgets/store_pull_to_refresh.dart';
 import 'package:the_one_test/features/home/presentation/widgets/store_scaffold.dart';
 
 class SearchView extends StatelessWidget {
@@ -50,6 +52,10 @@ class _SearchViewBodyState extends State<_SearchViewBody> {
   late final TextEditingController _controller = TextEditingController(
     text: widget.initialQuery,
   );
+  // Kept apart from the search bloc (and alive across typing/clearing) so
+  // the suggestions don't reshuffle every time the field is emptied.
+  final _suggestionsBloc = getIt<ProductBloc>()
+    ..add(const GetSuggestedProductsEvent());
   Timer? _debounce;
   ProductSort _sort = ProductSort.newest;
 
@@ -65,6 +71,7 @@ class _SearchViewBodyState extends State<_SearchViewBody> {
   void dispose() {
     _debounce?.cancel();
     _controller.dispose();
+    _suggestionsBloc.close();
     super.dispose();
   }
 
@@ -141,12 +148,11 @@ class _SearchViewBodyState extends State<_SearchViewBody> {
                 autofocus: widget.initialQuery == null,
                 onChanged: _onChanged,
                 onClear: _onClear,
-                fillColor: Theme.of(context).scaffoldBackgroundColor,
                 suffix: IconButton(
-                  icon: Icon(Icons.qr_code_scanner_rounded, size: 18.sp),
+                  icon: Icon(Icons.qr_code_scanner_rounded, size: 22.sp),
                   padding: EdgeInsets.zero,
                   style: IconButton.styleFrom(
-                    minimumSize: Size(36.w, 32.h),
+                    minimumSize: Size(40.w, 40.h),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   color: AppColors.primaryColor,
@@ -155,12 +161,13 @@ class _SearchViewBodyState extends State<_SearchViewBody> {
               ),
             ),
             Gap(16.h),
-            const StoreBreadcrumb(),
+            StoreBreadcrumb(current: 'Search'.tr()),
             Expanded(
               // Builder: body context, so the bottom inset includes the nav.
               child: Builder(
-                builder: (context) =>
-                    _hasQuery ? _buildResults(context) : const _SearchPrompt(),
+                builder: (context) => _hasQuery
+                    ? _buildResults(context)
+                    : _SuggestedProducts(bloc: _suggestionsBloc),
               ),
             ),
           ],
@@ -200,29 +207,129 @@ class _SearchViewBodyState extends State<_SearchViewBody> {
   }
 }
 
-class _SearchPrompt extends StatelessWidget {
-  const _SearchPrompt();
+/// What the page shows before anything is typed: a short hint and a
+/// shuffled grid of products to browse. Pull or "Shuffle" for a new pick.
+class _SuggestedProducts extends StatelessWidget {
+  const _SuggestedProducts({required this.bloc});
+
+  final ProductBloc bloc;
+
+  void _reload() => bloc.add(const GetSuggestedProductsEvent());
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(24.w, 60.h, 24.w, 0),
-      child: Column(
+    final gridPadding = EdgeInsets.symmetric(horizontal: 16.w);
+    const gridPhysics = NeverScrollableScrollPhysics();
+
+    return StorePullToRefresh(
+      onRefresh: () {
+        _reload();
+        return untilLoaded(bloc);
+      },
+      builder: (controller) => SingleChildScrollView(
+        controller: controller,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.only(
+          top: 16.h,
+          bottom: MediaQuery.paddingOf(context).bottom + 40.h,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const _SearchHint(),
+            Gap(24.h),
+            HomeSectionTitle(
+              title: 'Suggested for you'.tr(),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              actionLabel: 'Shuffle'.tr(),
+              onAction: _reload,
+            ),
+            Gap(16.h),
+            BlocBuilder<ProductBloc, BaseState<ItemModel>>(
+              bloc: bloc,
+              builder: (context, state) {
+                if (state.isLoading || state.isInitial) {
+                  return CategoryProductGridShimmer(
+                    padding: gridPadding,
+                    shrinkWrap: true,
+                    physics: gridPhysics,
+                  );
+                }
+                if (state.isFailure) {
+                  return FailureWidget(
+                    state: state,
+                    errorMessage: state.errorMessage ?? '',
+                    onRetry: _reload,
+                  );
+                }
+                return CategoryProductsGrid(
+                  padding: gridPadding,
+                  shrinkWrap: true,
+                  physics: gridPhysics,
+                  products: state.items
+                      .map((item) => item.toProductMap())
+                      .toList(),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchHint extends StatelessWidget {
+  const _SearchHint();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.card.r),
+        boxShadow: AppShadows.card(context),
+      ),
+      child: Row(
         children: [
-          Text(
-            'Looking for something?'.tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 26.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.primaryColor.withValues(alpha: 0.75),
+          Container(
+            width: 44.w,
+            height: 44.w,
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.manage_search_rounded,
+              color: AppColors.primaryColor,
+              size: 24.sp,
             ),
           ),
-          Gap(16.h),
-          Text(
-            'Type something in the search box above'.tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
+          Gap(12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Looking for something?'.tr(),
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                Gap(2.h),
+                Text(
+                  'Search by product name, category or barcode'.tr(),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

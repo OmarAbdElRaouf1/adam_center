@@ -51,13 +51,14 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     final galleryImages = images.isNotEmpty ? images : [product['image'] ?? ''];
     final color = product['color'] ?? '';
     final size = product['size'] ?? '';
+    final stockQuantity = int.tryParse(product['quantity'] ?? '') ?? 0;
 
     return StoreScaffold(
       bottomNavigationBar: _BottomBar(
         child: ProductActionBar(
           productId: productId,
           barCode: product['barCode'] ?? '',
-          stockQuantity: int.tryParse(product['quantity'] ?? '') ?? 0,
+          stockQuantity: stockQuantity,
         ),
       ),
       floatingActionButton: Column(
@@ -137,6 +138,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                               color: Colors.grey.shade600,
                             ),
                           ),
+                          Gap(12.h),
+                          _StockBadge(quantity: stockQuantity),
                           Gap(18.h),
                           ProductDescriptionSection(
                             description: product['description'] ?? '',
@@ -165,6 +168,62 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// How many pieces are left in stock: green when available, orange when
+/// running low and red when sold out.
+class _StockBadge extends StatelessWidget {
+  const _StockBadge({required this.quantity});
+
+  final int quantity;
+
+  static const _lowStockThreshold = 5;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = context.localizeDigits(quantity.toString());
+    final (color, icon, label) = switch (quantity) {
+      <= 0 => (
+        Colors.red.shade600,
+        Icons.remove_shopping_cart_outlined,
+        'Out of Stock'.tr(),
+      ),
+      <= _lowStockThreshold => (
+        Colors.orange.shade700,
+        Icons.hourglass_bottom_rounded,
+        'Only {} left in stock'.tr(args: [count]),
+      ),
+      _ => (
+        Colors.green.shade600,
+        Icons.inventory_2_outlined,
+        'In stock: {}'.tr(args: [count]),
+      ),
+    };
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppRadius.pill.r),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 18.sp),
+          Gap(6.w),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: color,
+            ),
+          ),
+        ],
       ),
     );
   }

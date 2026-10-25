@@ -26,7 +26,7 @@ class TextBanner extends StatelessWidget {
           ),
           Gap(12.h),
           Text(
-            'Free delivery within Kuwait in 24 hours'.tr(),
+            'Free delivery within Egypt in 24 hours'.tr(),
             textAlign: TextAlign.center,
             style: style,
           ),
